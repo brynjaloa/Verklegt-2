@@ -1,0 +1,8 @@
+Bids is a folder that has bid related HTML pages
+all bidding/payment pages such as:
+- my_bids .html
+- submit_bid .html
+- finalize_bid .html
+- payment_options .html
+- payment_failure .html
+- confirmation .html
