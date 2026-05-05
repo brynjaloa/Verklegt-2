@@ -122,13 +122,16 @@ class Artwork(models.Model):
     photo_style = models.CharField(max_length=50, choices=PhotoStyle.choices, blank=True, null=True)
     jewellery_style = models.CharField(max_length=50, choices=JewelleryStyle.choices, blank=True, null=True)
     starting_bid = models.DecimalField(max_digits=10, decimal_places=2)
-    width = models.DecimalField(max_digits=6, decimal_places=2)
-    height = models.DecimalField(max_digits=6, decimal_places=2)
-    year = models.IntegerField()
+    width_cm = models.DecimalField(max_digits=6, decimal_places=2)
+    height_cm = models.DecimalField(max_digits=6, decimal_places=2)
+    year_created = models.IntegerField()
     edition = models.CharField(max_length=50, choices=Edition.choices)
     provenance = models.TextField(blank=True, null=True)
     listing_date = models.DateField(auto_now_add=True)
     status = models.CharField(max_length=20, choices=Status.choices, default='Available')
+    is_sold = models.BooleanField(default=False)
+    main_image = models.ImageField(upload_to='artworks/', blank=True, null=True)
+    description = models.TextField(blank=True)
 
 
     def __str__(self):
