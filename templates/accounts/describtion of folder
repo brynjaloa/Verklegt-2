@@ -1,0 +1,7 @@
+accounts is a folder that contains account-related HTML pages
+all user related pages such as:
+- login .html
+- signup/register .html
+- profile .html
+- edit_profile .html
+- edit_password .html
