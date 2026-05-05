@@ -14,7 +14,7 @@ class Seller(models.Model):
     cover_image = models.ImageField(upload_to='sellers/covers/')
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
-    # Only shown if seller_type == Gallery
+    # Birtist bara ef notandi er "Gallery"
     street_name = models.CharField(max_length=255, blank=True, null=True)
     city = models.CharField(max_length=255, blank=True, null=True)
     postal_code = models.CharField(max_length=20, blank=True, null=True)
