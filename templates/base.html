@@ -1,12 +1,30 @@
+<!--main layout -->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title>ArtVault</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
 
+<nav>
+    <a href="/">ArtVault</a>
+    <a href="/artworks/">See all</a>
+    <a href="/bids/">My bids</a>
+    <a href="/profile/">Profile</a>
+</nav>
+
+<main>
+    {% block content %}
+    {% endblock %}
+</main>
+
+<footer>
+    <p>ArtVault © 2026</p>
+</footer>
+
+<script src="{% static 'js/main.js' %}"></script>
 </body>
 </html>
-
-* main layout *
