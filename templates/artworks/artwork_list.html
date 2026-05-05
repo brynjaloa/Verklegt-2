@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>{{ artwork.title }}</h1>
+
+{% if artwork.main_image %}
+    <img src="{{ artwork.main_image.url }}" alt="{{ artwork.title }}">
+{% endif %}
+
+<p>{{ artwork.description }}</p>
+<p>Medium: {{ artwork.medium }}</p>
+<p>Style: {{ artwork.style }}</p>
+<p>Size: {{ artwork.width_cm }}cm × {{ artwork.height_cm }}cm</p>
+<p>Year: {{ artwork.year_created }}</p>
+<p>Starting bid: {{ artwork.starting_bid_price }}</p>
+{% endblock %}
