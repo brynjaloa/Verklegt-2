@@ -1,5 +1,7 @@
-asgiref==3.11.1 # dependencies Django needs automatically
-Django==6.0.4 # main framework
-psycopg2-binary==2.9. # connects to PostgreSQL (Azure)
-python-dotenv==1.2.2 # reads .env file
-sqlparse==0.5.5 # dependencies Django needs automatically
+asgiref==3.11.1 #dependencies Django needs automatically
+Django==6.0.4 #main framework
+psycopg==3.3.4 #connects to PostgreSQL (Azure)
+psycopg-binary==3.3.4
+python-dotenv==1.2.2 #reads .env file
+sqlparse==0.5.5 #dependencies Django needs automatically
+typing_extensions==4.15.0
