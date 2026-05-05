@@ -9,13 +9,11 @@
             <article class="artwork-card">
                 <a href="{% url 'artwork_detail' artwork.pk %}">
                     {% if artwork.main_image %}
-                        <img src="{{ artwork.main_image.url }}" alt="{{ artwork.title }}">
+                        <img class="artwork-card-image" src="{{ artwork.main_image.url }}" alt="{{ artwork.title }}">
                     {% endif %}
                     <h2>{{ artwork.title }}</h2>
                 </a>
                 <p>{{ artwork.description }}</p>
-                <p>Medium: {{ artwork.medium }}</p>
-                <p>Style: {{ artwork.style }}</p>
                 <p>Size: {{ artwork.width_cm }}cm x {{ artwork.height_cm }}cm</p>
                 <p>Year: {{ artwork.year_created }}</p>
                 <p>Starting bid: {{ artwork.starting_bid_price }}</p>

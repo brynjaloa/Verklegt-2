@@ -5,12 +5,20 @@
     <h1>{{ artwork.title }}</h1>
 
     {% if artwork.main_image %}
-        <img src="{{ artwork.main_image.url }}" alt="{{ artwork.title }}">
+        <img class="artwork-detail-image" src="{{ artwork.main_image.url }}" alt="{{ artwork.title }}">
     {% endif %}
 
     <p>{{ artwork.description }}</p>
-    {% if artwork.medium %}<p>Medium: {{ artwork.medium }}</p>{% endif %}
-    {% if artwork.style %}<p>Style: {{ artwork.style }}</p>{% endif %}
+    {% if artwork.furniture_material %}<p>Furniture material: {{ artwork.furniture_material }}</p>{% endif %}
+    {% if artwork.furniture_style %}<p>Furniture style: {{ artwork.furniture_style }}</p>{% endif %}
+    {% if artwork.jewellery_material %}<p>Jewellery material: {{ artwork.jewellery_material }}</p>{% endif %}
+    {% if artwork.jewellery_style %}<p>Jewellery style: {{ artwork.jewellery_style }}</p>{% endif %}
+    {% if artwork.painting_medium %}<p>Painting medium: {{ artwork.painting_medium }}</p>{% endif %}
+    {% if artwork.painting_style %}<p>Painting style: {{ artwork.painting_style }}</p>{% endif %}
+    {% if artwork.photo_style %}<p>Photo style: {{ artwork.photo_style }}</p>{% endif %}
+    {% if artwork.photo_technique %}<p>Photo technique: {{ artwork.photo_technique }}</p>{% endif %}
+    {% if artwork.sculpture_material %}<p>Sculpture material: {{ artwork.sculpture_material }}</p>{% endif %}
+    {% if artwork.sculpture_style %}<p>Sculpture style: {{ artwork.sculpture_style }}</p>{% endif %}
     <p>Size: {{ artwork.width_cm }}cm x {{ artwork.height_cm }}cm</p>
     <p>Year: {{ artwork.year_created }}</p>
     <p>Starting bid: {{ artwork.starting_bid_price }}</p>
