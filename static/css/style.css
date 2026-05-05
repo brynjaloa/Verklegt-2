@@ -4,17 +4,26 @@ body {
 }
 
 nav {
-    background: black;
-    color: white;
+    background: darkred;
+    color: black;
     padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
 }
 
 nav a {
-    color: white;
+    color: black;
     margin-right: 10px;
     text-decoration: none;
 }
 
+.hero {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
 footer {
     margin-top: 20px;
     text-align: center;

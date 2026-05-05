@@ -1,8 +1,17 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block content %}
-<h1>Homepage</h1>
-<p>Welcome to ArtVault</p>
-{% endblock %}
 
-* homepage layout*
+
+<div class="hero">
+    <div class="hero-text">
+        <h2>ArtVault - est. 2026</h2>
+        <p>
+            ArtVault is a web-based art auction platform designed to connect artists...
+        </p>
+    </div>
+
+    <img src="{% static 'images/sample.jpg' %}" alt="art">
+</div>
+{% endblock %}
