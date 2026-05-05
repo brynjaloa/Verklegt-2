@@ -1,10 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "base.html" %}
 
-</body>
-</html>
+{% block content %}
+<article class="artwork-detail">
+    <h1>{{ artwork.title }}</h1>
+
+    {% if artwork.main_image %}
+        <img src="{{ artwork.main_image.url }}" alt="{{ artwork.title }}">
+    {% endif %}
+
+    <p>{{ artwork.description }}</p>
+    {% if artwork.medium %}<p>Medium: {{ artwork.medium }}</p>{% endif %}
+    {% if artwork.style %}<p>Style: {{ artwork.style }}</p>{% endif %}
+    <p>Size: {{ artwork.width_cm }}cm x {{ artwork.height_cm }}cm</p>
+    <p>Year: {{ artwork.year_created }}</p>
+    <p>Starting bid: {{ artwork.starting_bid_price }}</p>
+    <p>Status: {% if artwork.is_sold %}Sold{% else %}Available{% endif %}</p>
+</article>
+{% endblock %}
