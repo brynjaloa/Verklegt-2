@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/login.css' %}">
+<div class="login-container">
+    <h1 class="login-title">
+        Log in to your account
+    </h1>
+    <form method="post" action="{% url 'login' %}">
+        {% csrf_token %}
+        {% if form.errors %}
+            <p class="login-error">Invalid username or password.</p>
+        {% endif %}
+        <div class="form-row">
+            <label>Username:</label>
+            <input type="text" name="username" autocomplete="username" required>
+        </div>
+        <div class="form-row">
+            <label>Password:</label>
+            <input type="password" name="password" autocomplete="current-password" required>
+        </div>
+        <button type="submit" class="login-btn">
+            Login
+        </button>
+    </form>
+    <div class="signup-link">
+        <a href="{% url 'signup' %}">
+            Dont have an account? Sign up here
+        </a>
+    </div>
+</div>
+{% endblock %}
