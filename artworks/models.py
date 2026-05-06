@@ -29,7 +29,6 @@ class Artwork(models.Model):
         PAINTINGS = 'Paintings', 'Paintings'
         SCULPTURES = 'Sculptures', 'Sculptures'
         PHOTOS = 'Photos', 'Photos'
-        JEWELLERY = 'Jewellery', 'Jewellery'
 
     class PaintingMedium(models.TextChoices):
         OIL = 'Oil', 'Oil'
@@ -54,13 +53,6 @@ class Artwork(models.Model):
         DIGITAL = 'Digital', 'Digital'
         FILM = 'Film', 'Film'
         BLACK_AND_WHITE = 'Black & White', 'Black & White'
-        OTHER = 'Other', 'Other'
-
-    class JewelleryMaterial(models.TextChoices):
-        GOLD = 'Gold', 'Gold'
-        SILVER = 'Silver', 'Silver'
-        DIAMOND = 'Diamond', 'Diamond'
-        PLATINUM = 'Platinum', 'Platinum'
         OTHER = 'Other', 'Other'
 
     class PaintingStyle(models.TextChoices):
@@ -91,13 +83,6 @@ class Artwork(models.Model):
         ABSTRACT = 'Abstract', 'Abstract'
         OTHER = 'Other', 'Other'
 
-    class JewelleryStyle(models.TextChoices):
-        CLASSIC = 'Classic', 'Classic'
-        MODERN = 'Modern', 'Modern'
-        VINTAGE = 'Vintage', 'Vintage'
-        HANDMADE = 'Handmade', 'Handmade'
-        OTHER = 'Other', 'Other'
-
     class Edition(models.TextChoices):
         ORIGINAL = 'Original', 'Original'
         LIMITED = 'Limited Edition', 'Limited Edition'
@@ -115,12 +100,10 @@ class Artwork(models.Model):
     sculpture_material = models.CharField(max_length=50, choices=SculptureMaterial.choices, blank=True, null=True)
     furniture_material = models.CharField(max_length=50, choices=FurnitureMaterial.choices, blank=True, null=True)
     photo_technique = models.CharField(max_length=50, choices=PhotoTechnique.choices, blank=True, null=True)
-    jewellery_material = models.CharField(max_length=50, choices=JewelleryMaterial.choices, blank=True, null=True)
     painting_style = models.CharField(max_length=50, choices=PaintingStyle.choices, blank=True, null=True)
     sculpture_style = models.CharField(max_length=50, choices=SculptureStyle.choices, blank=True, null=True)
     furniture_style = models.CharField(max_length=50, choices=FurnitureStyle.choices, blank=True, null=True)
     photo_style = models.CharField(max_length=50, choices=PhotoStyle.choices, blank=True, null=True)
-    jewellery_style = models.CharField(max_length=50, choices=JewelleryStyle.choices, blank=True, null=True)
     starting_bid = models.DecimalField(max_digits=10, decimal_places=2)
     width = models.DecimalField(max_digits=6, decimal_places=2)
     height = models.DecimalField(max_digits=6, decimal_places=2)
@@ -128,6 +111,7 @@ class Artwork(models.Model):
     edition = models.CharField(max_length=50, choices=Edition.choices)
     provenance = models.TextField(blank=True, null=True)
     listing_date = models.DateField(auto_now_add=True)
+    description = models.TextField(blank=True, null=True)
     status = models.CharField(max_length=20, choices=Status.choices, default='Available')
 
 

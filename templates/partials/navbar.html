@@ -1,11 +1,13 @@
 <nav class="navbar">
+    <a href="{% url 'home' %}" style="text-decoration: none; color: inherit;">
     <h1 class="logo">ArtVault</h1>
+    </a>
 
     <input type="text" placeholder="Search..." class="search">
 
     <div class="links">
         <a href="#">See all</a>
-        <a href="#">Category</a>
+        <a href="{% url 'category_list' %}">Category</a>
         <a href="#">How to?</a>
         <a href="#">Buy</a>
         <a href="#">Sell</a>
