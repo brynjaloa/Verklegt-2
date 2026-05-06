@@ -17,14 +17,16 @@ nav {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 15px 40px;
+    padding: 22px 40px;
 }
 
 /* LOGO */
 .logo {
-    font-size: 36px;
+    font-size: 50px;
     font-weight: bold;
     font-family: serif;
+    text-decoration: none;
+    color: black;
 }
 
 /* MIDDLE */
@@ -32,6 +34,7 @@ nav {
     display: flex;
     align-items: center;
     gap: 30px;
+    margin-left: 240px;
 }
 
 /* SEARCH */
@@ -55,24 +58,25 @@ nav {
 /* LINKS */
 .nav-links {
     display: flex;
-    gap: 20px;
+    gap: 30px;
 }
 
 .nav-links a {
     text-decoration: none;
     color: black;
-    font-size: 18px;
+    font-size: 25px;
+    font-family: "Times New Roman", Times, serif;
 }
 
 /* LOGIN BUTTON */
 .login-btn {
-    background: #c95b55;
+    background: #be4848;
     color: white;
-    border: none;
     padding: 10px 25px;
     border-radius: 25px;
-    font-size: 18px;
+    font-size: 30px;
     cursor: pointer;
+    border: 1px solid black;
 }
 nav a {
     color: black;
@@ -120,8 +124,10 @@ nav a {
 }
 
 .hero-text h2 {
-    font-size: 28px;
+    font-size: 32px;
     margin-bottom: 10px;
+    font-family: Serif;
+
 }
 
 .hero-text p {
@@ -139,6 +145,7 @@ nav a {
 .section-title {
     font-size: 28px;
     margin: 40px;
+    font-family: Serif;
 }
 
 .artworks {
@@ -154,7 +161,7 @@ nav a {
 .art-box {
     width: 220px;
     height: 180px;
-    background: #ddd; /* grá kassi */
+    background: #ddd;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.2);
 }
@@ -165,7 +172,6 @@ nav a {
 }
 
 /* footer*/
-
 .footer {
     background: #953435;
     color: white;
@@ -188,32 +194,4 @@ nav a {
 .footer-section a {
     color: white;
     text-decoration: underline;
-}
-
-.categories-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
-    padding: 20px;
-    max-width: 900px;
-    margin: 0 auto;
-}
-
-.category-card {
-    display: block;
-    height: 250px;
-    background-color: #BE4947;
-    border-radius: 12px;
-    text-decoration: none;
-    display: flex;
-    align-items: flex-end;
-    justify-content: center;
-    padding: 16px;
-    border: 3px solid #6B0000;
-}
-
-.category-card span {
-    color: white;
-    font-size: 22px;
-    font-weight: bold;
 }

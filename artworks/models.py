@@ -1,5 +1,5 @@
-from django.db import models #
-from django.contrib.auth.models import User #
+from django.db import models
+from django.contrib.auth.models import User
 
 
 class Seller(models.Model):
@@ -14,7 +14,7 @@ class Seller(models.Model):
     cover_image = models.ImageField(upload_to='sellers/covers/')
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
-    # Birtist bara ef notandi er "Gallery"
+    # Only shown if seller_type == Gallery
     street_name = models.CharField(max_length=255, blank=True, null=True)
     city = models.CharField(max_length=255, blank=True, null=True)
     postal_code = models.CharField(max_length=20, blank=True, null=True)

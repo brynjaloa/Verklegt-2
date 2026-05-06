@@ -1,61 +1,35 @@
-from django.conf import settings
 from django.db import migrations, models
-import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
             name='Artwork',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('title', models.CharField(max_length=255)),
-                ('category', models.CharField(choices=[('Furniture', 'Furniture'), ('Paintings', 'Paintings'), ('Sculptures', 'Sculptures'), ('Photos', 'Photos'), ('Jewellery', 'Jewellery')], max_length=50)),
-                ('medium', models.CharField(blank=True, choices=[('Oil', 'Oil'), ('Water', 'Water'), ('Acrylic', 'Acrylic')], max_length=50, null=True)),
-                ('style', models.CharField(blank=True, choices=[('Impressionism', 'Impressionism'), ('Modernism', 'Modernism'), ('Surrealism', 'Surrealism'), ('Realism', 'Realism')], max_length=50, null=True)),
-                ('starting_bid', models.DecimalField(decimal_places=2, max_digits=10)),
-                ('width', models.DecimalField(decimal_places=2, max_digits=6)),
-                ('height', models.DecimalField(decimal_places=2, max_digits=6)),
-                ('year', models.IntegerField()),
-                ('edition', models.CharField(choices=[('Original', 'Original'), ('Limited Edition', 'Limited Edition'), ('Open Edition', 'Open Edition')], max_length=50)),
-                ('provenance', models.TextField(blank=True, null=True)),
-                ('listing_date', models.DateField(auto_now_add=True)),
-                ('status', models.CharField(choices=[('Available', 'Available'), ('Sold', 'Sold')], default='Available', max_length=20)),
+                ('starting_bid_price', models.DecimalField(decimal_places=2, max_digits=10)),
+                ('width_cm', models.DecimalField(decimal_places=2, max_digits=6)),
+                ('height_cm', models.DecimalField(decimal_places=2, max_digits=6)),
+                ('year_created', models.IntegerField()),
+                ('is_sold', models.BooleanField(default=False)),
+                ('main_image', models.ImageField(blank=True, null=True, upload_to='artworks/')),
+                ('description', models.TextField(blank=True)),
+                ('furniture_material', models.CharField(blank=True, max_length=100, null=True)),
+                ('furniture_style', models.CharField(blank=True, max_length=100, null=True)),
+                ('jewellery_material', models.CharField(blank=True, max_length=100, null=True)),
+                ('jewellery_style', models.CharField(blank=True, max_length=100, null=True)),
+                ('painting_medium', models.CharField(blank=True, max_length=100, null=True)),
+                ('painting_style', models.CharField(blank=True, max_length=100, null=True)),
+                ('photo_style', models.CharField(blank=True, max_length=100, null=True)),
+                ('photo_technique', models.CharField(blank=True, max_length=100, null=True)),
+                ('sculpture_material', models.CharField(blank=True, max_length=100, null=True)),
+                ('sculpture_style', models.CharField(blank=True, max_length=100, null=True)),
             ],
-        ),
-        migrations.CreateModel(
-            name='Seller',
-            fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=255)),
-                ('seller_type', models.CharField(choices=[('Individual', 'Individual'), ('Gallery', 'Gallery')], max_length=20)),
-                ('bio', models.TextField()),
-                ('logo', models.ImageField(upload_to='sellers/logos/')),
-                ('cover_image', models.ImageField(upload_to='sellers/covers/')),
-                ('street_name', models.CharField(blank=True, max_length=255, null=True)),
-                ('city', models.CharField(blank=True, max_length=255, null=True)),
-                ('postal_code', models.CharField(blank=True, max_length=20, null=True)),
-                ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
-            ],
-        ),
-        migrations.CreateModel(
-            name='ArtworkImage',
-            fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('image', models.ImageField(upload_to='artworks/')),
-                ('artwork', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='images', to='artworks.artwork')),
-            ],
-        ),
-        migrations.AddField(
-            model_name='artwork',
-            name='seller',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='artworks.seller'),
-        ),
+        )
     ]
