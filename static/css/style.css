@@ -4,7 +4,7 @@ body {
 }
 
 nav {
-    background: darkred;
+    background: #953435;
     color: black;
     padding: 10px;
     display: flex;
@@ -12,7 +12,68 @@ nav {
     justify-content: space-between;
     gap: 20px;
 }
+.navbar {
+    background: #9b3a35;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 40px;
+}
 
+/* LOGO */
+.logo {
+    font-size: 36px;
+    font-weight: bold;
+    font-family: serif;
+}
+
+/* MIDDLE */
+.nav-center {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+/* SEARCH */
+.search-box {
+    position: relative;
+}
+
+.search-box input {
+    padding: 8px 35px 8px 12px;
+    border-radius: 20px;
+    border: none;
+}
+
+.search-icon {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+/* LINKS */
+.nav-links {
+    display: flex;
+    gap: 20px;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: black;
+    font-size: 18px;
+}
+
+/* LOGIN BUTTON */
+.login-btn {
+    background: #c95b55;
+    color: white;
+    border: none;
+    padding: 10px 25px;
+    border-radius: 25px;
+    font-size: 18px;
+    cursor: pointer;
+}
 nav a {
     color: black;
     margin-right: 10px;
@@ -22,13 +83,11 @@ nav a {
 .hero {
     display: flex;
     align-items: center;
-    gap: 20px;
-}
-footer {
-    margin-top: 20px;
-    text-align: center;
-    padding: 10px;
-    background: #eee;
+    justify-content: space-between;
+    background: #be4848;
+    padding: 30px;
+    border-radius: 10px;
+    gap: 40px;
 }
 
 .artwork-card-image {
@@ -43,4 +102,90 @@ footer {
     display: block;
     width: min(100%, 420px);
     height: auto;
+}
+
+
+
+.hero-container {
+    padding: 40px;
+    background: #f2f2f2;
+}
+
+
+.hero-text {
+    color: white;
+    max-width: 50%;
+    padding-right: 30px;
+    border-right: 2px solid rgba(255,255,255,0.5);
+}
+
+.hero-text h2 {
+    font-size: 28px;
+    margin-bottom: 10px;
+}
+
+.hero-text p {
+    line-height: 1.6;
+}
+
+.hero-image img {
+    width: 450px;
+    height: auto;
+    border-radius: 5px;
+    padding-left: 30px;
+}
+
+
+.section-title {
+    font-size: 28px;
+    margin: 40px;
+}
+
+.artworks {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+}
+
+.art-card {
+    text-align: center;
+}
+
+.art-box {
+    width: 220px;
+    height: 180px;
+    background: #ddd; /* grá kassi */
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.price {
+    margin-top: 10px;
+    font-size: 20px;
+}
+
+/* footer*/
+
+.footer {
+    background: #953435;
+    color: white;
+    display: flex;
+    justify-content: space-around;
+    padding: 40px;
+    margin-top: 60px;
+}
+
+.footer-section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.footer-section h3 {
+    margin-bottom: 10px;
+}
+
+.footer-section a {
+    color: white;
+    text-decoration: underline;
 }
