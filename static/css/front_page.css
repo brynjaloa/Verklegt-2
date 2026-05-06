@@ -17,14 +17,16 @@ nav {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 15px 40px;
+    padding: 22px 40px;
 }
 
 /* LOGO */
 .logo {
-    font-size: 36px;
+    font-size: 50px;
     font-weight: bold;
     font-family: serif;
+    text-decoration: none;
+    color: black;
 }
 
 /* MIDDLE */
@@ -55,13 +57,14 @@ nav {
 /* LINKS */
 .nav-links {
     display: flex;
-    gap: 20px;
+    gap: 30px;
 }
 
 .nav-links a {
     text-decoration: none;
     color: black;
-    font-size: 18px;
+    font-size: 22px;
+    font-family: "Times New Roman", Times, serif;
 }
 
 /* LOGIN BUTTON */
@@ -71,7 +74,7 @@ nav {
     border: none;
     padding: 10px 25px;
     border-radius: 25px;
-    font-size: 18px;
+    font-size: 25px;
     cursor: pointer;
 }
 nav a {
