@@ -1,7 +1,44 @@
-<!-- templates/users/signup.html -->
 
-<form method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Sign up</button>
-</form>
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'css/signup.css' %}">
+<div class="signup-container">
+    <h1>Register your account</h1>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="signup-content">
+            <div class="left-side">
+                <div class="form-row">
+                    <label>Full name:</label>
+                    {{ form.name }}
+                </div>
+                <div class="form-row">
+                    <label>Username:</label>
+                    {{ form.username }}
+                </div>
+                <div class="form-row">
+                    <label>Email:</label>
+                    {{ form.email }}
+                </div>
+                <div class="form-row">
+                    <label>Password:</label>
+                    {{ form.password1 }}
+                </div>
+                <div class="form-row">
+                    <label>Confirm Password:</label>
+                    {{ form.password2 }}
+                </div>
+            </div>
+        </div>
+        <div class="upload-box">
+            <p>Upload profile picture</p>
+            {{ form.profile_image }}
+        </div>
+        <button type="submit" class="signup-btn">
+            Sign up
+        </button>
+    </form>
+</div>
+{% endblock %}

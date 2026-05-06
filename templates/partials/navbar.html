@@ -1,24 +1,17 @@
 <nav class="navbar">
-    <div class="nav-left">
-        <a href="{% url 'home' %}" class="logo">ArtVault</a>
-    </div>
+    <h1 class="logo">ArtVault</h1>
 
-    <div class="nav-center">
-        <div class="search-box">
-            <input type="text" placeholder="Search...">
-            <span class="search-icon">🔍</span>
-        </div>
+    <input type="text" placeholder="Search..." class="search">
 
-        <div class="nav-links">
-            <a href="#">See all</a>
-            <a href="#">Category</a>
-            <a href="#">How to?</a>
-            <a href="#">Buy</a>
-            <a href="#">Sell</a>
-        </div>
+    <div class="links">
+        <a href="#">See all</a>
+        <a href="#">Category</a>
+        <a href="#">How to?</a>
+        <a href="#">Buy</a>
+        <a href="#">Sell</a>
     </div>
 
     <div class="nav-right">
-        <a href="{% url 'account_choice' %}" class="login-btn">Login</a>
+        <a href="{% url 'login' %}" class="login-btn">Login</a>
     </div>
 </nav>

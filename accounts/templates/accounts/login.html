@@ -1,23 +1,28 @@
-{% extends "base.html" %}
-
+{% extends 'base.html' %}
+{% load static %}
 {% block content %}
-<div class="auth-container">
-    <h1>Log in to ArtVault</h1>
-
-    {% if form.errors %}
-        <p class="form-error">Your username or password is incorrect.</p>
-    {% endif %}
-
-    <form method="POST" action="{% url 'login' %}">
-        {% csrf_token %}
-        {{ form.as_p }}
-
-        <button type="submit">Log in</button>
+<link rel="stylesheet" href="{% static 'css/login.css' %}">
+<div class="login-container">
+    <h1 class="login-title">
+        Log in to your account
+    </h1>
+    <form>
+        <div class="form-row">
+            <label>Username:</label>
+            <input type="text">
+        </div>
+        <div class="form-row">
+            <label>Password:</label>
+            <input type="password">
+        </div>
+        <button class="login-btn">
+            Login
+        </button>
     </form>
-
-    <p>
-        Don’t have an account?
-        <a href="{% url 'signup' %}">Sign up here</a>
-    </p>
+    <div class="signup-link">
+        <a href="{% url 'signup' %}">
+            Dont have an account? Sign up here
+        </a>
+    </div>
 </div>
 {% endblock %}

@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
@@ -6,8 +7,8 @@ from .forms import SignUpForm, ProfileForm, SellerForm
 from .models import Profile, Seller
 
 
-def account_choice_view(request):
-    return render(request, 'accounts/account_choice.html')
+def login_view(request):
+    return render(request, 'accounts/login.html')
 
 
 def signup_view(request):
@@ -25,7 +26,8 @@ def signup_view(request):
                 profile_image=form.cleaned_data.get('profile_image')
             )
 
-            return redirect('login')
+            login(request, user)
+            return redirect('profile')
 
     else:
         form = SignUpForm()
@@ -35,19 +37,13 @@ def signup_view(request):
 
 @login_required
 def profile_view(request):
-    profile, _ = Profile.objects.get_or_create(
-        user=request.user,
-        defaults={'name': request.user.username},
-    )
+    profile = request.user.profile
     return render(request, 'accounts/profile.html', {'profile': profile})
 
 
 @login_required
 def edit_profile_view(request):
-    profile, _ = Profile.objects.get_or_create(
-        user=request.user,
-        defaults={'name': request.user.username},
-    )
+    profile = request.user.profile
 
     if request.method == 'POST':
         form = ProfileForm(request.POST, request.FILES, instance=profile)

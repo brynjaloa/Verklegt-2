@@ -1,0 +1,57 @@
+.login-container {
+    width: min(90%, 420px);
+    margin: 45px auto;
+    background-color: #973535;
+    border-radius: 18px;
+    padding: 26px;
+}
+
+.login-container h1 {
+    color: white;
+    text-align: center;
+    font-size: 28px;
+    margin-bottom: 24px;
+}
+
+.login-container .form-row {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    margin-bottom: 18px;
+}
+
+.login-container label {
+    color: white;
+    font-size: 16px;
+    margin-bottom: 6px;
+}
+
+.login-container input {
+    height: 38px;
+    border-radius: 10px;
+    border: 2px solid black;
+    padding: 0 12px;
+    font-size: 16px;
+}
+
+.login-container button {
+    display: block;
+    margin: 26px auto 0;
+    background-color: #c74b4b;
+    color: white;
+    font-size: 18px;
+    padding: 10px 42px;
+    border-radius: 12px;
+    border: 2px solid black;
+    cursor: pointer;
+}
+
+.login-container .signup-link {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.login-container .signup-link a {
+    color: white;
+    font-size: 15px;
+}
