@@ -20,5 +20,10 @@
     {% if not profile.is_seller %}
         <a href="{% url 'become_seller' %}">Become seller</a>
     {% endif %}
+
+    <form method="POST" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button type="submit">Log out</button>
+    </form>
 </body>
 </html>

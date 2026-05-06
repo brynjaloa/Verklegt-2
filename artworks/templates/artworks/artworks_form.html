@@ -1,0 +1,59 @@
+{% load static %}
+
+<h1>Add Artwork</h1>
+
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    {{ form.title.label_tag }}
+    {{ form.title }}
+
+    {{ form.category.label_tag }}
+    {{ form.category }}
+
+    <div class="painting-field">
+        {{ form.painting_medium.label_tag }}
+        {{ form.painting_medium }}
+    </div>
+
+    <div class="sculpture-field">
+        {{ form.sculpture_material.label_tag }}
+        {{ form.sculpture_material }}
+    </div>
+
+    <div class="furniture-field">
+        {{ form.furniture_material.label_tag }}
+        {{ form.furniture_material }}
+    </div>
+
+    <div class="photo-field">
+        {{ form.photo_technique.label_tag }}
+        {{ form.photo_technique }}
+    </div>
+
+
+    {{ form.style.label_tag }}
+    {{ form.style }}
+
+    {{ form.starting_bid.label_tag }}
+    {{ form.starting_bid }}
+
+    {{ form.width.label_tag }}
+    {{ form.width }}
+
+    {{ form.height.label_tag }}
+    {{ form.height }}
+
+    {{ form.year.label_tag }}
+    {{ form.year }}
+
+    {{ form.description.label_tag }}
+    {{ form.description }}
+
+    {{ form.main_image.label_tag }}
+    {{ form.main_image }}
+
+    <button type="submit">Add Artwork</button>
+</form>
+
+<script src="{% static 'artworks/artwork_form.js' %}"></script>
