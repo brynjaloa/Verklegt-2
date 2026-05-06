@@ -4,14 +4,56 @@
 {% block content %}
 
 
-<div class="hero">
-    <div class="hero-text">
-        <h2>ArtVault - est. 2026</h2>
-        <p>
-            ArtVault is a web-based art auction platform designed to connect artists...
-        </p>
-    </div>
+<div class="front-box-container">
+    <div class="front-box">
+        <div class="front-box-text">
+            <h2>ArtVault - est. 2026</h2>
+            <p>
+                ArtVault is a web-based art auction platform designed to connect artists,
+                collectors, and buyers in a seamless digital environment.
+                The system allows users to browse artworks, place bids in ongoing auctions,
+                and manage their personal profiles. Artists can list their work for sale,
+                while buyers can track auctions and participate in real time.
+                The platform focuses on intuitive navigation, clear user flows,
+                and an engaging visual design to ensure a smooth and accessible user experience
+                for both new and experienced users.
+            </p>
+        </div>
 
-    <img src="{% static 'images/sample.jpg' %}" alt="art">
+        <div class="front-box-image">
+            <img src="{% static 'images/sample.jpg' %}" alt="art">
+        </div>
+    </div>
 </div>
+
+<h2 class="section-title">Newly added</h2>
+
+<div class="artworks">
+    {% for i in "1234" %}
+    <div class="art-card">
+        <div class="art-box"></div>
+        <p class="price">$$</p>
+    </div>
+    {% endfor %}
+</div>
+
+<h2 class="section-title">Popular</h2>
+
+<div class="artworks">
+    {% for i in "1234" %}
+    <div class="art-card">
+        <div class="art-box"></div>
+        <p class="price">$$</p>
+    </div>
+    {% endfor %}
+</div>
+<div class="artworks">
+    {% for i in "1234" %}
+    <div class="art-card">
+        <div class="art-box"></div>
+        <p class="price">$$</p>
+    </div>
+    {% endfor %}
+</div>
+
 {% endblock %}

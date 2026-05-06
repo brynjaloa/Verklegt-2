@@ -1,9 +1,8 @@
 from django.contrib import admin
-from .models import Artwork
+from .models import Artwork, Seller, ArtworkImage
+
+admin.site.register(Seller)
+admin.site.register(Artwork)
+admin.site.register(ArtworkImage)
 
 
-@admin.register(Artwork)
-class ArtworkAdmin(admin.ModelAdmin):
-    list_display = ("title", "starting_bid_price", "year_created", "is_sold")
-    list_filter = ("is_sold",)
-    search_fields = ("title", "description")
