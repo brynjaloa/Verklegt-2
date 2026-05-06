@@ -11,7 +11,7 @@
 
         <div class="nav-links">
             <a href="#">See all</a>
-            <a href="#">Category</a>
+            <a href="{% url 'category_list' %}">Category</a>
             <a href="#">How to?</a>
             <a href="#">Buy</a>
             <a href="#">Sell</a>
@@ -19,6 +19,6 @@
     </div>
 
     <div class="nav-right">
-        <button class="login-btn">Login</button>
+        <a href="{% url 'account_choice' %}" class="login-btn">Login</a>
     </div>
 </nav>
