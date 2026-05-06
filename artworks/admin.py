@@ -4,6 +4,6 @@ from .models import Artwork
 
 @admin.register(Artwork)
 class ArtworkAdmin(admin.ModelAdmin):
-    list_display = ("title", "starting_bid_price", "year_created", "is_sold")
-    list_filter = ("is_sold",)
+    list_display = ("title", "category", "starting_bid", "year", "status")
+    list_filter = ("category", "status")
     search_fields = ("title", "description")

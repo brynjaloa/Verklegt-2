@@ -34,6 +34,7 @@ nav {
     display: flex;
     align-items: center;
     gap: 30px;
+    margin-left: 240px;
 }
 
 /* SEARCH */
@@ -63,19 +64,19 @@ nav {
 .nav-links a {
     text-decoration: none;
     color: black;
-    font-size: 22px;
+    font-size: 25px;
     font-family: "Times New Roman", Times, serif;
 }
 
 /* LOGIN BUTTON */
 .login-btn {
-    background: #c95b55;
+    background: #be4848;
     color: white;
-    border: none;
     padding: 10px 25px;
     border-radius: 25px;
-    font-size: 25px;
+    font-size: 30px;
     cursor: pointer;
+    border: 1px solid black;
 }
 nav a {
     color: black;
@@ -123,8 +124,10 @@ nav a {
 }
 
 .hero-text h2 {
-    font-size: 28px;
+    font-size: 32px;
     margin-bottom: 10px;
+    font-family: Serif;
+
 }
 
 .hero-text p {
@@ -142,6 +145,7 @@ nav a {
 .section-title {
     font-size: 28px;
     margin: 40px;
+    font-family: Serif;
 }
 
 .artworks {
@@ -157,7 +161,7 @@ nav a {
 .art-box {
     width: 220px;
     height: 180px;
-    background: #ddd; /* grá kassi */
+    background: #ddd;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.2);
 }
@@ -168,7 +172,6 @@ nav a {
 }
 
 /* footer*/
-
 .footer {
     background: #953435;
     color: white;
