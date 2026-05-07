@@ -6,16 +6,20 @@
     <h1 class="login-title">
         Log in to your account
     </h1>
-    <form>
+    <form method="post" action="{% url 'login' %}">
+        {% csrf_token %}
+        {% if form.errors %}
+            <p class="login-error">Invalid username or password.</p>
+        {% endif %}
         <div class="form-row">
             <label>Username:</label>
-            <input type="text">
+            <input type="text" name="username" autocomplete="username" required>
         </div>
         <div class="form-row">
             <label>Password:</label>
-            <input type="password">
+            <input type="password" name="password" autocomplete="current-password" required>
         </div>
-        <button class="login-btn">
+        <button type="submit" class="login-btn">
             Login
         </button>
     </form>
