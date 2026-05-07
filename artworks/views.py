@@ -1,5 +1,8 @@
-from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseForbidden
+from django.shortcuts import render, get_object_or_404, redirect
+
+from .forms import ArtworkForm
 from .models import Artwork
 
 def artwork_list(request):
@@ -62,10 +65,48 @@ def artwork_detail(request, pk):
     artwork = get_object_or_404(Artwork, pk=pk)
     return render(request, "artworks/artwork_detail.html", {"artwork": artwork})
 
-def category_list(request):
-    categories = Artwork.Category.choices
-    return render(request, 'Category/categories.html', {'categories': categories})
 
 @login_required
 def add_artwork(request):
-    return render(request, 'artworks/add_artwork.html')
+    if not hasattr(request.user, "seller"):
+        return redirect("become_seller")
+
+    if request.method == "POST":
+        form = ArtworkForm(request.POST, request.FILES)
+        if form.is_valid():
+            artwork = form.save(commit=False)
+            artwork.seller = request.user.seller
+            artwork.save()
+            return redirect("artwork_detail", pk=artwork.pk)
+    else:
+        form = ArtworkForm()
+
+    return render(request, "artworks/artworks_form.html", {"form": form, "form_title": "Add Artwork", "button_text": "Add Artwork"})
+
+
+@login_required
+def edit_artwork(request, pk):
+    artwork = get_object_or_404(Artwork, pk=pk)
+
+    if not hasattr(request.user, "seller") or artwork.seller != request.user.seller:
+        return HttpResponseForbidden("You cannot edit this artwork.")
+
+    if request.method == "POST":
+        form = ArtworkForm(request.POST, request.FILES, instance=artwork)
+        if form.is_valid():
+            form.save()
+            return redirect("artwork_detail", pk=artwork.pk)
+    else:
+        form = ArtworkForm(instance=artwork)
+
+    return render(request, "artworks/artworks_form.html", {
+        "form": form,
+        "form_title": "Edit Artwork",
+        "button_text": "Save Changes",
+        "artwork": artwork,
+    })
+
+
+def category_list(request):
+    categories = Artwork.Category.choices
+    return render(request, 'Category/categories.html', {'categories': categories})
