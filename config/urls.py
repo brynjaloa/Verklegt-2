@@ -25,6 +25,7 @@ urlpatterns = [
     path("", TemplateView.as_view(template_name="home.html"), name="home"),
     path("artworks/", include("artworks.urls")),
     path('', include('accounts.urls')),
+    
 ]
 
 if settings.DEBUG:
