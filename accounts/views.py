@@ -7,18 +7,8 @@ from .forms import SignUpForm, ProfileForm, SellerForm
 from .models import Profile, Seller
 
 
-def get_or_create_profile(user):
-    name = user.get_full_name() or user.username
-    profile, _ = Profile.objects.get_or_create(user=user, defaults={'name': name})
-    return profile
-
-
 def login_view(request):
     return render(request, 'accounts/login.html')
-
-
-def account_choice_view(request):
-    return render(request, 'accounts/account_choice.html')
 
 
 def signup_view(request):
@@ -47,13 +37,13 @@ def signup_view(request):
 
 @login_required
 def profile_view(request):
-    profile = get_or_create_profile(request.user)
+    profile = request.user.profile
     return render(request, 'accounts/profile.html', {'profile': profile})
 
 
 @login_required
 def edit_profile_view(request):
-    profile = get_or_create_profile(request.user)
+    profile = request.user.profile
 
     if request.method == 'POST':
         form = ProfileForm(request.POST, request.FILES, instance=profile)
@@ -73,8 +63,6 @@ def edit_profile_view(request):
 
 @login_required
 def become_seller_view(request):
-    profile = get_or_create_profile(request.user)
-
     if hasattr(request.user, 'seller'):
         return redirect('profile')
 
@@ -86,8 +74,8 @@ def become_seller_view(request):
             seller.user = request.user
             seller.save()
 
-            profile.is_seller = True
-            profile.save()
+            request.user.profile.is_seller = True
+            request.user.profile.save()
 
             messages.success(request, 'You are now registered as a seller.')
             return redirect('profile')
