@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.contrib.auth.models import User
+from django.http import JsonResponse
 
 from .forms import SignUpForm, ProfileForm, SellerForm
 from .models import Profile, Seller
@@ -33,6 +35,20 @@ def signup_view(request):
         form = SignUpForm()
 
     return render(request, 'accounts/signup.html', {'form': form})
+
+
+def check_username_view(request):
+    username = request.GET.get('username', '').strip()
+    exists = bool(username) and User.objects.filter(username__iexact=username).exists()
+
+    return JsonResponse({'exists': exists})
+
+
+def check_email_view(request):
+    email = request.GET.get('email', '').strip()
+    exists = bool(email) and User.objects.filter(email__iexact=email).exists()
+
+    return JsonResponse({'exists': exists})
 
 
 @login_required
