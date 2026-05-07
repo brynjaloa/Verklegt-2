@@ -1,4 +1,5 @@
 from django.shortcuts import render, get_object_or_404
+from django.contrib.auth.decorators import login_required
 from .models import Artwork
 
 def artwork_list(request):
@@ -64,3 +65,7 @@ def artwork_detail(request, pk):
 def category_list(request):
     categories = Artwork.Category.choices
     return render(request, 'Category/categories.html', {'categories': categories})
+
+@login_required
+def add_artwork(request):
+    return render(request, 'artworks/add_artwork.html')
