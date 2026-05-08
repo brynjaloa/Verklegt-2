@@ -136,3 +136,44 @@ def edit_artwork(request, pk):
 def category_list(request):
     categories = Artwork.Category.choices
     return render(request, 'Category/categories.html', {'categories': categories})
+
+def artwork_see_all(request):
+    medium = request.GET.get('medium')
+    year_from = request.GET.get('year_from')
+    year_to = request.GET.get('year_to')
+    category = request.GET.get('category')
+    style = request.GET.get('style')
+    edition = request.GET.get('edition')
+
+    artworks = Artwork.objects.all()
+
+    if category:
+        artworks = artworks.filter(category=category)
+    if medium:
+        artworks = artworks.filter(painting_medium=medium)
+    if style:
+        artworks = artworks.filter(painting_style=style)
+    if edition:
+        artworks = artworks.filter(edition=edition)
+    if year_from:
+        artworks = artworks.filter(year__gte=year_from)
+    if year_to:
+        artworks = artworks.filter(year__lte=year_to)
+
+    all_styles = list({label: value for value, label in (
+            list(Artwork.PaintingStyle.choices) +
+            list(Artwork.SculptureStyle.choices) +
+            list(Artwork.FurnitureStyle.choices) +
+            list(Artwork.PhotoStyle.choices)
+    )}.items())
+
+    return render(request, 'artworks/see_all.html', {
+        'artworks': artworks,
+        'categories': Artwork.Category.choices,
+        'editions': Artwork.Edition.choices,
+        'painting_mediums': Artwork.PaintingMedium.choices,
+        'sculpture_materials': Artwork.SculptureMaterial.choices,
+        'furniture_materials': Artwork.FurnitureMaterial.choices,
+        'photo_techniques': Artwork.PhotoTechnique.choices,
+        'all_styles': all_styles,
+    })
