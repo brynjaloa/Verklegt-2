@@ -98,6 +98,7 @@
                             {% if artwork.seller.city or artwork.seller.postal_code %}
                              <p>{{ artwork.seller.city }}{% if artwork.seller.city and artwork.seller.postal_code %}, {% endif %}{{ artwork.seller.postal_code }}</p>
                         {% endif %}
+                    {% endif %}
                     </div>
                 </div>
             </details>
