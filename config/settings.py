@@ -43,7 +43,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
-    'storages',
 
     #my apps
     'accounts',
@@ -143,24 +142,6 @@ LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'profile'
 LOGOUT_REDIRECT_URL = 'home'
 
-def get_env_value(name):
-    value = os.getenv(name)
-    if not value or value.startswith("your_"):
-        return None
-    return value
-
-
-AZURE_ACCOUNT_NAME = get_env_value("AZURE_ACCOUNT_NAME")
-AZURE_ACCOUNT_KEY = get_env_value("AZURE_ACCOUNT_KEY")
-AZURE_CONNECTION_STRING = (
-    get_env_value("AZURE_CONNECTION_STRING")
-    or get_env_value("AZURE_STORAGE_CONNECTION_STRING")
-)
-AZURE_CONTAINER = get_env_value("AZURE_CONTAINER") or "media"
-AZURE_CUSTOM_DOMAIN = get_env_value("AZURE_CUSTOM_DOMAIN")
-AZURE_URL_EXPIRATION_SECS = 31536000
-AZURE_OVERWRITE_FILES = False
-
 STORAGES = {
     "default": {
         "BACKEND": "django.core.files.storage.FileSystemStorage",
@@ -169,13 +150,3 @@ STORAGES = {
         "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
     },
 }
-
-if AZURE_CONNECTION_STRING or (AZURE_ACCOUNT_NAME and AZURE_ACCOUNT_KEY):
-    STORAGES["default"] = {
-        "BACKEND": "storages.backends.azure_storage.AzureStorage",
-    }
-    MEDIA_URL = (
-        f"https://{AZURE_CUSTOM_DOMAIN}/"
-        if AZURE_CUSTOM_DOMAIN
-        else f"https://{AZURE_ACCOUNT_NAME}.blob.core.windows.net/{AZURE_CONTAINER}/"
-    )

@@ -1,8 +1,9 @@
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseForbidden
 from django.shortcuts import render, get_object_or_404, redirect
 
 from .forms import ArtworkForm
-from .models import Artwork
+from .models import Artwork, ArtworkImage
 
 def artwork_list(request):
     category = request.GET.get('category')
@@ -60,9 +61,28 @@ def artwork_list(request):
         'styles': styles,
         'mediums': mediums,
     })
+
+
+def home_view(request):
+    recent_artworks = Artwork.objects.filter(is_sold=False).order_by("-listing_date", "-id")[:4]
+
+    return render(request, "home.html", {
+        "recent_artworks": recent_artworks,
+    })
+
+
 def artwork_detail(request, pk):
     artwork = get_object_or_404(Artwork, pk=pk)
-    return render(request, "artworks/artwork_detail.html", {"artwork": artwork})
+    extra_images = list(artwork.images.all())
+
+    if not artwork.main_image and extra_images:
+        extra_images = extra_images[1:]
+
+    return render(request, "artworks/artwork_detail.html", {
+        "artwork": artwork,
+        "primary_image": artwork.primary_image,
+        "extra_images": extra_images,
+    })
 
 
 @login_required
@@ -76,11 +96,41 @@ def add_artwork(request):
             artwork = form.save(commit=False)
             artwork.seller = request.user.seller
             artwork.save()
+            ArtworkImage.objects.create(artwork=artwork, image=form.cleaned_data["second_image"])
+            for image in form.cleaned_data["additional_images"]:
+                ArtworkImage.objects.create(artwork=artwork, image=image)
             return redirect("artwork_detail", pk=artwork.pk)
     else:
         form = ArtworkForm()
 
-    return render(request, "artworks/artworks_form.html", {"form": form})
+    return render(request, "artworks/artworks_form.html", {"form": form, "form_title": "Add Artwork", "button_text": "Add Artwork"})
+
+
+@login_required
+def edit_artwork(request, pk):
+    artwork = get_object_or_404(Artwork, pk=pk)
+
+    if not hasattr(request.user, "seller") or artwork.seller != request.user.seller:
+        return HttpResponseForbidden("You cannot edit this artwork.")
+
+    if request.method == "POST":
+        form = ArtworkForm(request.POST, request.FILES, instance=artwork)
+        if form.is_valid():
+            artwork = form.save()
+            if form.cleaned_data.get("second_image"):
+                ArtworkImage.objects.create(artwork=artwork, image=form.cleaned_data["second_image"])
+            for image in form.cleaned_data["additional_images"]:
+                ArtworkImage.objects.create(artwork=artwork, image=image)
+            return redirect("artwork_detail", pk=artwork.pk)
+    else:
+        form = ArtworkForm(instance=artwork)
+
+    return render(request, "artworks/artworks_form.html", {
+        "form": form,
+        "form_title": "Edit Artwork",
+        "button_text": "Save Changes",
+        "artwork": artwork,
+    })
 
 
 def category_list(request):

@@ -96,6 +96,20 @@ class Artwork(models.Model):
     is_sold = models.BooleanField(default=False)
     listing_date = models.DateField(auto_now_add=True)
 
+    @property
+    def primary_image(self):
+        if self.main_image:
+            return self.main_image
+
+        if not self.pk:
+            return None
+
+        first_image = self.images.first()
+        if first_image:
+            return first_image.image
+
+        return None
+
     def __str__(self):
         return self.title
 

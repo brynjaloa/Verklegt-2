@@ -6,50 +6,53 @@
 <link rel="stylesheet" href="{% static 'css/signup.css' %}">
 <div class="signup-container">
     <h1>Register your account</h1>
-
     <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}
-
+        {% if form.non_field_errors %}
+            <div class="form-errors">
+                {{ form.non_field_errors }}
+            </div>
+        {% endif %}
         <div class="signup-content">
             <div class="left-side">
-
                 <div class="form-row">
-                    <label>Full name:</label>
+                    <label for="{{ form.name.id_for_label }}">Full name:</label>
                     {{ form.name }}
+                    {{ form.name.errors }}
                 </div>
-
                 <div class="form-row">
-                    <label>Username:</label>
+                    <label for="{{ form.username.id_for_label }}">Username:</label>
                     {{ form.username }}
+                    <p id="username-message" class="field-message" aria-live="polite"></p>
+                    {{ form.username.errors }}
                 </div>
-
                 <div class="form-row">
-                    <label>Email:</label>
+                    <label for="{{ form.email.id_for_label }}">Email:</label>
                     {{ form.email }}
+                    <p id="email-message" class="field-message" aria-live="polite"></p>
+                    {{ form.email.errors }}
                 </div>
-
                 <div class="form-row">
-                    <label>Password:</label>
+                    <label for="{{ form.password1.id_for_label }}">Password:</label>
                     {{ form.password1 }}
+                    {{ form.password1.errors }}
                 </div>
-
                 <div class="form-row">
-                    <label>Confirm Password:</label>
+                    <label for="{{ form.password2.id_for_label }}">Confirm Password:</label>
                     {{ form.password2 }}
+                    {{ form.password2.errors }}
                 </div>
-
             </div>
         </div>
-
         <div class="upload-box">
             <p>Upload profile picture</p>
             {{ form.profile_image }}
+            {{ form.profile_image.errors }}
         </div>
-
         <button type="submit" class="signup-btn">
             Sign up
         </button>
-
     </form>
 </div>
+<script src="{% static 'js/signup.js' %}" data-check-username-url="{% url 'check_username' %}" data-check-email-url="{% url 'check_email' %}"></script>
 {% endblock %}

@@ -1,8 +1,76 @@
 from django.contrib import admin
-from .models import Artwork, Seller, ArtworkImage
+from django.core.exceptions import ValidationError
+from django.forms.models import BaseInlineFormSet
+
+from accounts.models import Seller
+from .models import Artwork, ArtworkImage
+
+
+class ArtworkImageInlineFormSet(BaseInlineFormSet):
+    def clean(self):
+        super().clean()
+
+        image_count = 0
+        for form in self.forms:
+            if not hasattr(form, "cleaned_data"):
+                continue
+
+            if form.cleaned_data.get("DELETE"):
+                continue
+
+            if form.cleaned_data.get("image"):
+                image_count += 1
+            elif form.instance.pk and form.instance.image:
+                image_count += 1
+
+        if image_count < 2:
+            raise ValidationError("Must upload two pictures before posting an artwork.")
+
+
+class ArtworkImageInline(admin.TabularInline):
+    model = ArtworkImage
+    formset = ArtworkImageInlineFormSet
+    extra = 2
+    verbose_name_plural = "Artwork images - must upload two pictures"
+    fieldsets = (
+        (None, {
+            "description": "Must upload two pictures. If the form has errors before saving, choose the image files again.",
+            "fields": ("image",),
+        }),
+    )
+
+
+@admin.register(Artwork)
+class ArtworkAdmin(admin.ModelAdmin):
+    inlines = [ArtworkImageInline]
+    fieldsets = (
+        (None, {
+            "fields": (
+                "seller",
+                "title",
+                "category",
+                "starting_bid",
+                "width",
+                "height",
+                "year",
+                "description",
+                "painting_medium",
+                "sculpture_material",
+                "furniture_material",
+                "photo_technique",
+                "painting_style",
+                "sculpture_style",
+                "furniture_style",
+                "photo_style",
+                "edition",
+                "provenance",
+                "is_sold",
+            ),
+        }),
+    )
+    list_display = ("title", "seller", "category", "starting_bid", "is_sold", "listing_date")
+    list_filter = ("category", "is_sold", "listing_date")
+    search_fields = ("title", "description", "seller__name")
+
 
 admin.site.register(Seller)
-admin.site.register(Artwork)
-admin.site.register(ArtworkImage)
-
-
