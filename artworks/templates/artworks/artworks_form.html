@@ -1,6 +1,6 @@
 {% load static %}
 
-<h1>{{ form_title|default:"Add Artwork" }}</h1>
+<h1>{{form_title|default:"Add Artwork"}}</h1>
 
 <form method="POST" enctype="multipart/form-data">
     {% csrf_token %}
@@ -110,7 +110,7 @@
         {{ form.additional_images.errors }}
     </div>
 
-    <button type="submit">{{ button_text|default:"Add Artwork" }}</button>
+    <button type="submit">{{button_text|default:"Add Artwork"}}</button>
 </form>
 
 <script src="{% static 'artworks/artwork_form.js' %}"></script>

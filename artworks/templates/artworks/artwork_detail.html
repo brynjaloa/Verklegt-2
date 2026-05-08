@@ -21,11 +21,13 @@
                             <img src="{{ primary_image.url }}" alt="{{ artwork.title }}">
                         </button>
                     {% endif %}
+
                     {% for image in extra_images %}
                         <button class="artwork-thumbnail" type="button" data-image-url="{{ image.image.url }}" data-image-alt="{{ artwork.title }} picture {{ forloop.counter|add:1 }}">
                             <img src="{{ image.image.url }}" alt="{{ artwork.title }} picture {{ forloop.counter|add:1 }}">
                         </button>
                     {% endfor %}
+
                 </div>
             {% endif %}
         </div>
@@ -34,7 +36,7 @@
             <h1>{{ artwork.title }}</h1>
 
             <p class="artwork-short-description">
-                {{ artwork.description|truncatewords:35|default:"No short description available." }}
+                {{ artwork.description|truncatewords:35|default:"No short description available."}}
             </p>
 
             <p class="artwork-minimum-bid">Minimum bid: ${{ artwork.starting_bid|intcomma }}</p>
@@ -59,24 +61,29 @@
                             <dt>Sculpture Style</dt>
                             <dd>{{ artwork.sculpture_style }}</dd>
                         </div>
+
                         <div>
                             <dt>Size</dt>
                             <dd>{{ artwork.width }}cm x {{ artwork.height }}cm</dd>
                         </div>
+
                         <div>
                             <dt>Year</dt>
                             <dd>{{ artwork.year }}</dd>
                         </div>
+
                         <div>
                             <dt>Edition</dt>
                             <dd>{{ artwork.edition }}</dd>
                         </div>
+
                         {% if artwork.provenance %}
                         <div>
                             <dt>Provenance</dt>
                             <dd>{{ artwork.provenance }}</dd>
                         </div>
                         {% endif %}
+
                     </dl>
                 </div>
             </details>
@@ -94,12 +101,14 @@
                         {% if artwork.seller.bio %}
                             <p>{{ artwork.seller.bio }}</p>
                         {% endif %}
+
                         {% if artwork.seller.seller_type == "Gallery" %}
                             {% if artwork.seller.city or artwork.seller.postal_code %}
-                             <p>{{ artwork.seller.city }}{% if artwork.seller.city and artwork.seller.postal_code %}, {% endif %}{{ artwork.seller.postal_code }}</p>
+                                <p>{{ artwork.seller.city }}{% if artwork.seller.city and artwork.seller.postal_code %}, {% endif %}{{ artwork.seller.postal_code }}</p>
                             {% endif %}
                         {% endif %}
                     </div>
+
                 </div>
             </details>
         </div>
