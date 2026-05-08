@@ -1,0 +1,21 @@
+body {
+    font-family: serif;
+}
+
+.faq-question {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    padding: 12px 0;
+}
+.faq-icon {
+    margin-left: auto;
+    font-size: 20px;
+    color: #666;
+}
+.faq-answer {
+    padding: 8px 32px;
+    color: #444;
+}
+

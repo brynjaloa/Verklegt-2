@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.css">
+
+<style>
+.noUi-connect { background: white; }
+.noUi-horizontal { background: rgba(255,255,255,0.3); border: none; box-shadow: none; height: 6px; }
+.noUi-handle { background: white; border: none; box-shadow: none; border-radius: 50%; width: 20px !important; height: 20px !important; top: -8px !important; cursor: pointer; }
+.noUi-handle::before, .noUi-handle::after { display: none; }
+.noUi-tooltip { background: #6B0000; color: white; border: none; font-size: 11px; padding: 2px 6px; border-radius: 4px; }
+</style>
+
+<div style="padding: 20px;">
+
+    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 24px;">
+        <a href="{% url 'home' %}" style="width: 40px; height: 40px; border-radius: 50%; border: 1px solid #ccc; display: flex; align-items: center; justify-content: center; text-decoration: none; font-size: 18px; color: black;">‹</a>
+        <h1 style="background-color: #C06060; color: white; padding: 8px 24px; border-radius: 24px; margin: 0; font-size: 24px;">All Artworks</h1>
+    </div>
+
+    <div style="display: flex; gap: 24px;">
+
+        <!-- Filter sidebar -->
+        <div style="width: 220px; background: #84302F; border-radius: 12px; margin-top: 200px; padding: 20px; color: white; flex-shrink: 0; align-self: flex-start;">
+            <h2 style="text-align: center; margin-top: 0;">Filters</h2>
+            <form method="GET">
+
+                <p><strong>Category</strong></p>
+                {% for value, label in categories %}
+                <label><input type="checkbox" name="category" value="{{ value }}"> {{ label }}</label><br>
+                {% endfor %}
+                <p><strong>Medium / Material</strong></p>
+                <label style="font-size: 12px; color: rgba(255,255,255,0.7);">Painting</label><br>
+                {% for value, label in painting_mediums %}
+                <label><input type="checkbox" name="medium" value="{{ value }}"> {{ label }}</label><br>
+                {% endfor %}
+                <label style="font-size: 12px; color: rgba(255,255,255,0.7); margin-top: 8px; display: block;">Sculpture</label>
+                {% for value, label in sculpture_materials %}
+                <label><input type="checkbox" name="medium" value="{{ value }}"> {{ label }}</label><br>
+                {% endfor %}
+                <label style="font-size: 12px; color: rgba(255,255,255,0.7); margin-top: 8px; display: block;">Furniture</label>
+                {% for value, label in furniture_materials %}
+                <label><input type="checkbox" name="medium" value="{{ value }}"> {{ label }}</label><br>
+                {% endfor %}
+                <label style="font-size: 12px; color: rgba(255,255,255,0.7); margin-top: 8px; display: block;">Photo</label>
+                {% for value, label in photo_techniques %}
+                <label><input type="checkbox" name="medium" value="{{ value }}"> {{ label }}</label><br>
+                {% endfor %}
+
+                <p><strong>Style</strong></p>
+                {% for label, value in all_styles %}
+                <label><input type="checkbox" name="style" value="{{ value }}"> {{ label }}</label><br>
+                {% endfor %}
+
+                <p><strong>Edition</strong></p>
+                {% for value, label in editions %}
+                <label><input type="checkbox" name="edition" value="{{ value }}"> {{ label }}</label><br>
+                {% endfor %}
+                <p><strong>Year</strong></p>
+                <div style="padding: 0 8px; margin-bottom: 12px;">
+                    <div id="year-slider" style="margin: 16px 0;"></div>
+                    <div style="display: flex; gap: 12px; margin-top: 12px;">
+                        <div style="flex: 1;">
+                            <label style="font-size: 12px; display: block; margin-bottom: 4px;">From</label>
+                            <input type="number" id="year-from-input" name="year_from" min="1800" max="2026"
+                                value="{{ request.GET.year_from|default:'1800' }}"
+                                style="width: 100%; padding: 6px; border-radius: 6px; border: none; text-align: center; box-sizing: border-box;">
+                        </div>
+                        <div style="flex: 1;">
+                            <label style="font-size: 12px; display: block; margin-bottom: 4px;">To</label>
+                            <input type="number" id="year-to-input" name="year_to" min="1800" max="2026"
+                                value="{{ request.GET.year_to|default:'2026' }}"
+                                style="width: 100%; padding: 6px; border-radius: 6px; border: none; text-align: center; box-sizing: border-box;">
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" style="margin-top: 16px; width: 100%; padding: 8px; background: white; color: #8B0000; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">Apply</button>
+            </form>
+        </div>
+
+        <!-- Artwork grid -->
+        <div style="flex: 1;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                <h2 style="margin-top: 50px;">Listings:</h2>
+                <select style="padding: 6px 12px; border-radius: 8px; border: 1px solid #ccc;">
+                    <option>Sort by: Relevance</option>
+                    <option>Sort by: Price (low to high)</option>
+                    <option>Sort by: Price (high to low)</option>
+                </select>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;">
+                {% for artwork in artworks %}
+                <a href="{% url 'artwork_detail' artwork.pk %}" style="text-decoration: none; color: black;">
+                    <div style="border-radius: 8px; overflow: hidden; border: 1px solid #ddd;">
+                        {% if artwork.main_image %}
+                        <img src="{{ artwork.main_image.url }}" style="width: 100%; height: 180px; object-fit: cover;">
+                        {% else %}
+                        <div style="width: 100%; height: 180px; background: #eee;"></div>
+                        {% endif %}
+                        <p style="margin: 8px;">{{ artwork.title }}</p>
+                        <p style="margin: 8px; color: #666;">Min bid: ${{ artwork.starting_bid }}</p>
+                    </div>
+                </a>
+                {% empty %}
+                <p style="color: #999;">No artworks found.</p>
+                {% endfor %}
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.js"></script>
+<script>
+const slider = document.getElementById('year-slider');
+const fromInput = document.getElementById('year-from-input');
+const toInput = document.getElementById('year-to-input');
+
+noUiSlider.create(slider, {
+    start: [parseInt(fromInput.value) || 1800, parseInt(toInput.value) || 2026],
+    connect: true,
+    range: { min: 1800, max: 2026 },
+    step: 1,
+    tooltips: true,
+    format: { to: value => Math.round(value), from: value => Math.round(value) }
+});
+
+slider.noUiSlider.on('update', (values) => {
+    fromInput.value = values[0];
+    toInput.value = values[1];
+});
+
+fromInput.addEventListener('change', () => { slider.noUiSlider.set([fromInput.value, null]); });
+toInput.addEventListener('change', () => { slider.noUiSlider.set([null, toInput.value]); });
+</script>
+
+{% endblock %}
