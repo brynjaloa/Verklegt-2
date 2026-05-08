@@ -1,4 +1,7 @@
-from django.shortcuts import render, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, get_object_or_404, redirect
+
+from .forms import ArtworkForm
 from .models import Artwork
 
 def artwork_list(request):
@@ -60,6 +63,25 @@ def artwork_list(request):
 def artwork_detail(request, pk):
     artwork = get_object_or_404(Artwork, pk=pk)
     return render(request, "artworks/artwork_detail.html", {"artwork": artwork})
+
+
+@login_required
+def add_artwork(request):
+    if not hasattr(request.user, "seller"):
+        return redirect("become_seller")
+
+    if request.method == "POST":
+        form = ArtworkForm(request.POST, request.FILES)
+        if form.is_valid():
+            artwork = form.save(commit=False)
+            artwork.seller = request.user.seller
+            artwork.save()
+            return redirect("artwork_detail", pk=artwork.pk)
+    else:
+        form = ArtworkForm()
+
+    return render(request, "artworks/artworks_form.html", {"form": form})
+
 
 def category_list(request):
     categories = Artwork.Category.choices

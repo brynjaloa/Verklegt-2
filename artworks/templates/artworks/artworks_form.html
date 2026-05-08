@@ -14,26 +14,30 @@
     <div class="painting-field">
         {{ form.painting_medium.label_tag }}
         {{ form.painting_medium }}
+        {{ form.painting_style.label_tag }}
+        {{ form.painting_style }}
     </div>
 
     <div class="sculpture-field">
         {{ form.sculpture_material.label_tag }}
         {{ form.sculpture_material }}
+        {{ form.sculpture_style.label_tag }}
+        {{ form.sculpture_style }}
     </div>
 
     <div class="furniture-field">
         {{ form.furniture_material.label_tag }}
         {{ form.furniture_material }}
+        {{ form.furniture_style.label_tag }}
+        {{ form.furniture_style }}
     </div>
 
     <div class="photo-field">
         {{ form.photo_technique.label_tag }}
         {{ form.photo_technique }}
+        {{ form.photo_style.label_tag }}
+        {{ form.photo_style }}
     </div>
-
-
-    {{ form.style.label_tag }}
-    {{ form.style }}
 
     {{ form.starting_bid.label_tag }}
     {{ form.starting_bid }}
@@ -47,13 +51,19 @@
     {{ form.year.label_tag }}
     {{ form.year }}
 
+    {{ form.edition.label_tag }}
+    {{ form.edition }}
+
+    {{ form.provenance.label_tag }}
+    {{ form.provenance }}
+
     {{ form.description.label_tag }}
     {{ form.description }}
-
+button
     {{ form.main_image.label_tag }}
     {{ form.main_image }}
 
-    <button type="submit">Add Artwork</button>
+    < type="submit">Add Artwork</button>
 </form>
 
 <script src="{% static 'artworks/artwork_form.js' %}"></script>

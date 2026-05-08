@@ -143,10 +143,22 @@ LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'profile'
 LOGOUT_REDIRECT_URL = 'home'
 
-AZURE_ACCOUNT_NAME = os.getenv("AZURE_ACCOUNT_NAME")
-AZURE_ACCOUNT_KEY = os.getenv("AZURE_ACCOUNT_KEY")
-AZURE_CONTAINER = os.getenv("AZURE_CONTAINER", "media")
-AZURE_CUSTOM_DOMAIN = os.getenv("AZURE_CUSTOM_DOMAIN")
+def get_env_value(name):
+    value = os.getenv(name)
+    if not value or value.startswith("your_"):
+        return None
+    return value
+
+
+AZURE_ACCOUNT_NAME = get_env_value("AZURE_ACCOUNT_NAME")
+AZURE_ACCOUNT_KEY = get_env_value("AZURE_ACCOUNT_KEY")
+AZURE_CONNECTION_STRING = (
+    get_env_value("AZURE_CONNECTION_STRING")
+    or get_env_value("AZURE_STORAGE_CONNECTION_STRING")
+)
+AZURE_CONTAINER = get_env_value("AZURE_CONTAINER") or "media"
+AZURE_CUSTOM_DOMAIN = get_env_value("AZURE_CUSTOM_DOMAIN")
+AZURE_URL_EXPIRATION_SECS = 31536000
 AZURE_OVERWRITE_FILES = False
 
 STORAGES = {
@@ -158,7 +170,7 @@ STORAGES = {
     },
 }
 
-if AZURE_ACCOUNT_NAME and AZURE_ACCOUNT_KEY:
+if AZURE_CONNECTION_STRING or (AZURE_ACCOUNT_NAME and AZURE_ACCOUNT_KEY):
     STORAGES["default"] = {
         "BACKEND": "storages.backends.azure_storage.AzureStorage",
     }
