@@ -88,8 +88,8 @@
                 {% for artwork in artworks %}
                 <a href="{% url 'artwork_detail' artwork.pk %}" style="text-decoration: none; color: black;">
                     <div style="border-radius: 8px; overflow: hidden; border: 1px solid #ddd;">
-                        {% if artwork.main_image %}
-                        <img src="{{ artwork.main_image.url }}" style="width: 100%; height: 180px; object-fit: cover;">
+                        {% if artwork.primary_image %}
+                        <img src="{{ artwork.primary_image.url }}" style="width: 100%; height: 180px; object-fit: cover;">
                         {% else %}
                         <div style="width: 100%; height: 180px; background: #eee;"></div>
                         {% endif %}

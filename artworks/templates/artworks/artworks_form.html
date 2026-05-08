@@ -1,59 +1,116 @@
 {% load static %}
 
-<h1>Add Artwork</h1>
+<h1>{{ form_title|default:"Add Artwork" }}</h1>
 
 <form method="POST" enctype="multipart/form-data">
     {% csrf_token %}
+    {% if form.non_field_errors %}
+        {{ form.non_field_errors }}
+    {% endif %}
 
     {{ form.title.label_tag }}
     {{ form.title }}
+    {{ form.title.errors }}
 
     {{ form.category.label_tag }}
     {{ form.category }}
+    {{ form.category.errors }}
 
     <div class="painting-field">
         {{ form.painting_medium.label_tag }}
         {{ form.painting_medium }}
+        {{ form.painting_medium.errors }}
+
+        {{ form.painting_style.label_tag }}
+        {{ form.painting_style }}
+        {{ form.painting_style.errors }}
     </div>
 
     <div class="sculpture-field">
         {{ form.sculpture_material.label_tag }}
         {{ form.sculpture_material }}
+        {{ form.sculpture_material.errors }}
+
+        {{ form.sculpture_style.label_tag }}
+        {{ form.sculpture_style }}
+        {{ form.sculpture_style.errors }}
     </div>
 
     <div class="furniture-field">
         {{ form.furniture_material.label_tag }}
         {{ form.furniture_material }}
+        {{ form.furniture_material.errors }}
+
+        {{ form.furniture_style.label_tag }}
+        {{ form.furniture_style }}
+        {{ form.furniture_style.errors }}
     </div>
 
     <div class="photo-field">
         {{ form.photo_technique.label_tag }}
         {{ form.photo_technique }}
+        {{ form.photo_technique.errors }}
+
+        {{ form.photo_style.label_tag }}
+        {{ form.photo_style }}
+        {{ form.photo_style.errors }}
     </div>
 
-
-    {{ form.style.label_tag }}
-    {{ form.style }}
+    {{ form.edition.label_tag }}
+    {{ form.edition }}
+    {{ form.edition.errors }}
 
     {{ form.starting_bid.label_tag }}
     {{ form.starting_bid }}
+    {{ form.starting_bid.errors }}
 
     {{ form.width.label_tag }}
     {{ form.width }}
+    {{ form.width.errors }}
 
     {{ form.height.label_tag }}
     {{ form.height }}
+    {{ form.height.errors }}
 
     {{ form.year.label_tag }}
     {{ form.year }}
+    {{ form.year.errors }}
 
     {{ form.description.label_tag }}
     {{ form.description }}
+    {{ form.description.errors }}
 
-    {{ form.main_image.label_tag }}
-    {{ form.main_image }}
+    {{ form.provenance.label_tag }}
+    {{ form.provenance }}
+    {{ form.provenance.errors }}
 
-    <button type="submit">Add Artwork</button>
+    <h2>Pictures</h2>
+
+    <div>
+        {{ form.main_image.label_tag }}
+        {{ form.main_image }}
+        {{ form.main_image.errors }}
+    </div>
+
+    <div>
+        {{ form.second_image.label_tag }}
+        {{ form.second_image }}
+        {% if form.second_image.help_text %}
+            <p>{{ form.second_image.help_text }}</p>
+        {% endif %}
+        {{ form.second_image.errors }}
+    </div>
+
+    <div>
+        {{ form.additional_images.label_tag }}
+        {{ form.additional_images }}
+        {% if form.additional_images.help_text %}
+            <p>{{ form.additional_images.help_text }}</p>
+        {% endif %}
+        {{ form.additional_images.errors }}
+    </div>
+
+    <button type="submit">{{ button_text|default:"Add Artwork" }}</button>
 </form>
 
 <script src="{% static 'artworks/artwork_form.js' %}"></script>

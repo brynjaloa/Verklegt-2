@@ -1,26 +1,108 @@
 {% extends "base.html" %}
+{% load static %}
 {% load humanize %}
 
 {% block content %}
-<article class="artwork-detail">
-    <h1>{{ artwork.title }}</h1>
+<link rel="stylesheet" href="{% static 'css/artwork_detail.css' %}?v=3">
 
-    {% if artwork.main_image %}
-        <img class="artwork-detail-image" src="{{ artwork.main_image.url }}" alt="{{ artwork.title }}">
-    {% endif %}
+<article class="artwork-detail-page">
+    <div class="artwork-detail-layout">
+        <div class="artwork-detail-media">
+            {% if primary_image %}
+                <img id="artwork-main-image" class="artwork-detail-main-image" src="{{ primary_image.url }}" alt="{{ artwork.title }}">
+            {% else %}
+                <div class="artwork-detail-placeholder"></div>
+            {% endif %}
 
-    <p>{{ artwork.description }}</p>
-    {% if artwork.furniture_material %}<p>Furniture material: {{ artwork.furniture_material }}</p>{% endif %}
-    {% if artwork.furniture_style %}<p>Furniture style: {{ artwork.furniture_style }}</p>{% endif %}
-    {% if artwork.painting_medium %}<p>Painting medium: {{ artwork.painting_medium }}</p>{% endif %}
-    {% if artwork.painting_style %}<p>Painting style: {{ artwork.painting_style }}</p>{% endif %}
-    {% if artwork.photo_style %}<p>Photo style: {{ artwork.photo_style }}</p>{% endif %}
-    {% if artwork.photo_technique %}<p>Photo technique: {{ artwork.photo_technique }}</p>{% endif %}
-    {% if artwork.sculpture_material %}<p>Sculpture material: {{ artwork.sculpture_material }}</p>{% endif %}
-    {% if artwork.sculpture_style %}<p>Sculpture style: {{ artwork.sculpture_style }}</p>{% endif %}
-    <p>Size: {{ artwork.width }}cm x {{ artwork.height }}cm</p>
-    <p>Year created: {{ artwork.year }}</p>
-    <p>Starting bid: ${{ artwork.starting_bid|intcomma }}</p>
-    <p>Status: {% if artwork.is_sold %}Sold{% else %}Available{% endif %}</p>
+            {% if primary_image or extra_images %}
+                <div class="artwork-extra-images">
+                    {% if primary_image %}
+                        <button class="artwork-thumbnail is-active" type="button" data-image-url="{{ primary_image.url }}" data-image-alt="{{ artwork.title }}">
+                            <img src="{{ primary_image.url }}" alt="{{ artwork.title }}">
+                        </button>
+                    {% endif %}
+                    {% for image in extra_images %}
+                        <button class="artwork-thumbnail" type="button" data-image-url="{{ image.image.url }}" data-image-alt="{{ artwork.title }} picture {{ forloop.counter|add:1 }}">
+                            <img src="{{ image.image.url }}" alt="{{ artwork.title }} picture {{ forloop.counter|add:1 }}">
+                        </button>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="artwork-detail-info">
+            <h1>{{ artwork.title }}</h1>
+
+            <p class="artwork-short-description">
+                {{ artwork.description|truncatewords:35|default:"No short description available." }}
+            </p>
+
+            <p class="artwork-minimum-bid">Minimum bid: ${{ artwork.starting_bid|intcomma }}</p>
+
+            <button class="bid-now-button" type="button">Bid now</button>
+
+            {% if user.is_authenticated and user.seller|default:None == artwork.seller %}
+                <a class="artwork-edit-link" href="{% url 'edit_artwork' artwork.pk %}">Edit artwork</a>
+            {% endif %}
+
+            <details class="artwork-detail-panel">
+                <summary>Information</summary>
+                <div class="artwork-panel-content">
+
+                    <dl class="artwork-facts">
+                        <div>
+                            <dt>Category</dt>
+                            <dd>{{ artwork.category }}</dd>
+                        </div>
+
+                        <div>
+                            <dt>Sculpture Style</dt>
+                            <dd>{{ artwork.sculpture_style }}</dd>
+                        </div>
+                        <div>
+                            <dt>Size</dt>
+                            <dd>{{ artwork.width }}cm x {{ artwork.height }}cm</dd>
+                        </div>
+                        <div>
+                            <dt>Year</dt>
+                            <dd>{{ artwork.year }}</dd>
+                        </div>
+                        <div>
+                            <dt>Edition</dt>
+                            <dd>{{ artwork.edition }}</dd>
+                        </div>
+                        {% if artwork.provenance %}
+                        <div>
+                            <dt>Provenance</dt>
+                            <dd>{{ artwork.provenance }}</dd>
+                        </div>
+                        {% endif %}
+                    </dl>
+                </div>
+            </details>
+
+            <details class="artwork-detail-panel">
+                <summary>Seller information</summary>
+                <div class="artwork-panel-content seller-panel">
+                    {% if artwork.seller.logo %}
+                        <img class="seller-logo" src="{{ artwork.seller.logo.url }}" alt="{{ artwork.seller.name }}">
+                    {% endif %}
+
+                    <div>
+                        <h2>{{ artwork.seller.name }}</h2>
+                        <p>{{ artwork.seller.seller_type }}</p>
+                        {% if artwork.seller.bio %}
+                            <p>{{ artwork.seller.bio }}</p>
+                        {% endif %}
+                        {% if artwork.seller.seller_type == "Gallery" %}
+                            {% if artwork.seller.city or artwork.seller.postal_code %}
+                             <p>{{ artwork.seller.city }}{% if artwork.seller.city and artwork.seller.postal_code %}, {% endif %}{{ artwork.seller.postal_code }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </details>
+        </div>
+    </div>
 </article>
+<script src="{% static 'js/artwork_detail.js' %}?v=1"></script>
 {% endblock %}
