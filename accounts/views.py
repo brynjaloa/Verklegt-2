@@ -54,8 +54,14 @@ def check_email_view(request):
 @login_required
 def profile_view(request):
     profile = request.user.profile
-    return render(request, 'accounts/profile.html', {'profile': profile})
-
+    seller = None
+    if hasattr(request.user, 'seller'):
+        seller = request.user.seller
+    context = {
+        'profile': profile,
+        'seller': seller,
+    }
+    return render(request,'accounts/profile.html',context)
 
 @login_required
 def edit_profile_view(request):
