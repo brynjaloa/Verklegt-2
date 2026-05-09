@@ -1,11 +1,38 @@
 from io import BytesIO
 from pathlib import Path
+from typing import Any, TypeAlias
 
 from django import forms
 from django.core.files.base import ContentFile
 from PIL import Image, UnidentifiedImageError
 
 from .models import Artwork
+
+
+CategoryFields: TypeAlias = dict[str, tuple[str, str]]
+
+CATEGORY_SPECIFIC_FIELDS: CategoryFields = {
+    Artwork.Category.PAINTINGS.value: ("painting_medium", "painting_style"),
+    Artwork.Category.SCULPTURES.value: ("sculpture_material", "sculpture_style"),
+    Artwork.Category.FURNITURE.value: ("furniture_material", "furniture_style"),
+    Artwork.Category.PHOTOS.value: ("photo_technique", "photo_style"),
+}
+
+
+def clear_irrelevant_category_fields(cleaned_data: dict[str, Any] | None) -> dict[str, Any]:
+    cleaned_data = cleaned_data or {}
+    selected_category = cleaned_data.get("category")
+    allowed_fields = set()
+
+    if isinstance(selected_category, str):
+        allowed_fields.update(CATEGORY_SPECIFIC_FIELDS.get(selected_category, ()))
+
+    for field_names in CATEGORY_SPECIFIC_FIELDS.values():
+        for field_name in field_names:
+            if field_name not in allowed_fields:
+                cleaned_data[field_name] = None
+
+    return cleaned_data
 
 
 class MultipleFileInput(forms.ClearableFileInput):
@@ -49,7 +76,8 @@ class ArtworkForm(forms.ModelForm):
         self.fields["main_image"].required = not bool(self.instance and self.instance.main_image)
         self.fields["second_image"].required = not bool(self.instance and self.instance.pk)
 
-    def clean_image_file(self, image):
+    @staticmethod
+    def clean_image_file(image: Any) -> Any:
         if not image:
             return image
 
@@ -74,6 +102,9 @@ class ArtworkForm(forms.ModelForm):
         images = self.cleaned_data.get("additional_images", [])
 
         return [self.clean_image_file(image) for image in images]
+
+    def clean(self):
+        return clear_irrelevant_category_fields(super().clean())
 
     class Meta:
         model = Artwork

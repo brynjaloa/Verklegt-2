@@ -2,57 +2,36 @@
 {% load static %}
 
 {% block content %}
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.css">
+<link rel="stylesheet" href="{% static 'css/artwork_marketplace.css' %}">
 
-<style>
-.noUi-connect { background: white; }
-.noUi-horizontal { background: rgba(255,255,255,0.3); border: none; box-shadow: none; height: 6px; }
-.noUi-handle { background: white;
-    border: none;
-    box-shadow: none;
-    border-radius: 50%;
-    width: 20px !important;
-    height: 20px !important;
-    top: -8px !important;
-    cursor: pointer;
-}
-.noUi-handle::before, .noUi-handle::after { display: none; }
-.noUi-tooltip { background: #6B0000;
-    color: white;
-    border: none;
-    font-size: 11px;
-    padding: 2px 6px;
-    border-radius: 4px;
-}
-
-</style>
-<div style="padding: 20px;">
+<div class="marketplace-page">
 
     <!-- Header -->
-    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 24px;">
-        <a href="{% url 'category_list' %}" style="width: 40px; height: 40px; border-radius: 50%; border: 1px solid #ccc; display: flex; align-items: center; justify-content: center; text-decoration: none; font-size: 18px; color: black;">‹</a>
-        <h1 style="background-color: #C06060; color: white; padding: 8px 24px; border-radius: 24px; margin: 0; font-size: 24px;">{{ category }}</h1>
+    <div class="marketplace-header">
+        <a class="marketplace-back-link" href="{% url 'category_list' %}">‹</a>
+        <h1 class="marketplace-heading">{{ category }}</h1>
     </div>
 
     <!-- Style thumbnails -->
     {% if styles %}
-    <div style="display: flex; gap: 48px; margin-bottom: 48px; justify-content: center; padding: 0 40px;">
+    <div class="style-list">
         {% for value, label in styles %}
-        <a href="?category={{ category }}&style={{ value }}" style="text-decoration: none;">
-            <div style="width: 160px; height: 160px; background: #8B0000; border-radius: 10px; display: flex; align-items: flex-end; justify-content: center; padding: 10px;">
-                <span style="color: white; font-weight: bold;">{{ label }}</span>
+        <a class="style-link" href="?category={{ category }}&style={{ value }}">
+            <div class="style-tile">
+                <span class="style-label">{{ label }}</span>
             </div>
-            <div style="height: 3px; background: #8B0000; margin-top: 6px; border-radius: 2px;"></div>
+            <div class="style-underline"></div>
         </a>
         {% endfor %}
     </div>
     {% endif %}
 
-    <div style="display: flex; gap: 24px;">
+    <div class="marketplace-layout">
 
         <!-- Filter sidebar -->
-        <div style="width: 220px; background: #84302F; border-radius: 12px; padding: 20px; color: white; flex-shrink: 0; align-self: flex-start;">
-            <h2 style="text-align: center; margin-top: 0;">Filters</h2>
+        <div class="filter-sidebar">
+            <h2>Filters</h2>
             <form method="GET">
                 <input type="hidden" name="category" value="{{ category }}">
 
@@ -65,49 +44,32 @@
 
                 <p><strong>Year</strong></p>
                 <br>
-                <div style="padding: 0 8px; margin-bottom: 12px;">
-                    <div id="year-slider" style="margin: 16px 0;"></div>
-                    <div style="display: flex; gap: 12px; margin-top: 12px;">
-                        <div style="flex: 1;">
-                            <label style="font-size: 12px; display: block; margin-bottom: 4px;">From</label>
-                            <input type="number" id="year-from-input" name="year_from" min="1800" max="2025"
-                                value="{{ request.GET.year_from|default:'1800' }}"
-                                style="width: 100%;
-                                    padding: 6px;
-                                    border-radius: 6px;
-                                    border: none;
-                                    text-align: center;
-                                    box-sizing: border-box;">
+                <div class="year-filter">
+                    <div id="year-slider" class="year-slider"></div>
+                    <div class="year-inputs">
+                        <div class="year-input-group">
+                            <label>From</label>
+                            <input type="number" id="year-from-input" name="year_from" min="1300" max="2025"
+                                value="{{ request.GET.year_from|default:'1300' }}">
                         </div>
-                        <div style="flex: 1;">
-                            <label style="font-size: 12px; display: block; margin-bottom: 4px;">To</label>
-                            <input type="number" id="year-to-input" name="year_to" min="1800" max="2025"
-                                value="{{ request.GET.year_to|default:'2025' }}"
-                                style="width: 100%;
-                                    padding: 6px;
-                                    border-radius: 6px;
-                                    border: none;
-                                    text-align: center;
-                                    box-sizing: border-box;">
+                        <div class="year-input-group">
+                            <label>To</label>
+                            <input type="number" id="year-to-input" name="year_to" min="1300" max="2025"
+                                value="{{ request.GET.year_to|default:'2025' }}">
                         </div>
                     </div>
                 </div>
 
-                <button type="submit" style="margin-top: 16px; width: 100%; padding: 8px; background: white; color: #8B0000; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">Apply</button>
+                <button class="filter-button" type="submit">Apply</button>
             </form>
         </div>
 
         <!-- Artwork grid -->
-        <div style="flex: 1;">
-            <div style="display: flex;
-                justify-content: space-between;
-                align-items: center;
-                margin-bottom: 16px;">
+        <div class="listings-area">
+            <div class="listings-toolbar">
 
-                <h2 style="margin: 0;">Listings:</h2>
-                <select style="padding: 6px 12px;
-                    border-radius: 8px;
-                    border: 1px solid #ccc;">
+                <h2>Listings:</h2>
+                <select class="sort-select">
 
                     <option>Sort by: Relevance</option>
                     <option>Sort by: Price (low to high)</option>
@@ -115,27 +77,23 @@
                 </select>
             </div>
 
-            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;">
+            <div class="marketplace-grid">
                 {% for artwork in artworks %}
-                <a href="{% url 'artwork_detail' artwork.pk %}" style="text-decoration: none; color: black;">
-                    <div style="border-radius: 8px;
-                        overflow: hidden;
-                        border: 1px solid #ddd;">
+                <a class="marketplace-card-link" href="{% url 'artwork_detail' artwork.pk %}">
+                    <div class="marketplace-card">
 
                         {% if artwork.primary_image %}
-                            <img src="{{ artwork.primary_image.url }}" style="width: 100%;
-                                height: 180px;
-                                object-fit: cover;">
+                            <img class="marketplace-card-image" src="{{ artwork.primary_image.url }}" alt="{{ artwork.title }}">
                         {% else %}
-                            <div style="width: 100%; height: 180px; background: #eee;"></div>
+                            <div class="marketplace-card-placeholder"></div>
                         {% endif %}
 
-                        <p style="margin: 8px;">{{ artwork.title }}</p>
-                        <p style="margin: 8px; color: #666;">Min bid: ${{ artwork.starting_bid }}</p>
+                        <p>{{ artwork.title }}</p>
+                        <p class="marketplace-card-price">Min bid: ${{ artwork.starting_bid }}</p>
                     </div>
                 </a>
                 {% empty %}
-                    <p style="color: #999;">No artworks found.</p>
+                    <p class="empty-listings">No artworks found.</p>
                 {% endfor %}
             </div>
         </div>

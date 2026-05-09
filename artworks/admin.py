@@ -1,9 +1,16 @@
 from django.contrib import admin
 from django.core.exceptions import ValidationError
+from django import forms
 from django.forms.models import BaseInlineFormSet
 
 from accounts.models import Seller
+from .forms import clear_irrelevant_category_fields
 from .models import Artwork, ArtworkImage
+
+
+class ArtworkAdminForm(forms.ModelForm):
+    def clean(self):
+        return clear_irrelevant_category_fields(super().clean())
 
 
 class ArtworkImageInlineFormSet(BaseInlineFormSet):
@@ -42,6 +49,7 @@ class ArtworkImageInline(admin.TabularInline):
 
 @admin.register(Artwork)
 class ArtworkAdmin(admin.ModelAdmin):
+    form = ArtworkAdminForm
     inlines = [ArtworkImageInline]
     fieldsets = (
         (None, {
@@ -71,6 +79,9 @@ class ArtworkAdmin(admin.ModelAdmin):
     list_display = ("title", "seller", "category", "starting_bid", "is_sold", "listing_date")
     list_filter = ("category", "is_sold", "listing_date")
     search_fields = ("title", "description", "seller__name")
+
+    class Media:
+        js = ("artworks/admin_artwork_form.js",)
 
 
 admin.site.register(Seller)
