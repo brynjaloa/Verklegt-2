@@ -41,6 +41,17 @@
     <div class="profile-layout">
 
         <div class="left-side">
+            {% if not seller %}
+                {% if profile.profile_image %}
+                    <img class="profile-image" src="{{ profile.profile_image.url }}">
+                {% else %}
+
+                    <div class="default-profile">
+                        <div class="default-head"></div>
+                        <div class="default-body"></div>
+                    </div>
+                {% endif %}
+            {% endif %}
 
             <div class="profile-name">
                 {{ profile.name }}
@@ -79,21 +90,43 @@
 
                     <div class="inner-box">
                         <h1>What I'm selling</h1>
-                        <!--placeholder,laga seinna-->
-                        <p>No artworks listed yet.</p>
-                    </div>
+                        <div class="section-line"></div>
+                        {% if artworks %}
+                            <div class="listing-scroll">
+                                {% for artwork in artworks %}
+                                    <a href="{% url 'artwork_detail' artwork.id %}" class="artwork-link">
+
+                                        <div class="listing-left">
+                                            <span class="listing-dot"></span>
+                                            {{ artwork.title }}
+                                        </div>
+
+                                        <span class="listing-action">
+                                            See listing
+                                        </span>
+                                    </a>
+                                {% endfor %}
+                            </div>
+
+                            {% else %}
+                                <p>No artworks listed yet.</p>
+                            {% endif %}
+                            </div>
 
                     <div class="inner-box">
                         <h1>My bids</h1>
+                        <div class="section-line"></div>
                         <p>No bids yet.</p>
                     </div>
 
                     <div class="inner-box">
+                        <div class="section-line"></div>
                         <h1>My buys</h1>
                         <p>No purchases yet.</p>
                     </div>
                 </div>
             {% else %}
+
 
                 <div class="info-box">
 
