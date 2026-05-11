@@ -100,7 +100,19 @@
                         {% endif %}
 
                         <p>{{ artwork.title }}</p>
-                        <p class="marketplace-card-price">Min bid: ${{ artwork.starting_bid }}</p>
+                        {% if artwork.highest_bid %}
+
+                            <p class="marketplace-card-price">
+                                Highest bid:
+                                ${{ artwork.highest_bid.bid_price }}
+                            </p>
+
+                        {% else %}
+                            <p class="marketplace-card-price">
+                                Min bid:
+                                ${{ artwork.starting_bid }}
+                            </p>
+                        {% endif %}
                     </div>
                 </a>
                 {% empty %}

@@ -30,6 +30,7 @@ urlpatterns = [
     path("faq/", TemplateView.as_view(template_name="faq.html"), name="faq"),
     path("about/", TemplateView.as_view(template_name="about.html"), name="about"),
     path("location/", TemplateView.as_view(template_name="location.html"), name="location"),
+    path('bids/', include('bids.urls')),
 
 ]
 

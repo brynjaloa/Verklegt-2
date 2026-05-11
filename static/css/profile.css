@@ -216,3 +216,46 @@ body {
     align-items: center;
     gap: 18px;
 }
+
+.profile-bid{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:15px 0;
+    border-bottom:1px solid #cfcfcf;
+}
+
+.bid-artwork-link{
+    text-decoration:none;
+    color:black;
+    font-size:28px;
+    font-weight:500;
+}
+
+.bid-artwork-link:hover{
+    text-decoration:underline;
+}
+
+.accepted-status{
+    background:#c95555;
+    color:white;
+    padding:10px 24px;
+    border-radius:10px;
+    font-size:20px;
+}
+
+.pending-status{
+    background:#d9d9d9;
+    color:black;
+    padding:10px 24px;
+    border-radius:10px;
+    font-size:20px;
+}
+
+.rejected-status{
+    background:#444;
+    color:white;
+    padding:10px 24px;
+    border-radius:10px;
+    font-size:20px;
+}

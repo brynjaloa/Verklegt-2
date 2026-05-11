@@ -5,6 +5,8 @@ from django.core.paginator import Paginator
 from .forms import ArtworkForm
 from .models import Artwork, ArtworkImage
 
+from bids.models import Bid
+from bids.forms import BidForm
 
 CATEGORY_FILTER_FIELDS = {
     Artwork.Category.PAINTINGS: {
@@ -40,8 +42,12 @@ def artwork_list(request):
     medium = request.GET.get('medium')
     year_from = request.GET.get('year_from')
     year_to = request.GET.get('year_to')
-
     artworks = Artwork.objects.all()
+
+
+    for artwork in artworks:
+        highest_bid = Bid.objects.filter(artwork=artwork).order_by("-bid_price").first()
+        artwork.highest_bid = highest_bid
 
     if category:
         artworks = artworks.filter(category=category)
@@ -80,6 +86,7 @@ def home_view(request):
 
 def artwork_detail(request, pk):
     artwork = get_object_or_404(Artwork, pk=pk)
+    highest_bids = Bid.objects.filter(artwork=artwork).order_by("-bid_price")[:3]
     extra_images = list(artwork.images.all())
     seller = getattr(request.user, "seller", None)
     can_edit_artwork = (
@@ -92,12 +99,59 @@ def artwork_detail(request, pk):
     if not artwork.main_image and extra_images:
         extra_images = extra_images[1:]
 
+    existing_bid = None
+
+    if request.user.is_authenticated:
+        existing_bid = Bid.objects.filter(
+            artwork=artwork,
+            user=request.user
+        ).first()
+
+    if request.method == "POST":
+        if existing_bid:
+            form = BidForm(
+                request.POST,
+                instance=existing_bid
+            )
+
+        else:
+            form = BidForm(request.POST)
+
+        if form.is_valid():
+            bid = form.save(commit=False)
+            bid.artwork = artwork
+            bid.user = request.user
+            bid.save()
+            existing_bid = bid
+
+            return render(request, "artworks/artwork_detail.html", {
+
+                "artwork": artwork,
+                "primary_image": artwork.primary_image,
+                "extra_images": extra_images,
+                "can_edit_artwork": can_edit_artwork,
+                "show_description_toggle": show_description_toggle,
+                "form": form,
+                "existing_bid": existing_bid,
+                "show_popup": True,
+                "highest_bids": highest_bids,
+            })
+
+    else:
+        if existing_bid:
+            form = BidForm(instance=existing_bid)
+        else:
+            form = BidForm()
+
     return render(request, "artworks/artwork_detail.html", {
         "artwork": artwork,
         "primary_image": artwork.primary_image,
         "extra_images": extra_images,
         "can_edit_artwork": can_edit_artwork,
         "show_description_toggle": show_description_toggle,
+        "form": form,
+        "existing_bid": existing_bid,
+        "highest_bids": highest_bids,
     })
 
 
@@ -201,3 +255,19 @@ def artwork_see_all(request):
         'all_styles': all_styles,
         'page_obj': page_obj,
     })
+
+@login_required
+def accept_bid(request, bid_id):
+
+    bid = get_object_or_404(Bid, id=bid_id)
+
+    if bid.artwork.seller != request.user.seller:
+        return HttpResponseForbidden()
+
+    bid.status = "Accepted"
+    bid.save()
+
+    return redirect(
+        "artwork_detail",
+        pk=bid.artwork.id
+    )
