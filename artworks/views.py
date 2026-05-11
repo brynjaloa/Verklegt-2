@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
 from django.shortcuts import render, get_object_or_404, redirect
-
+from django.core.paginator import Paginator
 from .forms import ArtworkForm
 from .models import Artwork, ArtworkImage
 
@@ -186,6 +186,10 @@ def artwork_see_all(request):
             list(Artwork.PhotoStyle.choices)
     )}.items())
 
+    paginator = Paginator(artworks, 24)  # 24 artworks per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
     return render(request, 'artworks/see_all.html', {
         'artworks': artworks,
         'categories': Artwork.Category.choices,
@@ -195,4 +199,5 @@ def artwork_see_all(request):
         'furniture_materials': Artwork.FurnitureMaterial.choices,
         'photo_techniques': Artwork.PhotoTechnique.choices,
         'all_styles': all_styles,
+        'page_obj': page_obj,
     })

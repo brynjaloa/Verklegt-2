@@ -31,8 +31,6 @@ urlpatterns = [
     path("about/", TemplateView.as_view(template_name="about.html"), name="about"),
     path("location/", TemplateView.as_view(template_name="location.html"), name="location"),
 
-
-    
 ]
 
 if settings.DEBUG:

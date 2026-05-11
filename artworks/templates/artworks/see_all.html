@@ -92,7 +92,7 @@
                 </select>
             </div>
             <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;">
-                {% for artwork in artworks %}
+                {% for artwork in page_obj %}
                 <a href="{% url 'artwork_detail' artwork.pk %}" style="text-decoration: none; color: black;">
                     <div style="border-radius: 8px; overflow: hidden; border: 1px solid #ddd;">
                         {% if artwork.main_image %}
@@ -108,6 +108,17 @@
                 <p style="color: #999;">No artworks found.</p>
                 {% endfor %}
             </div>
+            {% if page_obj.has_other_pages %}
+            <div style="display: flex; justify-content: center; gap: 8px; margin-top: 24px;">
+                {% if page_obj.has_previous %}
+                    <a href="?page={{ page_obj.previous_page_number }}" style="padding: 6px 12px; border-radius: 8px; border: 1px solid #ccc; text-decoration: none; color: black;">Previous</a>
+                {% endif %}
+                <span style="padding: 6px 12px;">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}" style="padding: 6px 12px; border-radius: 8px; border: 1px solid #ccc; text-decoration: none; color: black;">Next</a>
+                {% endif %}
+            </div>
+            {% endif %}
         </div>
 
     </div>
@@ -136,5 +147,6 @@ slider.noUiSlider.on('update', (values) => {
 fromInput.addEventListener('change', () => { slider.noUiSlider.set([fromInput.value, null]); });
 toInput.addEventListener('change', () => { slider.noUiSlider.set([null, toInput.value]); });
 </script>
+
 
 {% endblock %}
