@@ -35,7 +35,7 @@ def clear_irrelevant_category_fields(cleaned_data: Optional[dict[str, Any]]) -> 
     return cleaned_data
 
 
-def clear_irrelevant_dimension_fields(cleaned_data: dict[str, Any] | None) -> dict[str, Any]:
+def clear_irrelevant_dimension_fields(cleaned_data: Optional[dict[str, Any]]) -> dict[str, Any]:
     cleaned_data = cleaned_data or {}
 
     if cleaned_data.get("category") != Artwork.Category.FURNITURE.value:
