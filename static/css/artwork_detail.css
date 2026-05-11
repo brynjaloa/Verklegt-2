@@ -76,6 +76,21 @@
     line-height: 1.45;
 }
 
+.description-toggle {
+    margin-left: 6px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: #9b3a35;
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.description-toggle:hover {
+    text-decoration: underline;
+}
+
 .artwork-minimum-bid {
     margin: 0 0 30px;
     font-size: 24px;

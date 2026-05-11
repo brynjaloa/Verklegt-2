@@ -7,13 +7,16 @@ document.addEventListener("DOMContentLoaded", function () {
         return;
     }
 
+    const minYear = parseInt(fromInput.min, 10) || 1300;
+    const maxYear = parseInt(toInput.max, 10) || 2025;
+
     noUiSlider.create(slider, {
         start: [
-            parseInt(fromInput.value, 10) || 1800,
-            parseInt(toInput.value, 10) || 2025,
+            parseInt(fromInput.value, 10) || minYear,
+            parseInt(toInput.value, 10) || maxYear,
         ],
         connect: true,
-        range: { min: 1800, max: 2025 },
+        range: { min: minYear, max: maxYear },
         step: 1,
         tooltips: true,
         format: {

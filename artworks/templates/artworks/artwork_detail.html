@@ -2,9 +2,11 @@
 {% load static %}
 {% load humanize %}
 
-{% block content %}
-<link rel="stylesheet" href="{% static 'css/artwork_detail.css' %}?v=3">
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/artwork_detail.css' %}?v=4">
+{% endblock %}
 
+{% block content %}
 <article class="artwork-detail-page">
     <div class="artwork-detail-layout">
         <div class="artwork-detail-media">
@@ -23,9 +25,11 @@
                     {% endif %}
 
                     {% for image in extra_images %}
-                        <button class="artwork-thumbnail" type="button" data-image-url="{{ image.image.url }}" data-image-alt="{{ artwork.title }} picture {{ forloop.counter|add:1 }}">
-                            <img src="{{ image.image.url }}" alt="{{ artwork.title }} picture {{ forloop.counter|add:1 }}">
+                        {% with picture_number=forloop.counter|add:"1" %}
+                        <button class="artwork-thumbnail" type="button" data-image-url="{{ image.image.url }}" data-image-alt="{{ artwork.title }} picture {{ picture_number }}">
+                            <img src="{{ image.image.url }}" alt="{{ artwork.title }} picture {{ picture_number }}">
                         </button>
+                        {% endwith %}
                     {% endfor %}
 
                 </div>
@@ -36,14 +40,22 @@
             <h1>{{ artwork.title }}</h1>
 
             <p class="artwork-short-description">
-                {{ artwork.description|truncatewords:35|default:"No short description available."}}
+                {% if artwork.description %}
+                    <span class="description-short">{{ artwork.description|truncatewords:35 }}</span>
+                    <span class="description-full" hidden>{{ artwork.description }}</span>
+                    {% if show_description_toggle %}
+                        <button class="description-toggle" type="button" data-expanded="false">See more</button>
+                    {% endif %}
+                {% else %}
+                    No short description available.
+                {% endif %}
             </p>
 
             <p class="artwork-minimum-bid">Minimum bid: ${{ artwork.starting_bid|intcomma }}</p>
 
             <button class="bid-now-button" type="button">Bid now</button>
 
-            {% if user.is_authenticated and user.seller|default:None == artwork.seller %}
+            {% if can_edit_artwork %}
                 <a class="artwork-edit-link" href="{% url 'edit_artwork' artwork.pk %}">Edit artwork</a>
             {% endif %}
 
@@ -57,10 +69,47 @@
                             <dd>{{ artwork.category }}</dd>
                         </div>
 
+                        {% if artwork.category == "Paintings" %}
+                        <div>
+                            <dt>Painting Style</dt>
+                            <dd>{{ artwork.painting_style|default:"None" }}</dd>
+                        </div>
+
+                        <div>
+                            <dt>Painting Medium</dt>
+                            <dd>{{ artwork.painting_medium|default:"None" }}</dd>
+                        </div>
+                        {% elif artwork.category == "Sculptures" %}
                         <div>
                             <dt>Sculpture Style</dt>
-                            <dd>{{ artwork.sculpture_style }}</dd>
+                            <dd>{{ artwork.sculpture_style|default:"None" }}</dd>
                         </div>
+
+                        <div>
+                            <dt>Sculpture Material</dt>
+                            <dd>{{ artwork.sculpture_material|default:"None" }}</dd>
+                        </div>
+                        {% elif artwork.category == "Furniture" %}
+                        <div>
+                            <dt>Furniture Style</dt>
+                            <dd>{{ artwork.furniture_style|default:"None" }}</dd>
+                        </div>
+
+                        <div>
+                            <dt>Furniture Material</dt>
+                            <dd>{{ artwork.furniture_material|default:"None" }}</dd>
+                        </div>
+                        {% elif artwork.category == "Photos" %}
+                        <div>
+                            <dt>Photo Style</dt>
+                            <dd>{{ artwork.photo_style|default:"None" }}</dd>
+                        </div>
+
+                        <div>
+                            <dt>Photo Technique</dt>
+                            <dd>{{ artwork.photo_technique|default:"None" }}</dd>
+                        </div>
+                        {% endif %}
 
                         <div>
                             <dt>Size</dt>
@@ -68,7 +117,7 @@
                         </div>
 
                         <div>
-                            <dt>Year</dt>
+                            <dt>Year created</dt>
                             <dd>{{ artwork.year }}</dd>
                         </div>
 
@@ -114,5 +163,8 @@
         </div>
     </div>
 </article>
-<script src="{% static 'js/artwork_detail.js' %}?v=1"></script>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/artwork_detail.js' %}?v=2"></script>
 {% endblock %}

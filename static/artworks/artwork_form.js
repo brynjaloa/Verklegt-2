@@ -1,6 +1,10 @@
 document.addEventListener("DOMContentLoaded", function () {
     const categorySelect = document.getElementById("id_category");
 
+    if (!categorySelect) {
+        return;
+    }
+
     const fields = {
         Paintings: document.querySelector(".painting-field"),
         Sculptures: document.querySelector(".sculpture-field"),
@@ -8,11 +12,20 @@ document.addEventListener("DOMContentLoaded", function () {
         Photos: document.querySelector(".photo-field"),
     };
 
+    function setFieldGroupState(field, isVisible) {
+        if (!field) {
+            return;
+        }
+
+        field.style.display = isVisible ? "block" : "none";
+        field.querySelectorAll("input, select, textarea").forEach(input => {
+            input.disabled = !isVisible;
+        });
+    }
+
     function hideAllFields() {
         Object.values(fields).forEach(field => {
-            if (field) {
-                field.style.display = "none";
-            }
+            setFieldGroupState(field, false);
         });
     }
 
@@ -22,7 +35,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const selectedCategory = categorySelect.value;
 
         if (fields[selectedCategory]) {
-            fields[selectedCategory].style.display = "block";
+            setFieldGroupState(fields[selectedCategory], true);
         }
     }
 
