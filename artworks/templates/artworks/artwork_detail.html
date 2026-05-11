@@ -152,8 +152,13 @@
                         {% endif %}
 
                         {% if artwork.seller.seller_type == "Gallery" %}
-                            {% if artwork.seller.city or artwork.seller.postal_code %}
-                                <p>{{ artwork.seller.city }}{% if artwork.seller.city and artwork.seller.postal_code %}, {% endif %}{{ artwork.seller.postal_code }}</p>
+                            {% if artwork.seller.street_name or artwork.seller.city or artwork.seller.postal_code %}
+                                <p>
+                                    {% if artwork.seller.street_name %}
+                                        {{ artwork.seller.street_name }}<br>
+                                    {% endif %}
+                                    {{ artwork.seller.city }}{% if artwork.seller.city and artwork.seller.postal_code %}, {% endif %}{{ artwork.seller.postal_code }}
+                                </p>
                             {% endif %}
                         {% endif %}
                     </div>

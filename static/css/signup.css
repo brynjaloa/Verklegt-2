@@ -41,7 +41,9 @@
     margin-bottom:6px;
 }
 
-.signup-container input{
+.signup-container input,
+.signup-container select,
+.signup-container textarea{
     height:38px;
     width:100%;
     align-self:center;
@@ -50,6 +52,18 @@
     padding:0 12px;
     font-size:16px;
     box-sizing:border-box;
+}
+
+.signup-container select{
+    background:white;
+}
+
+.signup-container textarea{
+    min-height:120px;
+    height:auto;
+    padding:10px 12px;
+    font-family:inherit;
+    resize:vertical;
 }
 
 .signup-container input[type="file"]{
@@ -86,6 +100,12 @@
     font-size:14px;
 }
 
+.signup-container .field-help{
+    color:#ffecec;
+    font-size:14px;
+    margin:6px 0 0;
+}
+
 .signup-container .field-message-error,
 .signup-container .errorlist,
 .signup-container .form-errors ul{
@@ -117,6 +137,16 @@
     cursor:pointer;
 }
 
+.seller-signup-container{
+    width:min(92%, 620px);
+}
+
+.form-row-split{
+    display:grid !important;
+    grid-template-columns:1fr 160px;
+    gap:16px;
+}
+
 @media (width <= 640px){
     .signup-container{
         width:min(92%, 352px);
@@ -124,5 +154,9 @@
 
     .signup-content{
         display:block;
+    }
+
+    .form-row-split{
+        grid-template-columns:1fr;
     }
 }
