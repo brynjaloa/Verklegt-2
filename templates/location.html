@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div style="padding: 20px;">
+
+    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 24px;">
+        <a href="/" style="width: 40px; height: 40px; border-radius: 50%; border: 1px solid #ccc; display: flex; align-items: center; justify-content: center; text-decoration: none; font-size: 18px; color: black;">‹</a>
+        <h1 style="background-color: #C06060; color: white; padding: 8px 24px; border-radius: 24px; margin: 0; font-size: 24px;">Location</h1>
+    </div>
+
+    <div style="display: flex; gap: 60px; align-items: flex-start; margin-top: 20px;">
+
+        <!-- Left: address info -->
+        <div style="flex: 1;">
+            <h2 style="font-size: 28px; margin-bottom: 16px;">Visit us</h2>
+
+            <p style="font-size: 16px; margin-bottom: 8px;"><strong>ArtVault Headquarters</strong></p>
+            <p style="font-size: 16px; margin-bottom: 8px;">Laugavegur 15</p>
+            <p style="font-size: 16px; margin-bottom: 8px;">101 Reykjavík</p>
+            <p style="font-size: 16px; margin-bottom: 32px;">Iceland</p>
+
+            <h2 style="font-size: 28px; margin-bottom: 16px;">Opening hours</h2>
+            <p style="font-size: 16px; margin-bottom: 8px;"><strong>Monday – Friday:</strong> 9:00 – 18:00</p>
+            <p style="font-size: 16px; margin-bottom: 8px;"><strong>Saturday:</strong> 10:00 – 16:00</p>
+            <p style="font-size: 16px; margin-bottom: 8px;"><strong>Sunday:</strong> Closed</p>
+
+            <h2 style="font-size: 28px; margin-top: 32px; margin-bottom: 16px;">Contact</h2>
+            <p style="font-size: 16px; margin-bottom: 8px;"><strong>Email:</strong> hello@artvault.is</p>
+            <p style="font-size: 16px; margin-bottom: 8px;"><strong>Phone:</strong> +354 555 0100</p>
+        </div>
+
+        <!-- Right: map embed -->
+        <div style="flex: 2;">
+            <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1736.9!2d-21.9277!3d64.1436!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNjTCsDA4JzM3LjAiTiAyMcKwNTUnMzkuNyJX!5e0!3m2!1sen!2sis!4v1"
+                width="100%"
+                height="550"
+                style="border-radius: 12px; border: none;"
+                allowfullscreen=""
+                loading="lazy">
+            </iframe>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
