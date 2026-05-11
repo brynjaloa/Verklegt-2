@@ -10,7 +10,13 @@
     <!-- Header -->
     <div class="marketplace-header">
         <a class="marketplace-back-link" href="{% url 'category_list' %}">‹</a>
-        <h1 class="marketplace-heading">{{ category }}</h1>
+        <h1 class="marketplace-heading">
+            {% if query %}
+                Search results for "{{ query }}"
+            {% else %}
+                {{ category|default:"All artworks" }}
+            {% endif %}
+        </h1>
     </div>
 
     <!-- Style thumbnails -->
@@ -33,7 +39,12 @@
         <div class="filter-sidebar">
             <h2>Filters</h2>
             <form method="GET">
-                <input type="hidden" name="category" value="{{ category }}">
+                {% if query %}
+                    <input type="hidden" name="q" value="{{ query }}">
+                {% endif %}
+                {% if category %}
+                    <input type="hidden" name="category" value="{{ category }}">
+                {% endif %}
 
                 {% if mediums %}
                     <p><strong>Medium</strong></p>

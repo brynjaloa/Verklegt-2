@@ -35,6 +35,15 @@ def clear_irrelevant_category_fields(cleaned_data: Optional[dict[str, Any]]) -> 
     return cleaned_data
 
 
+def clear_irrelevant_dimension_fields(cleaned_data: dict[str, Any] | None) -> dict[str, Any]:
+    cleaned_data = cleaned_data or {}
+
+    if cleaned_data.get("category") != Artwork.Category.FURNITURE.value:
+        cleaned_data["depth"] = None
+
+    return cleaned_data
+
+
 class MultipleFileInput(forms.ClearableFileInput):
     allow_multiple_selected = True
 
@@ -75,6 +84,12 @@ class ArtworkForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields["main_image"].required = not bool(self.instance and self.instance.main_image)
         self.fields["second_image"].required = not bool(self.instance and self.instance.pk)
+        self.fields["width"].required = False
+        self.fields["height"].required = False
+        self.fields["depth"].required = False
+        self.fields["width"].help_text = "Recommended"
+        self.fields["height"].help_text = "Recommended"
+        self.fields["depth"].help_text = "Recommended for furniture"
 
     @staticmethod
     def clean_image_file(image: Any) -> Any:
@@ -104,7 +119,10 @@ class ArtworkForm(forms.ModelForm):
         return [self.clean_image_file(image) for image in images]
 
     def clean(self):
-        return clear_irrelevant_category_fields(super().clean())
+        cleaned_data = clear_irrelevant_category_fields(super().clean())
+        cleaned_data = clear_irrelevant_dimension_fields(cleaned_data)
+
+        return cleaned_data
 
     class Meta:
         model = Artwork
@@ -114,6 +132,7 @@ class ArtworkForm(forms.ModelForm):
             "starting_bid",
             "width",
             "height",
+            "depth",
             "year",
             "description",
             "main_image",

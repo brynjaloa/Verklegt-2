@@ -1,10 +1,83 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'base.html' %}
+{% load static %}
 
-</body>
-</html>
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/signup.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="signup-container seller-signup-container">
+    <h1>Become a seller</h1>
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+            <div class="form-errors">
+                {{ form.non_field_errors }}
+            </div>
+        {% endif %}
+
+        <div class="signup-content">
+            <div class="left-side">
+                <div class="form-row">
+                    <label for="{{ form.name.id_for_label }}">Name:</label>
+                    {{ form.name }}
+                    {{ form.name.errors }}
+                </div>
+
+                <div class="form-row">
+                    <label for="{{ form.seller_type.id_for_label }}">Seller type:</label>
+                    {{ form.seller_type }}
+                    {{ form.seller_type.errors }}
+                </div>
+
+                <div class="form-row">
+                    <label for="{{ form.street_name.id_for_label }}">Street address:</label>
+                    {{ form.street_name }}
+                    {% if form.street_name.help_text %}
+                        <p class="field-help">{{ form.street_name.help_text }}</p>
+                    {% endif %}
+                    {{ form.street_name.errors }}
+                </div>
+
+                <div class="form-row form-row-split">
+                    <div>
+                        <label for="{{ form.city.id_for_label }}">City:</label>
+                        {{ form.city }}
+                        {{ form.city.errors }}
+                    </div>
+
+                    <div>
+                        <label for="{{ form.postal_code.id_for_label }}">Postal code:</label>
+                        {{ form.postal_code }}
+                        {{ form.postal_code.errors }}
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <label for="{{ form.bio.id_for_label }}">Bio:</label>
+                    {{ form.bio }}
+                    {{ form.bio.errors }}
+                </div>
+            </div>
+        </div>
+
+        <div class="upload-box">
+            <p>Upload logo</p>
+            {{ form.logo }}
+            {{ form.logo.errors }}
+        </div>
+
+        <div class="upload-box">
+            <p>Upload cover image</p>
+            {{ form.cover_image }}
+            {{ form.cover_image.errors }}
+        </div>
+
+        <button type="submit" class="signup-btn">
+            Register as seller
+        </button>
+    </form>
+</div>
+{% endblock %}

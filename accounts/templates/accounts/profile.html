@@ -18,15 +18,15 @@
     </div>
 
 
-    {% if seller.cover_image %}
+    {% if seller and seller.cover_image %}
     <div class="cover-container">
         <img
             class="cover-image" src="{{ seller.cover_image.url }}">
 
         <div class="floating-profile">
 
-            {% if profile.profile_image %}
-                <img class="profile-image" src="{{ profile.profile_image.url }}">
+            {% if seller.logo %}
+                <img class="profile-image" src="{{ seller.logo.url }}" alt="{{ seller.name }}">
 
             {% else %}
                 <div class="default-profile">
@@ -43,9 +43,18 @@
         <div class="left-side">
             {% if not seller %}
                 {% if profile.profile_image %}
-                    <img class="profile-image" src="{{ profile.profile_image.url }}">
+                    <img class="profile-image" src="{{ profile.profile_image.url }}" alt="{{ profile.name }}">
                 {% else %}
 
+                    <div class="default-profile">
+                        <div class="default-head"></div>
+                        <div class="default-body"></div>
+                    </div>
+                {% endif %}
+            {% elif seller and not seller.cover_image %}
+                {% if seller.logo %}
+                    <img class="profile-image" src="{{ seller.logo.url }}" alt="{{ seller.name }}">
+                {% else %}
                     <div class="default-profile">
                         <div class="default-head"></div>
                         <div class="default-body"></div>
@@ -54,12 +63,12 @@
             {% endif %}
 
             <div class="profile-name">
-                {{ profile.name }}
+                {% if seller %}{{ seller.name }}{% else %}{{ profile.name }}{% endif %}
             </div>
 
             {% if seller %}
                 <div class="profile-type">
-                    {{ seller.seller_type }}
+                    Seller type: {{ seller.seller_type }}
                 </div>
             {% endif %}
 
