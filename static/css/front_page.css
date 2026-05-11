@@ -106,13 +106,6 @@ nav {
     object-fit: cover;
 }
 
-.artwork-detail-image {
-    display: block;
-    width: min(100%, 420px);
-    height: auto;
-}
-
-
 .front-box-container {
     padding: 40px;
     background: #f2f2f2;
@@ -120,6 +113,7 @@ nav {
 
 
 .front-box-text {
+    flex: 1;
     color: white;
     max-width: 50%;
     padding-right: 30px;
@@ -137,11 +131,18 @@ nav {
     line-height: 1.6;
 }
 
+.front-box-image {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .front-box-image img {
     width: 450px;
+    max-width: 100%;
     height: auto;
     border-radius: 5px;
-    padding-left: 30px;
 }
 
 
@@ -154,24 +155,235 @@ nav {
 .artworks {
     display: flex;
     justify-content: center;
-    gap: 40px;
+    gap: 64px;
+}
+
+.recent-carousel {
+    display: grid;
+    grid-template-columns: 48px minmax(0, 1fr) 48px;
+    gap: 18px;
+    align-items: center;
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 0 40px;
+}
+
+.recent-carousel-window {
+    overflow: hidden;
+}
+
+.recent-carousel-track {
+    justify-content: flex-start;
+    transition: transform 0.25s ease;
+    will-change: transform;
+}
+
+.recent-carousel .art-card {
+    flex: 0 0 calc((100% - 192px) / 4);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.carousel-arrow {
+    width: 48px;
+    height: 48px;
+    border: 1px solid #cfcfcf;
+    border-radius: 50%;
+    background: white;
+    color: #9b3a35;
+    font-size: 36px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.carousel-arrow:disabled {
+    cursor: default;
+    opacity: 0.35;
 }
 
 .art-card {
     text-align: center;
+    color: black;
+    width: 180px;
+}
+
+.art-image-link,
+.art-image-link:visited,
+.art-image-link:hover,
+.art-image-link:active {
+    display: block;
+    text-decoration: none;
+}
+
+.art-title,
+.price {
+    color: black;
+    text-decoration: none;
+    text-align: center;
+    width: 180px;
 }
 
 .art-box {
-    width: 220px;
+    width: 180px;
     height: 180px;
     background: #ddd;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgb(0 0 0 / 20%);
+    display: block;
+    object-fit: cover;
+}
+
+.art-image-link .art-box {
+    width: 180px;
+    height: 180px;
+}
+
+.art-title {
+    margin: 10px 0 0;
+    font-family: Arial, sans-serif;
+    font-size: 20px;
 }
 
 .price {
-    margin-top: 10px;
+    margin-top: 6px;
+    font-family: Arial, sans-serif;
+    font-size: 18px;
+}
+
+.empty-section {
+    color: #666;
+    font-size: 18px;
+}
+
+.artwork-detail-page {
+    padding: 48px 64px;
+}
+
+.artwork-detail-layout {
+    display: grid;
+    grid-template-columns: minmax(280px, 440px) minmax(320px, 1fr);
+    gap: 56px;
+    align-items: start;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.artwork-detail-media {
+    background: #eee;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.artwork-detail-main-image,
+.artwork-detail-placeholder {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+}
+
+.artwork-detail-placeholder {
+    background: #ddd;
+}
+
+.artwork-detail-info h1 {
+    margin: 0 0 18px;
+    font-size: 36px;
+}
+
+.artwork-short-description {
+    max-width: 560px;
+    margin: 0 0 20px;
+    font-size: 18px;
+    line-height: 1.5;
+}
+
+.artwork-minimum-bid {
+    margin: 0 0 24px;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.artwork-edit-link {
+    display: inline-block;
+    margin-bottom: 22px;
+    color: black;
+}
+
+.artwork-detail-panel {
+    max-width: 620px;
+    border-top: 1px solid #ddd;
+    padding: 16px 0;
+}
+
+.artwork-detail-panel:last-child {
+    border-bottom: 1px solid #ddd;
+}
+
+.artwork-detail-panel summary {
+    cursor: pointer;
     font-size: 20px;
+    font-weight: bold;
+}
+
+.artwork-panel-content {
+    padding-top: 14px;
+    line-height: 1.5;
+}
+
+.artwork-facts {
+    display: grid;
+    gap: 10px;
+    margin: 18px 0 0;
+}
+
+.artwork-facts div {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 18px;
+}
+
+.artwork-facts dt {
+    font-weight: bold;
+}
+
+.artwork-facts dd {
+    margin: 0;
+}
+
+.seller-panel {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+}
+
+.seller-logo {
+    width: 72px;
+    height: 72px;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.seller-panel h2 {
+    margin: 0 0 6px;
+    font-size: 22px;
+}
+
+.seller-panel p {
+    margin: 0 0 8px;
+}
+
+@media (width <= 760px) {
+    .artwork-detail-page {
+        padding: 28px 20px;
+    }
+
+    .artwork-detail-layout {
+        grid-template-columns: 1fr;
+        gap: 28px;
+    }
 }
 
 .profile-link {

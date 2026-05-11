@@ -1,0 +1,233 @@
+.marketplace-page {
+    padding: 20px;
+}
+
+.marketplace-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.marketplace-back-link {
+    width: 40px;
+    height: 40px;
+    border: 1px solid #ccc;
+    border-radius: 50%;
+    color: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    text-decoration: none;
+}
+
+.marketplace-heading {
+    margin: 0;
+    padding: 8px 24px;
+    border-radius: 24px;
+    background-color: #c06060;
+    color: white;
+    font-size: 24px;
+}
+
+.style-list {
+    display: flex;
+    gap: 48px;
+    justify-content: center;
+    margin-bottom: 48px;
+    padding: 0 40px;
+}
+
+.style-link {
+    text-decoration: none;
+}
+
+.style-tile {
+    width: 160px;
+    height: 160px;
+    padding: 10px;
+    border-radius: 10px;
+    background: #8b0000;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+}
+
+.style-label {
+    color: white;
+    font-weight: bold;
+}
+
+.style-underline {
+    height: 3px;
+    margin-top: 6px;
+    border-radius: 2px;
+    background: #8b0000;
+}
+
+.marketplace-layout {
+    display: flex;
+    gap: 24px;
+}
+
+.filter-sidebar {
+    width: 220px;
+    padding: 20px;
+    border-radius: 12px;
+    background: #84302f;
+    color: white;
+    flex-shrink: 0;
+    align-self: flex-start;
+}
+
+.filter-sidebar h2 {
+    margin-top: 0;
+    text-align: center;
+}
+
+.year-filter {
+    padding: 0 8px;
+    margin-bottom: 12px;
+}
+
+.year-slider {
+    margin: 16px 0;
+}
+
+.year-inputs {
+    display: flex;
+    gap: 12px;
+    margin-top: 12px;
+}
+
+.year-input-group {
+    flex: 1;
+}
+
+.year-input-group label {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 12px;
+}
+
+.year-input-group input {
+    width: 100%;
+    padding: 6px;
+    border: none;
+    border-radius: 6px;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.filter-button {
+    width: 100%;
+    margin-top: 16px;
+    padding: 8px;
+    border: none;
+    border-radius: 8px;
+    background: white;
+    color: #8b0000;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.listings-area {
+    flex: 1;
+}
+
+.listings-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+
+.listings-toolbar h2 {
+    margin: 0;
+}
+
+.sort-select {
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+.marketplace-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+}
+
+.marketplace-card-link {
+    color: black;
+    text-decoration: none;
+}
+
+.marketplace-card {
+    overflow: hidden;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+.marketplace-card-image,
+.marketplace-card-placeholder {
+    width: 100%;
+    height: 180px;
+    display: block;
+    object-fit: cover;
+}
+
+.marketplace-card-placeholder {
+    background: #eee;
+}
+
+.marketplace-card p {
+    margin: 8px;
+}
+
+.marketplace-card-price {
+    color: #666;
+}
+
+.empty-listings {
+    color: #999;
+}
+
+/* stylelint-disable selector-class-pattern -- noUiSlider uses these external class names. */
+.noUi-connect {
+    background: white;
+}
+
+.noUi-horizontal {
+    height: 6px;
+    border: none;
+    background: rgb(255 255 255 / 30%);
+    box-shadow: none;
+}
+
+.noUi-handle {
+    width: 20px !important;
+    height: 20px !important;
+    top: -8px !important;
+    border: none;
+    border-radius: 50%;
+    background: white;
+    box-shadow: none;
+    cursor: pointer;
+}
+
+.noUi-handle::before,
+.noUi-handle::after {
+    display: none;
+}
+
+.noUi-tooltip {
+    padding: 2px 6px;
+    border: none;
+    border-radius: 4px;
+    background: #6b0000;
+    color: white;
+    font-size: 11px;
+}
+/* stylelint-enable selector-class-pattern */

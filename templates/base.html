@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="{% static 'css/faq.css' %}">
     <meta charset="UTF-8">
     <title>ArtVault</title>
+    {% block extra_css %}
+    {% endblock %}
 </head>
 <body>
 
@@ -19,5 +21,7 @@
 
     {% include "partials/footer.html" %}
 
+    {% block extra_js %}
+    {% endblock %}
 </body>
 </html>

@@ -21,20 +21,37 @@
         </div>
 
         <div class="front-box-image">
-            <img src="{% static 'images/sample.jpg' %}" alt="art">
+            <img src="/media/Homepage/front-box-pic.jpg" alt="Pink leaf tree">
         </div>
     </div>
 </div>
 
 <h2 class="section-title">Newly added</h2>
 
-<div class="artworks">
-    {% for i in "1234" %}
-    <div class="art-card">
-        <div class="art-box"></div>
-        <p class="price">$$</p>
+<div class="recent-carousel" data-visible-count="4">
+    <button class="carousel-arrow carousel-arrow-left" type="button" aria-label="Previous recently added listings">‹</button>
+
+    <div class="recent-carousel-window">
+        <div class="artworks recent-carousel-track">
+            {% for artwork in recent_artworks %}
+            <div class="art-card">
+                <a href="{% url 'artwork_detail' artwork.pk %}" class="art-image-link" aria-label="{{ artwork.title }}">
+                    {% if artwork.primary_image %}
+                        <img class="art-box" src="{{ artwork.primary_image.url }}" alt="{{ artwork.title }}">
+                    {% else %}
+                        <div class="art-box"></div>
+                    {% endif %}
+                </a>
+                <p class="art-title">{{ artwork.title }}</p>
+                <p class="price">Starting bid is: ${{ artwork.starting_bid }}</p>
+            </div>
+            {% empty %}
+            <p class="empty-section">No artworks have been listed yet.</p>
+            {% endfor %}
+        </div>
     </div>
-    {% endfor %}
+
+    <button class="carousel-arrow carousel-arrow-right" type="button" aria-label="Next recently added listings">›</button>
 </div>
 
 <h2 class="section-title">Popular</h2>
@@ -55,4 +72,5 @@
     </div>
     {% endfor %}
 </div>
+<script src="{% static 'js/home.js' %}"></script>
 {% endblock %}
