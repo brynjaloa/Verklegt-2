@@ -28,6 +28,7 @@ urlpatterns = [
     path("artworks/", include("artworks.urls")),
     path('', include('accounts.urls')),
     path("faq/", TemplateView.as_view(template_name="faq.html"), name="faq"),
+    path('bids/', include('bids.urls')),
     
 ]
 
@@ -36,3 +37,4 @@ if settings.DEBUG:
         settings.MEDIA_URL,
         document_root=settings.MEDIA_ROOT
     )
+
