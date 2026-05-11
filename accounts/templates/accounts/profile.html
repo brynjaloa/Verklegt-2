@@ -63,7 +63,7 @@
             {% endif %}
 
             <div class="profile-name">
-                {{ profile.name }}
+                {% if seller %}{{ seller.name }}{% else %}{{ profile.name }}{% endif %}
             </div>
 
             {% if seller %}
