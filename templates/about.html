@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div style="padding: 20px;">
+
+    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 24px;">
+        <a href="/" style="width: 40px; height: 40px; border-radius: 50%; border: 1px solid #ccc; display: flex; align-items: center; justify-content: center; text-decoration: none; font-size: 18px; color: black;">‹</a>
+        <h1 style="background-color: #C06060; color: white; padding: 8px 24px; border-radius: 24px; margin: 0; font-size: 24px;">About us</h1>
+    </div>
+
+    <div style="display: flex; gap: 60px; align-items: flex-start;">
+
+        <!-- Left: image with red rectangle behind it -->
+        <div style="flex-shrink: 0; text-align: center;">
+            <div style="position: relative; display: inline-block;">
+                <!-- Red rectangle sticking out from the left -->
+                <div style="position: absolute; left: -48px; top: 50%; transform: translateY(50%); width: 780px; height: 1250%; background-color: #8B3A3A; border-radius: 0 12px 12px 0; z-index: 0;"></div>
+                <!-- Image on top -->
+                <img src="{% static '3_founders.webp' %}" alt="Picture of the Founders" style="position: relative; z-index: 1; width: 400px; border-radius: 4px;">
+            </div>
+            <p style="margin-top: 12px; color: #444;">Picture of the Founders</p>
+        </div>
+
+        <!-- Right: text -->
+       <!-- Right: text -->
+        <div style="flex: 1; margin-left: 600px; margin-right: 150px">
+            <h2 style="margin-bottom: 12px; margin-left: 10px">Our story</h2>
+            <p>ArtVault was founded in 2026 by a group of artists and collectors who wanted to create a seamless digital marketplace for art. We believe that great art should be accessible to everyone, and our platform connects artists directly with buyers around the world.</p>
+            <p>Our mission is to provide a transparent, secure, and intuitive platform where artists can list their work and buyers can bid with confidence.</p>
+
+            <h2 style="margin-top: 32px; margin-bottom: 12px; margin-left: 10px">Trustworthy team</h2>
+            <p>Our team consists of passionate individuals with backgrounds in art, technology, and business. We are committed to building a platform that serves both artists and collectors with integrity and care.</p>
+            <p>Every artwork listed on ArtVault goes through a verification process to ensure authenticity and quality. We stand behind every transaction made on our platform.</p>
+            <br>
+            <br>
+            <br>
+
+        </div>
+
+    </div>
+</div>
+{% endblock %}
