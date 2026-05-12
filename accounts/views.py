@@ -10,6 +10,7 @@ from .models import Profile, Seller
 from bids.models import Bid
 
 
+
 def get_or_create_profile(user):
     name = user.get_full_name() or user.username
     profile, _ = Profile.objects.get_or_create(user=user, defaults={'name': name})
@@ -63,7 +64,7 @@ def profile_view(request):
     profile = get_or_create_profile(request.user)
     seller = None
     artworks = Artwork.objects.none()
-    my_bids = Bid.objects.filter(user=request.user)
+    my_bids = Bid.objects.filter(user=request.user).select_related("artwork", "artwork__seller")
 
     if hasattr(request.user, 'seller'):
         seller = request.user.seller

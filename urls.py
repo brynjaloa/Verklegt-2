@@ -10,6 +10,7 @@ urlpatterns = [
     path('accounts/', include('accounts.urls')),
     path('login/', views.login_view, name='login'),
     path('signup/', views.signup_view, name='signup'),
+    path("bids/<int:bid_id>/accept/",views.accept_bid,name="accept_bid"),
+    path('bids/', include('bids.urls')),
 ]
 
-path('bids/', include('bids.urls')),
