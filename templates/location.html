@@ -2,40 +2,40 @@
 {% load static %}
 
 {% block content %}
-<div style="padding: 20px;">
+<link rel="stylesheet" href="{% static 'css/location.css' %}">
 
-    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 24px;">
-        <a href="/" style="width: 40px; height: 40px; border-radius: 50%; border: 1px solid #ccc; display: flex; align-items: center; justify-content: center; text-decoration: none; font-size: 18px; color: black;">‹</a>
-        <h1 style="background-color: #C06060; color: white; padding: 8px 24px; border-radius: 24px; margin: 0; font-size: 24px;">Location - Contact us</h1>
+<div class="location-page">
+
+    <div class="location-header">
+        <a href="/" class="location-back-link">‹</a>
+        <h1 class="location-heading">Location - Contact us</h1>
     </div>
 
-    <div style="display: flex; gap: 60px; align-items: flex-start; margin-top: 20px;">
+    <div class="location-body">
 
-        <!-- Left: address info -->
-        <div style="flex: 1;">
-            <h2 style="font-size: 28px; margin-bottom: 16px; margin-left: 15px;">Visit us</h2>
+        <div class="location-info">
+            <h2>Visit us</h2>
+            <p>ArtVault Headquarters</p>
+            <p>Menntavegur 1</p>
+            <p>101 Reykjavík</p>
+            <p>Iceland</p>
 
-            <p style="font-size: 20px; margin-bottom: 8px; margin-left: 40px">ArtVault Headquarters</p>
-            <p style="font-size: 20px; margin-bottom: 8px; margin-left: 40px">Menntavegur 1</p>
-            <p style="font-size: 20px; margin-bottom: 8px; margin-left: 40px">101 Reykjavík</p>
-            <p style="font-size: 20px; margin-bottom: 32px; margin-left: 40px">Iceland</p>
+            <h2>Opening hours</h2>
+            <p><strong>Monday – Friday:</strong> 8:00 – 18:00</p>
+            <p><strong>Saturday:</strong> 12:00 – 16:00</p>
+            <p><strong>Sunday:</strong> Closed</p>
 
-            <h2 style="font-size: 28px; margin-bottom: 16px; margin-left: 15px">Opening hours</h2>
-            <p style="font-size: 20px; margin-bottom: 8px; margin-left: 40px"><strong>Monday – Friday:</strong> 8:00 – 18:00</p>
-            <p style="font-size: 20px; margin-bottom: 8px; margin-left: 40px"><strong>Saturday:</strong> 12:00 – 16:00</p>
-            <p style="font-size: 20px; margin-bottom: 8px; margin-left: 40px"><strong>Sunday:</strong> Closed</p>
-
-            <h2 style="font-size: 28px; margin-top: 32px; margin-bottom: 16px; margin-left: 15px">Contact</h2>
-            <p style="font-size: 20px; margin-bottom: 8px; margin-left: 40px"><strong>Email:</strong> Customersupport@artvault.is</p>
-            <p style="font-size: 20px; margin-bottom: 8px; margin-left: 40px"><strong>Phone:</strong> +354 823 0833</p>
+            <h2>Contact</h2>
+            <p><strong>Email:</strong> Customersupport@artvault.is</p>
+            <p><strong>Phone:</strong> +354 823 0833</p>
         </div>
 
-        <!-- Right: map embed -->
-        <div style="flex: 3;">
-            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d5597.344668638078!2d-21.92800749973026!3d64.12527397990212!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x48d60b4e184b7e19%3A0xb87126c26f3d3420!2sReykjavik%20University!5e1!3m2!1sen!2sis!4v1778512219679!5m2!1sen!2sis"
+        <div class="location-map">
+            <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d5597.344668638078!2d-21.92800749973026!3d64.12527397990212!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x48d60b4e184b7e19%3A0xb87126c26f3d3420!2sReykjavik%20University!5e1!3m2!1sen!2sis!4v1778512219679!5m2!1sen!2sis"
                 width="1200"
-                height= "550"
-                style="border-radius: 12px; border: none;"
+                height="550"
+                class="location-iframe"
                 allowfullscreen=""
                 loading="lazy">
             </iframe>

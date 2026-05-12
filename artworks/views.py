@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
 from django.shortcuts import render, get_object_or_404, redirect
-
+from django.core.paginator import Paginator
 from .forms import ArtworkForm
 from .models import Artwork, ArtworkImage
 
@@ -73,14 +73,12 @@ def artwork_list(request):
 
     artworks = Artwork.objects.all()
 
-
     for artwork in artworks:
         highest_bid = Bid.objects.filter(artwork=artwork).order_by("-bid_price").first()
         artwork.highest_bid = highest_bid
 
     if query:
         artworks = artworks.filter(title__icontains=query)
-
     if category:
         artworks = artworks.filter(category=category)
 
@@ -101,6 +99,10 @@ def artwork_list(request):
     featured_styles = FEATURED_CATEGORY_STYLES.get(category, styles)
     mediums = category_fields.get("mediums", [])
 
+    paginator = Paginator(artworks, 20)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
     return render(request, 'artworks/artwork_marketplace.html', {
         'artworks': artworks,
         'query': query,
@@ -108,6 +110,7 @@ def artwork_list(request):
         'styles': featured_styles,
         'filter_styles': styles,
         'mediums': mediums,
+        'page_obj': page_obj,
     })
 
 
@@ -294,6 +297,10 @@ def artwork_see_all(request):
             list(Artwork.PhotoStyle.choices)
     )}.items())
 
+    paginator = Paginator(artworks, 20)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
     return render(request, 'artworks/see_all.html', {
         'artworks': artworks,
         'categories': Artwork.Category.choices,
@@ -303,6 +310,7 @@ def artwork_see_all(request):
         'furniture_materials': Artwork.FurnitureMaterial.choices,
         'photo_techniques': Artwork.PhotoTechnique.choices,
         'all_styles': all_styles,
+        'page_obj': page_obj,
     })
 
 @login_required

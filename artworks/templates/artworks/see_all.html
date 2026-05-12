@@ -19,43 +19,49 @@
             <h2>Filters</h2>
             <form method="GET">
 
-                <p><strong>Category</strong></p>
-                {% for value, label in categories %}
-                <label><input type="checkbox" name="category" value="{{ value }}"> {{ label }}</label><br>
-                {% endfor %}
+                <p class="filter-toggle" onclick="toggleFilter('filter-category')"><strong class="filter-toggle">Category ▾</strong></p>
+                <div id="filter-category" class="filter-dropdown">
+                    {% for value, label in categories %}
+                    <label><input type="checkbox" name="category" value="{{ value }}"> {{ label }}</label><br>
+                    {% endfor %}
+                </div>
 
-                <p><strong>Medium / Material</strong></p>
-                <label class="filter-group-label">Painting</label><br>
-                {% for value, label in painting_mediums %}
-                <label><input type="checkbox" name="medium" value="{{ value }}"> {{ label }}</label><br>
-                {% endfor %}
+                <p><strong class="filter-toggle" onclick="toggleFilter('filter-medium')">Medium / Material ▾</strong></p>
+                <div id="filter-medium" class="filter-dropdown">
+                    <label class="filter-group-label">Painting</label><br>
+                    {% for value, label in painting_mediums %}
+                    <label><input type="checkbox" name="medium" value="{{ value }}"> {{ label }}</label><br>
+                    {% endfor %}
+                    <label class="filter-group-label filter-group-label-spaced">Sculpture</label>
+                    {% for value, label in sculpture_materials %}
+                    <label><input type="checkbox" name="medium" value="{{ value }}"> {{ label }}</label><br>
+                    {% endfor %}
+                    <label class="filter-group-label filter-group-label-spaced">Furniture</label>
+                    {% for value, label in furniture_materials %}
+                    <label><input type="checkbox" name="medium" value="{{ value }}"> {{ label }}</label><br>
+                    {% endfor %}
+                    <label class="filter-group-label filter-group-label-spaced">Photo</label>
+                    {% for value, label in photo_techniques %}
+                    <label><input type="checkbox" name="medium" value="{{ value }}"> {{ label }}</label><br>
+                    {% endfor %}
+                </div>
 
-                <label class="filter-group-label filter-group-label-spaced">Sculpture</label>
-                {% for value, label in sculpture_materials %}
-                <label><input type="checkbox" name="medium" value="{{ value }}"> {{ label }}</label><br>
-                {% endfor %}
+                <p><strong class="filter-toggle" onclick="toggleFilter('filter-style')">Style ▾</strong></p>
+                <div id="filter-style" class="filter-dropdown">
+                    {% for label, value in all_styles %}
+                    <label><input type="checkbox" name="style" value="{{ value }}"> {{ label }}</label><br>
+                    {% endfor %}
+                </div>
 
-                <label class="filter-group-label filter-group-label-spaced">Furniture</label>
-                {% for value, label in furniture_materials %}
-                <label><input type="checkbox" name="medium" value="{{ value }}"> {{ label }}</label><br>
-                {% endfor %}
+                <p><strong class="filter-toggle" onclick="toggleFilter('filter-edition')">Edition ▾</strong></p>
+                <div id="filter-edition" class="filter-dropdown">
+                    {% for value, label in editions %}
+                    <label><input type="checkbox" name="edition" value="{{ value }}"> {{ label }}</label><br>
+                    {% endfor %}
+                </div>
 
-                <label class="filter-group-label filter-group-label-spaced">Photo</label>
-                {% for value, label in photo_techniques %}
-                <label><input type="checkbox" name="medium" value="{{ value }}"> {{ label }}</label><br>
-                {% endfor %}
-
-                <p><strong>Style</strong></p>
-                {% for label, value in all_styles %}
-                <label><input type="checkbox" name="style" value="{{ value }}"> {{ label }}</label><br>
-                {% endfor %}
-
-                <p><strong>Edition</strong></p>
-                {% for value, label in editions %}
-                <label><input type="checkbox" name="edition" value="{{ value }}"> {{ label }}</label><br>
-                {% endfor %}
-
-                <p><strong>Year</strong></p>
+                <p><strong>Year:</strong></p>
+                <br>
                 <div class="year-filter-box">
                     <div id="year-slider" class="see-all-year-slider"></div>
                     <div class="year-input-row">
@@ -71,7 +77,6 @@
                         </div>
                     </div>
                 </div>
-
                 <button class="see-all-filter-button" type="submit">Apply</button>
             </form>
         </div>
@@ -109,6 +114,6 @@
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.js"></script>
-<script src="{% static 'artworks/see_all.js' %}"></script>
+<script src="{% static 'js/see_all.js' %}"></script>
 
 {% endblock %}

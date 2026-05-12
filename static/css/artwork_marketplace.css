@@ -230,4 +230,32 @@
     color: white;
     font-size: 11px;
 }
-/* stylelint-enable selector-class-pattern */
+.filter-toggle {
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.filter-dropdown {
+    display: none;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-top: 24px;
+}
+
+.pagination-btn {
+    padding: 6px 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    text-decoration: none;
+    color: black;
+}
+
+.pagination-info {
+    padding: 6px 12px;
+}
