@@ -146,11 +146,12 @@ def artwork_detail(request, pk):
         if existing_bid:
             form = BidForm(
                 request.POST,
-                instance=existing_bid
+                instance=existing_bid,
+                artwork=artwork,
             )
 
         else:
-            form = BidForm(request.POST)
+            form = BidForm(request.POST, artwork=artwork)
 
         if form.is_valid():
             bid = form.save(commit=False)
@@ -169,14 +170,28 @@ def artwork_detail(request, pk):
                 "form": form,
                 "existing_bid": existing_bid,
                 "show_popup": True,
+                "bid_popup_message": "success",
                 "highest_bids": highest_bids,
             })
 
+        return render(request, "artworks/artwork_detail.html", {
+            "artwork": artwork,
+            "primary_image": artwork.primary_image,
+            "extra_images": extra_images,
+            "can_edit_artwork": can_edit_artwork,
+            "show_description_toggle": show_description_toggle,
+            "form": form,
+            "existing_bid": existing_bid,
+            "show_popup": True,
+            "bid_popup_message": "minimum_bid_error",
+            "highest_bids": highest_bids,
+        })
+
     else:
         if existing_bid:
-            form = BidForm(instance=existing_bid)
+            form = BidForm(instance=existing_bid, artwork=artwork)
         else:
-            form = BidForm()
+            form = BidForm(artwork=artwork)
 
     return render(request, "artworks/artwork_detail.html", {
         "artwork": artwork,

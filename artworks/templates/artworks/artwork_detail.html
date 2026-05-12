@@ -94,7 +94,9 @@
                 {% csrf_token %}
 
                 <div class="bid-inputs">
-                    {{ form.bid_price }}
+                    <div class="bid-field">
+                        {{ form.bid_price }}
+                    </div>
                     {{ form.expiration_date }}
                 </div>
 
@@ -256,19 +258,24 @@
 
         <button
             id="close-popup"
-            onclick="document.getElementById('bid-popup').classList.add('hidden')">
+            type="button"
+            data-close-popup>
             X
         </button>
 
-        {% if existing_bid %}
-            <h2>Thank you for re-submitting a bid.</h2>
+        {% if bid_popup_message == "minimum_bid_error" %}
+            <h2>Bid may not be lower than minimum bid, please bid again using a higher bid</h2>
         {% else %}
-            <h2>Thank you for submitting a bid.</h2>
-        {% endif %}
+            {% if existing_bid %}
+                <h2>Thank you for re-submitting a bid.</h2>
+            {% else %}
+                <h2>Thank you for submitting a bid.</h2>
+            {% endif %}
 
-        <p>
-            You will get a notification if it is accepted.
-        </p>
+            <p>
+                You will get a notification if it is accepted.
+            </p>
+        {% endif %}
 
     </div>
 
@@ -276,3 +283,6 @@
 
 {% endblock %}
 
+{% block extra_js %}
+<script src="{% static 'js/artwork_detail.js' %}?v=4"></script>
+{% endblock %}

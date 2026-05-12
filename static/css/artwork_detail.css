@@ -194,12 +194,27 @@
     margin-bottom:20px;
 }
 
+.bid-field {
+    display: flex;
+    flex-direction: column;
+}
+
 .bid-input{
     padding:14px;
     width:220px;
     font-size:18px;
     border:1px solid #999;
     border-radius:4px;
+}
+
+.bid-price-input::-webkit-outer-spin-button,
+.bid-price-input::-webkit-inner-spin-button {
+    margin: 0;
+    appearance: none;
+}
+
+.bid-price-input {
+    appearance: textfield;
 }
 
 .bid-popup{
@@ -217,40 +232,6 @@
 
 .hidden{
     display:none !important;
-}
-
-.bid-popup-content{
-    background:white;
-    width:700px;
-    padding:80px;
-    position:relative;
-}
-
-#close-popup{
-    position:absolute;
-    top:20px;
-    right:20px;
-    background:none;
-    border:none;
-    font-size:30px;
-    cursor:pointer;
-}
-
-.bid-popup{
-    position:fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    background:rgb(0 0 0 / 40%);
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    z-index:999;
-}
-
-.hidden{
-    display:none;
 }
 
 .bid-popup-content{
@@ -368,5 +349,3 @@
         aspect-ratio: 4 / 5;
     }
 }
-
-
