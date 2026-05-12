@@ -253,16 +253,15 @@ def artwork_see_all(request):
 
 @login_required
 def accept_bid(request, bid_id):
-
     bid = get_object_or_404(Bid, id=bid_id)
 
     if bid.artwork.seller != request.user.seller:
         return HttpResponseForbidden()
 
+    Bid.objects.filter(
+        artwork=bid.artwork).exclude(id=bid.id).update(status="Rejected")
+
     bid.status = "Accepted"
     bid.save()
 
-    return redirect(
-        "artwork_detail",
-        pk=bid.artwork.id
-    )
+    return redirect("artwork_detail",pk=bid.artwork.id)

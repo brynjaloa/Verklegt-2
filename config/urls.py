@@ -22,6 +22,7 @@ from django.views.generic import TemplateView
 from artworks.views import home_view
 
 
+
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", home_view, name="home"),
@@ -37,4 +38,3 @@ if settings.DEBUG:
         settings.MEDIA_URL,
         document_root=settings.MEDIA_ROOT
     )
-
