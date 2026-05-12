@@ -27,38 +27,47 @@
             <h2 style="text-align: center; margin-top: 0;">Filters</h2>
             <form method="GET">
 
-                <p><strong>Category</strong></p>
-                {% for value, label in categories %}
-                <label><input type="checkbox" name="category" value="{{ value }}"> {{ label }}</label><br>
-                {% endfor %}
-                <p><strong>Medium / Material</strong></p>
-                <label style="font-size: 12px; color: rgba(255,255,255,0.7);">Painting</label><br>
-                {% for value, label in painting_mediums %}
-                <label><input type="checkbox" name="medium" value="{{ value }}"> {{ label }}</label><br>
-                {% endfor %}
-                <label style="font-size: 12px; color: rgba(255,255,255,0.7); margin-top: 8px; display: block;">Sculpture</label>
-                {% for value, label in sculpture_materials %}
-                <label><input type="checkbox" name="medium" value="{{ value }}"> {{ label }}</label><br>
-                {% endfor %}
-                <label style="font-size: 12px; color: rgba(255,255,255,0.7); margin-top: 8px; display: block;">Furniture</label>
-                {% for value, label in furniture_materials %}
-                <label><input type="checkbox" name="medium" value="{{ value }}"> {{ label }}</label><br>
-                {% endfor %}
-                <label style="font-size: 12px; color: rgba(255,255,255,0.7); margin-top: 8px; display: block;">Photo</label>
-                {% for value, label in photo_techniques %}
-                <label><input type="checkbox" name="medium" value="{{ value }}"> {{ label }}</label><br>
-                {% endfor %}
+                <p><strong style="cursor: pointer;" onclick="toggleFilter('filter-category')">Category ▾</strong></p>
+                <div id="filter-category" style="display: none;">
+                    {% for value, label in categories %}
+                    <label><input type="checkbox" name="category" value="{{ value }}"> {{ label }}</label><br>
+                    {% endfor %}
+                </div>
+                <p><strong style="cursor: pointer;" onclick="toggleFilter('filter-medium')">Medium / Material ▾</strong></p>
+                <div id="filter-medium" style="display: none;">
+                    <label style="font-size: 12px; color: rgba(255,255,255,0.7);">Painting</label><br>
+                    {% for value, label in painting_mediums %}
+                    <label><input type="checkbox" name="medium" value="{{ value }}"> {{ label }}</label><br>
+                    {% endfor %}
+                    <label style="font-size: 12px; color: rgba(255,255,255,0.7); margin-top: 8px; display: block;">Sculpture</label>
+                    {% for value, label in sculpture_materials %}
+                    <label><input type="checkbox" name="medium" value="{{ value }}"> {{ label }}</label><br>
+                    {% endfor %}
+                    <label style="font-size: 12px; color: rgba(255,255,255,0.7); margin-top: 8px; display: block;">Furniture</label>
+                    {% for value, label in furniture_materials %}
+                    <label><input type="checkbox" name="medium" value="{{ value }}"> {{ label }}</label><br>
+                    {% endfor %}
+                    <label style="font-size: 12px; color: rgba(255,255,255,0.7); margin-top: 8px; display: block;">Photo</label>
+                    {% for value, label in photo_techniques %}
+                    <label><input type="checkbox" name="medium" value="{{ value }}"> {{ label }}</label><br>
+                    {% endfor %}
+                </div>
 
-                <p><strong>Style</strong></p>
-                {% for label, value in all_styles %}
-                <label><input type="checkbox" name="style" value="{{ value }}"> {{ label }}</label><br>
-                {% endfor %}
+                <p><strong style="cursor: pointer;" onclick="toggleFilter('filter-style')">Style ▾</strong></p>
+                <div id="filter-style" style="display: none;">
+                    {% for label, value in all_styles %}
+                    <label><input type="checkbox" name="style" value="{{ value }}"> {{ label }}</label><br>
+                    {% endfor %}
+                </div>
 
-                <p><strong>Edition</strong></p>
-                {% for value, label in editions %}
-                <label><input type="checkbox" name="edition" value="{{ value }}"> {{ label }}</label><br>
-                {% endfor %}
-                <p><strong>Year</strong></p>
+                <p><strong style="cursor: pointer;" onclick="toggleFilter('filter-edition')">Edition ▾</strong></p>
+                <div id="filter-edition" style="display: none;">
+                    {% for value, label in editions %}
+                    <label><input type="checkbox" name="edition" value="{{ value }}"> {{ label }}</label><br>
+                    {% endfor %}
+                </div>
+                <p><strong>Year:</strong></p>
+                <br>
                 <div style="padding: 0 8px; margin-bottom: 12px;">
                     <div id="year-slider" style="margin: 16px 0;"></div>
                     <div style="display: flex; gap: 12px; margin-top: 12px;">
@@ -146,6 +155,13 @@ slider.noUiSlider.on('update', (values) => {
 
 fromInput.addEventListener('change', () => { slider.noUiSlider.set([fromInput.value, null]); });
 toInput.addEventListener('change', () => { slider.noUiSlider.set([null, toInput.value]); });
+</script>
+
+<script>
+function toggleFilter(id) {
+    const el = document.getElementById(id);
+    el.style.display = el.style.display === 'none' ? 'block' : 'none';
+}
 </script>
 
 
