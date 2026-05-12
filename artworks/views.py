@@ -35,19 +35,51 @@ CATEGORY_FILTER_FIELDS = {
     },
 }
 
+FEATURED_CATEGORY_STYLES = {
+    Artwork.Category.PAINTINGS: (
+        (Artwork.PaintingStyle.MODERNISM.value, "Modernism"),
+        (Artwork.PaintingStyle.SURREALISM.value, "Surrealism"),
+        (Artwork.PaintingStyle.REALISM.value, "Realism"),
+        (Artwork.PaintingStyle.ABSTRACT_ART.value, "Abstract art"),
+    ),
+    Artwork.Category.SCULPTURES: (
+        (Artwork.SculptureStyle.SURREALISM.value, Artwork.SculptureStyle.SURREALISM.label),
+        (Artwork.SculptureStyle.CONTEMPORARY.value, "Contemporary"),
+        (Artwork.SculptureStyle.MODERN_ART.value, "Modern art"),
+        (Artwork.SculptureStyle.KINETIC_ART.value, "Kinetic art"),
+    ),
+    Artwork.Category.PHOTOS: (
+        (Artwork.PhotoStyle.LANDSCAPE.value, Artwork.PhotoStyle.LANDSCAPE.label),
+        (Artwork.PhotoStyle.PORTRAIT.value, Artwork.PhotoStyle.PORTRAIT.label),
+        (Artwork.PhotoStyle.ARCHITECTURAL.value, "Architectural"),
+        (Artwork.PhotoStyle.ABSTRACT.value, "Abstract"),
+    ),
+    Artwork.Category.FURNITURE: (
+        (Artwork.FurnitureStyle.MINIMALISM.value, Artwork.FurnitureStyle.MINIMALISM.label),
+        (Artwork.FurnitureStyle.ART_DECO.value, Artwork.FurnitureStyle.ART_DECO.label),
+        (Artwork.FurnitureStyle.MODERNISM.value, "Modern"),
+        (Artwork.FurnitureStyle.CONTEMPORARY.value, Artwork.FurnitureStyle.CONTEMPORARY.label),
+    ),
+}
+
 
 def artwork_list(request):
+    query = request.GET.get('q', '').strip()
     category = request.GET.get('category')
     style = request.GET.get('style')
     medium = request.GET.get('medium')
     year_from = request.GET.get('year_from')
     year_to = request.GET.get('year_to')
+
     artworks = Artwork.objects.all()
 
 
     for artwork in artworks:
         highest_bid = Bid.objects.filter(artwork=artwork).order_by("-bid_price").first()
         artwork.highest_bid = highest_bid
+
+    if query:
+        artworks = artworks.filter(title__icontains=query)
 
     if category:
         artworks = artworks.filter(category=category)
@@ -66,12 +98,15 @@ def artwork_list(request):
         artworks = artworks.filter(year__lte=year_to)
 
     styles = category_fields.get("styles", [])
+    featured_styles = FEATURED_CATEGORY_STYLES.get(category, styles)
     mediums = category_fields.get("mediums", [])
 
     return render(request, 'artworks/artwork_marketplace.html', {
         'artworks': artworks,
+        'query': query,
         'category': category,
-        'styles': styles,
+        'styles': featured_styles,
+        'filter_styles': styles,
         'mediums': mediums,
     })
 
@@ -175,7 +210,11 @@ def add_artwork(request):
     else:
         form = ArtworkForm()
 
-    return render(request, "artworks/artworks_form.html", {"form": form, "form_title": "Add Artwork", "button_text": "Add Artwork"})
+    return render(request, "artworks/artworks_form.html", {
+        "form": form,
+        "form_title": "Add Artwork",
+        "button_text": "Add Artwork",
+    })
 
 
 @login_required

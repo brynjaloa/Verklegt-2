@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.http import JsonResponse
 from artworks.models import Artwork
-from .forms import SignUpForm, ProfileForm, SellerForm
+from .forms import SignUpForm, ProfileForm, SellerForm, SellerEditForm
 from .models import Profile, Seller
 from bids.models import Bid
 
@@ -81,21 +81,39 @@ def profile_view(request):
 @login_required
 def edit_profile_view(request):
     profile = get_or_create_profile(request.user)
+    seller = getattr(request.user, 'seller', None)
 
     if request.method == 'POST':
-        form = ProfileForm(request.POST, request.FILES, instance=profile)
+        if seller:
+            seller_form = SellerEditForm(request.POST, request.FILES, instance=seller)
 
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Profile updated successfully.')
-            return redirect('profile')
+            if seller_form.is_valid():
+                seller_form.save()
+                messages.success(request, 'Seller information updated successfully.')
+                return redirect('profile')
+
+            messages.error(request, 'Something went wrong. Please try again.')
+            profile_form = None
         else:
+            profile_form = ProfileForm(request.POST, request.FILES, instance=profile)
+            seller_form = None
+
+            if profile_form.is_valid():
+                profile_form.save()
+                messages.success(request, 'Profile updated successfully.')
+                return redirect('profile')
+
             messages.error(request, 'Something went wrong. Please try again.')
 
     else:
-        form = ProfileForm(instance=profile)
+        profile_form = ProfileForm(instance=profile) if not seller else None
+        seller_form = SellerEditForm(instance=seller) if seller else None
 
-    return render(request, 'accounts/edit_profile.html', {'form': form})
+    return render(request, 'accounts/edit_profile.html', {
+        'profile_form': profile_form,
+        'seller_form': seller_form,
+        'seller': seller,
+    })
 
 
 @login_required

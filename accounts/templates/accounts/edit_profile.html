@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/signup.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="signup-container seller-signup-container">
+    <h1>{% if seller %}Edit seller profile{% else %}Edit profile{% endif %}</h1>
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        {% if messages %}
+            <div class="form-messages">
+                {% for message in messages %}
+                    <p class="form-message {{ message.tags }}">{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {% if seller %}
+            {% if seller_form.non_field_errors %}
+                <div class="form-errors">
+                    {{ seller_form.non_field_errors }}
+                </div>
+            {% endif %}
+
+            <div class="signup-content">
+                <div class="left-side">
+                    <div class="form-row">
+                        <label for="{{ seller_form.name.id_for_label }}">Name:</label>
+                        {{ seller_form.name }}
+                        {{ seller_form.name.errors }}
+                    </div>
+
+                    <div class="form-row">
+                        <label for="{{ seller_form.street_name.id_for_label }}">Street address:</label>
+                        {{ seller_form.street_name }}
+                        {% if seller_form.street_name.help_text %}
+                            <p class="field-help">{{ seller_form.street_name.help_text }}</p>
+                        {% endif %}
+                        {{ seller_form.street_name.errors }}
+                    </div>
+
+                    <div class="form-row form-row-split">
+                        <div>
+                            <label for="{{ seller_form.city.id_for_label }}">City:</label>
+                            {{ seller_form.city }}
+                            {{ seller_form.city.errors }}
+                        </div>
+
+                        <div>
+                            <label for="{{ seller_form.postal_code.id_for_label }}">Postal code:</label>
+                            {{ seller_form.postal_code }}
+                            {{ seller_form.postal_code.errors }}
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <label for="{{ seller_form.bio.id_for_label }}">Bio:</label>
+                        {{ seller_form.bio }}
+                        {{ seller_form.bio.errors }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="upload-box">
+                <p>Change logo</p>
+                {% if seller.logo %}
+                    <img class="current-profile-preview" src="{{ seller.logo.url }}" alt="{{ seller.name }}">
+                {% endif %}
+                {{ seller_form.logo }}
+                {{ seller_form.logo.errors }}
+            </div>
+
+            <div class="upload-box">
+                <p>Change cover photo</p>
+                {% if seller.cover_image %}
+                    <img class="current-cover-preview" src="{{ seller.cover_image.url }}" alt="{{ seller.name }} cover photo">
+                {% endif %}
+                {{ seller_form.cover_image }}
+                {{ seller_form.cover_image.errors }}
+            </div>
+        {% else %}
+            {% if profile_form.non_field_errors %}
+                <div class="form-errors">
+                    {{ profile_form.non_field_errors }}
+                </div>
+            {% endif %}
+
+            <div class="signup-content">
+                <div class="left-side">
+                    <div class="form-row">
+                        <label for="{{ profile_form.name.id_for_label }}">Name:</label>
+                        {{ profile_form.name }}
+                        {{ profile_form.name.errors }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="upload-box">
+                <p>Change profile picture</p>
+                {% if profile_form.instance.profile_image %}
+                    <img class="current-profile-preview" src="{{ profile_form.instance.profile_image.url }}" alt="{{ profile_form.instance.name }}">
+                {% endif %}
+                {{ profile_form.profile_image }}
+                {{ profile_form.profile_image.errors }}
+            </div>
+        {% endif %}
+
+        <button type="submit" class="signup-btn">
+            Save changes
+        </button>
+    </form>
+</div>
+{% endblock %}

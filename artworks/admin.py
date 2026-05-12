@@ -60,6 +60,7 @@ class ArtworkAdmin(admin.ModelAdmin):
                 "starting_bid",
                 "width",
                 "height",
+                "depth",
                 "year",
                 "description",
                 "painting_medium",

@@ -72,3 +72,44 @@ class SellerForm(forms.ModelForm):
             'cover_image',
             'bio',
         ]
+
+
+class SellerEditForm(forms.ModelForm):
+    address_help_text = "This address is only shown publicly for gallery sellers."
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        placeholders = {
+            'name': 'Seller or gallery name',
+            'street_name': 'Street address',
+            'city': 'City',
+            'postal_code': 'Postal code',
+            'bio': 'Tell buyers about you or your gallery',
+        }
+
+        for field_name, field in self.fields.items():
+            field.widget.attrs.setdefault('class', 'seller-field')
+
+            if field_name in placeholders:
+                field.widget.attrs.setdefault('placeholder', placeholders[field_name])
+
+        self.fields['name'].required = True
+        self.fields['street_name'].required = True
+        self.fields['city'].required = True
+        self.fields['postal_code'].required = True
+        self.fields['bio'].required = True
+        self.fields['bio'].widget.attrs.setdefault('rows', 5)
+        self.fields['street_name'].help_text = self.address_help_text
+
+    class Meta:
+        model = Seller
+        fields = [
+            'name',
+            'street_name',
+            'city',
+            'postal_code',
+            'logo',
+            'cover_image',
+            'bio',
+        ]

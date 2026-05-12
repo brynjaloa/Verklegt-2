@@ -2,6 +2,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const mainImage = document.getElementById("artwork-main-image");
     const thumbnails = document.querySelectorAll(".artwork-thumbnail");
     const descriptionToggle = document.querySelector(".description-toggle");
+    const bidPopup = document.getElementById("bid-popup");
+    const closePopupButton = document.getElementById("close-popup");
 
     if (mainImage && thumbnails.length > 0) {
         thumbnails.forEach(thumbnail => {
@@ -26,6 +28,12 @@ document.addEventListener("DOMContentLoaded", function () {
             fullText.hidden = isExpanded;
             descriptionToggle.dataset.expanded = isExpanded ? "false" : "true";
             descriptionToggle.textContent = isExpanded ? "See more..." : "See less";
+        });
+    }
+
+    if (bidPopup && closePopupButton) {
+        closePopupButton.addEventListener("click", function () {
+            bidPopup.classList.add("hidden");
         });
     }
 });

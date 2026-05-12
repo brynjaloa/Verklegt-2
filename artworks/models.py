@@ -9,9 +9,18 @@ class Artwork(models.Model):
         PHOTOS = "Photos", "Photos"
 
     class PaintingMedium(models.TextChoices):
-        OIL = "Oil", "Oil"
-        WATER = "Water", "Water"
-        ACRYLIC = "Acrylic", "Acrylic"
+        OIL = "Oil painting", "Oil painting"
+        WATERCOLOR = "Watercolor painting", "Watercolor painting"
+        ACRYLIC = "Acrylic painting", "Acrylic painting"
+        GOUACHE = "Gouache", "Gouache"
+        ENCAUSTIC = "Encaustic", "Encaustic"
+        TEMPERA = "Tempera", "Tempera"
+        FRESCO = "Fresco", "Fresco"
+        INK = "Ink", "Ink"
+        CHARCOAL = "Charcoal", "Charcoal"
+        CHALK = "Chalk", "Chalk"
+        GRAPHITE = "Graphite", "Graphite"
+        SPRAY_PAINTING = "Spray Painting", "Spray Painting"
         OTHER = "Other", "Other"
 
     class SculptureMaterial(models.TextChoices):
@@ -22,44 +31,103 @@ class Artwork(models.Model):
         OTHER = "Other", "Other"
 
     class FurnitureMaterial(models.TextChoices):
+        TEXTILE = "Textile", "Textile"
         WOOD = "Wood", "Wood"
         METAL = "Metal", "Metal"
+        PLASTIC = "Plastic", "Plastic"
+        LEATHER = "Leather", "Leather"
+        ARTIFICIAL_LEATHER = "Artificial leather", "Artificial leather"
         GLASS = "Glass", "Glass"
+        STEEL = "Steel", "Steel"
+        CONCRETE = "Concrete", "Concrete"
+        MARBLE = "Marble", "Marble"
+        BRONZE = "Bronze", "Bronze"
+        STONE = "Stone", "Stone"
         OTHER = "Other", "Other"
 
     class PhotoTechnique(models.TextChoices):
         DIGITAL = "Digital", "Digital"
         FILM = "Film", "Film"
-        BLACK_AND_WHITE = "Black & White", "Black & White"
         OTHER = "Other", "Other"
 
     class PaintingStyle(models.TextChoices):
-        IMPRESSIONISM = 'Impressionism', 'Impressionism'
-        MODERNISM = 'Modernism', 'Modernism'
-        SURREALISM = 'Surrealism', 'Surrealism'
-        REALISM = 'Realism', 'Realism'
-        OTHER = 'Other', 'Other'
+        RENAISSANCE = "Renaissance (14th - 17th century)", "Renaissance (14th - 17th century)"
+        BAROQUE = "Baroque (17th - mid 18th century)", "Baroque (17th - mid 18th century)"
+        ROCOCO = "Rococo (Early 18th century)", "Rococo (Early 18th century)"
+        NEOCLASSICISM = "Neoclassicism (18th - 19th century)", "Neoclassicism (18th - 19th century)"
+        ROMANTICISM = "Romanticism (1750 - 1890)", "Romanticism (1750 - 1890)"
+        REALISM = "Realism (1830 - )", "Realism (1830 - )"
+        IMPRESSIONISM = "Impressionism (1870 - 1880s)", "Impressionism (1870 - 1880s)"
+        POST_IMPRESSIONISM = "Post-Impressionism (1886 - 1905)", "Post-Impressionism (1886 - 1905)"
+        EXPRESSIONISM = "Expressionism (1905 - 1920s)", "Expressionism (1905 - 1920s)"
+        FAUVISM = "Fauvism (1905 - 1908)", "Fauvism (1905 - 1908)"
+        CUBISM = "Cubism (1907 - 1914)", "Cubism (1907 - 1914)"
+        SURREALISM = "Surrealism (1920s - )", "Surrealism (1920s - )"
+        ABSTRACT_ART = "Abstract Art (1910s - )", "Abstract Art (1910s - )"
+        FUTURISM = "Futurism (1909 - 1914)", "Futurism (1909 - 1914)"
+        POP_ART = "Pop Art (1950s - 1960s)", "Pop Art (1950s - 1960s)"
+        MINIMALISM = "Minimalism (1960s - 1970s)", "Minimalism (1960s - 1970s)"
+        PHOTOREALISM = "Photorealism (1960s - 1970s)", "Photorealism (1960s - 1970s)"
+        CONTEMPORARY_ART = "Contemporary art (1970s - now)", "Contemporary art (1970s - now)"
+        MODERNISM = "Modernism", "Modernism"
+        OTHER = "Other", "Other"
 
     class SculptureStyle(models.TextChoices):
-        ABSTRACT = 'Abstract', 'Abstract'
-        FIGURATIVE = 'Figurative', 'Figurative'
-        MINIMALIST = 'Minimalist', 'Minimalist'
-        CONTEMPORARY = 'Contemporary', 'Contemporary'
-        OTHER = 'Other', 'Other'
+        ABSTRACT = "Abstract", "Abstract"
+        LAND = "Land", "Land"
+        RELIEF = "Relief", "Relief"
+        FREESTANDING = "Freestanding", "Freestanding"
+        CARVED = "Carved", "Carved"
+        MODELING = "Modeling", "Modeling"
+        ASSEMBLED = "Assembled", "Assembled"
+        CAST = "Cast", "Cast"
+        MINIMALISM = "Minimalism", "Minimalism"
+        CONSTRUCTIVISM = "Constructivism", "Constructivism"
+        SURREALISM = "Surrealism", "Surrealism"
+        KINETIC_ART = "Kinetic Art", "Kinetic Art"
+        CONTEMPORARY = "Contemporary", "Contemporary"
+        FIGURATIVE_ART = "Figurative Art", "Figurative Art"
+        MODERN_ART = "Modern art", "Modern art"
+        MODERNISM = "Modernism", "Modernism"
+        CUBISM = "Cubism", "Cubism"
+        BAROQUE = "Baroque", "Baroque"
+        RENAISSANCE = "Renaissance", "Renaissance"
+        EXPRESSIONISM = "Expressionism", "Expressionism"
+        CLASSICISM = "Classicism", "Classicism"
+        HYPERREALISM = "Hyperrealism", "Hyperrealism"
+        CONCRETE_ART = "Concrete art", "Concrete art"
+        FUTURISM = "Futurism", "Futurism"
+        GOTHIC_ART = "Gothic art", "Gothic art"
+        OTHER = "Other", "Other"
 
     class FurnitureStyle(models.TextChoices):
-        VICTORIAN = 'Victorian', 'Victorian'
-        ART_DECO = 'Art Deco', 'Art Deco'
-        MODERN = 'Modern', 'Modern'
-        MINIMALIST = 'Minimalist', 'Minimalist'
-        OTHER = 'Other', 'Other'
+        CONTEMPORARY = "Contemporary", "Contemporary"
+        ART_DECO = "Art Deco", "Art Deco"
+        MINIMALISM = "Minimalism", "Minimalism"
+        RENAISSANCE = "Renaissance", "Renaissance"
+        MODERNISM = "Modernism", "Modernism"
+        BAROQUE = "Baroque", "Baroque"
+        MAXIMALISM = "Maximalism", "Maximalism"
+        CLASSICISM = "Classicism", "Classicism"
+        POST_MODERNISM = "Post modernism", "Post modernism"
+        OTHER = "Other", "Other"
 
     class PhotoStyle(models.TextChoices):
-        PORTRAIT = 'Portrait', 'Portrait'
-        LANDSCAPE = 'Landscape', 'Landscape'
-        STREET = 'Street', 'Street'
-        ABSTRACT = 'Abstract', 'Abstract'
-        OTHER = 'Other', 'Other'
+        LANDSCAPE = "Landscape", "Landscape"
+        PORTRAIT = "Portrait", "Portrait"
+        FASHION = "Fashion", "Fashion"
+        BLACK_AND_WHITE = "Black and white", "Black and white"
+        ASTROPHOTOGRAPHY = "Astrophotography", "Astrophotography"
+        AERIAL = "Aerial", "Aerial"
+        EDITORIAL = "Editorial", "Editorial"
+        FOOD = "Food", "Food"
+        ARCHITECTURAL = "Architectural", "Architectural"
+        HEADSHOT = "Headshot", "Headshot"
+        NATURE = "Nature", "Nature"
+        SPORTS = "Sports", "Sports"
+        CONCEPTUAL = "Conceptual", "Conceptual"
+        ABSTRACT = "Abstract", "Abstract"
+        OTHER = "Other", "Other"
 
     class Edition(models.TextChoices):
         ORIGINAL = 'Original', 'Original'
@@ -73,8 +141,9 @@ class Artwork(models.Model):
     category = models.CharField(max_length=50, choices=Category.choices)
 
     starting_bid = models.DecimalField(max_digits=10, decimal_places=2)
-    width = models.DecimalField(max_digits=6, decimal_places=2)
-    height = models.DecimalField(max_digits=6, decimal_places=2)
+    width = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
+    height = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
+    depth = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
     year = models.IntegerField()
 
     description = models.TextField(blank=True)

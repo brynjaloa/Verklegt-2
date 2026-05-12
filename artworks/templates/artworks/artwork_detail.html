@@ -214,10 +214,26 @@
                             </div>
                             {% endif %}
 
+                        {% if artwork.width or artwork.height or artwork.depth %}
                             <div>
                                 <dt>Size</dt>
-                                <dd>{{ artwork.width }}cm x {{ artwork.height }}cm</dd>
+                                {% if artwork.category == "Furniture" %}
+                                    <dd>
+                                        {% if artwork.width %}{{ artwork.width }}cm width{% endif %}
+                                        {% if artwork.width and artwork.depth %} x {% endif %}
+                                        {% if artwork.depth %}{{ artwork.depth }}cm depth{% endif %}
+                                        {% if artwork.height and artwork.width or artwork.height and artwork.depth %} x {% endif %}
+                                        {% if artwork.height %}{{ artwork.height }}cm height{% endif %}
+                                    </dd>
+                                {% else %}
+                                    <dd>
+                                        {% if artwork.width %}{{ artwork.width }}cm width{% endif %}
+                                        {% if artwork.width and artwork.height %} x {% endif %}
+                                        {% if artwork.height %}{{ artwork.height }}cm height{% endif %}
+                                    </dd>
+                                {% endif %}
                             </div>
+                        {% endif %}
 
                             <div>
                                 <dt>Year created</dt>
@@ -297,3 +313,4 @@
     </div>
 
     {% endblock %}
+
