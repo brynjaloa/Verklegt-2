@@ -55,7 +55,14 @@
                     </div>
                 {% endif %}
 
-                <p><strong>Year:</strong></p>
+                {% if filter_styles %}
+                    <p><strong>Style</strong></p>
+                    {% for value, label in filter_styles %}
+                        <label><input type="checkbox" name="style" value="{{ value }}"> {{ label }}</label><br>
+                    {% endfor %}
+                {% endif %}
+
+                <p><strong>Year</strong></p>
                 <br>
                 <div class="year-filter">
                     <div id="year-slider" class="year-slider"></div>

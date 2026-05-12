@@ -4,17 +4,17 @@
     </div>
 
     <div class="nav-center">
-        <div class="search-box">
-            <input type="text" placeholder="Search...">
-            <span class="search-icon">🔍</span>
-        </div>
+        <form class="search-box" method="GET" action="{% url 'artwork_list' %}">
+            <input type="text" name="q" value="{{ request.GET.q }}" placeholder="Search...">
+            <button class="search-icon" type="submit" aria-label="Search">🔍</button>
+        </form>
 
         <div class="nav-links">
             <a href="{% url 'see_all' %}">See all</a>
             <a href="{% url 'category_list' %}">Category</a>
             <a href="{% url 'faq' %}">How to?</a>
             <a href="#">Buy</a>
-            <a href="#">Sell</a>
+            <a href="{% url 'add_artwork' %}">Sell</a>
         </div>
     </div>
         <div class="nav-right">
@@ -23,7 +23,10 @@
 
                 <a href="{% url 'profile' %}" class="profile-link">
 
-                    {% if user.profile.profile_image %}
+                    {% if user.seller and user.seller.logo %}
+                        <img src="{{ user.seller.logo.url }}" class="nav-profile-image" alt="{{ user.seller.name }}">
+
+                    {% elif user.profile.profile_image %}
                         <img src="{{ user.profile.profile_image.url }}" class="nav-profile-image">
 
                     {% else %}

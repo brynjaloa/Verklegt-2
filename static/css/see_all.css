@@ -1,0 +1,209 @@
+.see-all-page {
+    padding: 20px;
+}
+
+.see-all-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.see-all-back-link {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    font-size: 18px;
+    color: black;
+}
+
+.see-all-heading {
+    background-color: #c06060;
+    color: white;
+    padding: 8px 24px;
+    border-radius: 24px;
+    margin: 0;
+    font-size: 24px;
+}
+
+.see-all-layout {
+    display: flex;
+    gap: 24px;
+}
+
+.see-all-filter-sidebar {
+    width: 220px;
+    background: #84302f;
+    border-radius: 12px;
+    padding: 20px;
+    color: white;
+    flex-shrink: 0;
+    align-self: flex-start;
+}
+
+.see-all-filter-sidebar h2 {
+    text-align: center;
+    margin-top: 0;
+}
+
+.filter-group-label {
+    font-size: 12px;
+    color: rgb(255 255 255 / 70%);
+}
+
+.filter-group-label-spaced {
+    margin-top: 8px;
+    display: block;
+}
+
+.year-filter-box {
+    padding: 0 8px;
+    margin-bottom: 12px;
+}
+
+.see-all-year-slider {
+    margin: 16px 0;
+}
+
+.year-input-row {
+    display: flex;
+    gap: 12px;
+    margin-top: 12px;
+}
+
+.year-input-column {
+    flex: 1;
+}
+
+.year-input-column label {
+    font-size: 12px;
+    display: block;
+    margin-bottom: 4px;
+}
+
+.year-input-column input {
+    width: 100%;
+    padding: 6px;
+    border-radius: 6px;
+    border: none;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.see-all-filter-button {
+    margin-top: 16px;
+    width: 100%;
+    padding: 8px;
+    background: white;
+    color: #8b0000;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.see-all-listings {
+    flex: 1;
+}
+
+.see-all-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.see-all-toolbar h2 {
+    margin: 0;
+}
+
+.see-all-sort-select {
+    padding: 6px 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+.see-all-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+}
+
+.see-all-card-link {
+    text-decoration: none;
+    color: black;
+}
+
+.see-all-card {
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid #ddd;
+}
+
+.see-all-card-image,
+.see-all-card-placeholder {
+    width: 100%;
+    height: 180px;
+}
+
+.see-all-card-image {
+    object-fit: cover;
+}
+
+.see-all-card-placeholder {
+    background: #eee;
+}
+
+.see-all-card-title {
+    margin: 8px;
+}
+
+.see-all-card-price {
+    margin: 8px;
+    color: #666;
+}
+
+.see-all-empty {
+    color: #999;
+}
+
+.noUi-connect {
+    background: white;
+}
+
+.noUi-horizontal {
+    background: rgb(255 255 255 / 30%);
+    border: none;
+    box-shadow: none;
+    height: 6px;
+}
+
+.noUi-handle {
+    background: white;
+    border: none;
+    box-shadow: none;
+    border-radius: 50%;
+    width: 20px !important;
+    height: 20px !important;
+    top: -8px !important;
+    cursor: pointer;
+}
+
+.noUi-handle::before,
+.noUi-handle::after {
+    display: none;
+}
+
+.noUi-tooltip {
+    background: #6b0000;
+    color: white;
+    border: none;
+    font-size: 11px;
+    padding: 2px 6px;
+    border-radius: 4px;
+}

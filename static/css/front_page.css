@@ -19,6 +19,7 @@ nav {
     align-items: center;
     justify-content: space-between;
     padding: 22px 40px;
+    gap: 18px;
 }
 
 /* LOGO */
@@ -35,7 +36,10 @@ nav {
     display: flex;
     align-items: center;
     gap: 30px;
-    margin-left: 240px;
+    margin-left: 80px;
+    min-width: 0;
+    flex: 1;
+    justify-content: flex-end;
 }
 
 /* SEARCH */
@@ -54,12 +58,19 @@ nav {
     right: 10px;
     top: 50%;
     transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    font: inherit;
+    padding: 0;
 }
 
 /* LINKS */
 .nav-links {
     display: flex;
-    gap: 30px;
+    gap: 24px;
+    align-items: center;
+    flex-wrap: nowrap;
 }
 
 .nav-links a {
@@ -67,6 +78,11 @@ nav {
     color: black;
     font-size: 25px;
     font-family: "Times New Roman", Times, serif;
+    white-space: nowrap;
+}
+
+.nav-right {
+    flex-shrink: 0;
 }
 
 /* LOGIN BUTTON */
@@ -395,6 +411,10 @@ nav {
     font-size: 15px;
     font-weight: bold;
     font-family: serif;
+}
+
+.profile-link span {
+    white-space: nowrap;
 }
 
 .nav-profile-image {

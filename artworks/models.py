@@ -69,6 +69,7 @@ class Artwork(models.Model):
         MINIMALISM = "Minimalism (1960s - 1970s)", "Minimalism (1960s - 1970s)"
         PHOTOREALISM = "Photorealism (1960s - 1970s)", "Photorealism (1960s - 1970s)"
         CONTEMPORARY_ART = "Contemporary art (1970s - now)", "Contemporary art (1970s - now)"
+        MODERNISM = "Modernism", "Modernism"
         OTHER = "Other", "Other"
 
     class SculptureStyle(models.TextChoices):
