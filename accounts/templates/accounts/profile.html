@@ -139,9 +139,58 @@
                 <div class="info-box">
 
                     <div class="inner-box">
+
                         <h1>My bids</h1>
-                        <!--placeholder-->
-                        <p>No bids yet</p>
+
+                        <div class="section-line"></div>
+
+                        {% if my_bids %}
+
+                            <div class="listing-scroll">
+
+                                {% for bid in my_bids %}
+
+                                    <div class="profile-bid">
+
+                                        <a href="{% url 'artwork_detail' bid.artwork.id %}"
+                                           class="bid-artwork-link">
+
+                                            {{ bid.artwork.title }}
+
+                                        </a>
+
+                                        {% if bid.status == "Accepted" %}
+
+                                            <span class="accepted-status">
+                                                Accepted
+                                            </span>
+
+                                        {% elif bid.status == "Rejected" %}
+
+                                            <span class="rejected-status">
+                                                Rejected
+                                            </span>
+
+                                        {% else %}
+
+                                            <span class="pending-status">
+                                                Pending
+                                            </span>
+
+                                        {% endif %}
+
+                                    </div>
+
+                                {% endfor %}
+
+                            </div>
+
+                        {% else %}
+
+                            <p>No bids yet.</p>
+
+                        {% endif %}
+
                     </div>
 
                     <div class="inner-box">

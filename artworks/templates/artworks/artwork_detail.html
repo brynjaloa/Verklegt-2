@@ -52,11 +52,76 @@
             </p>
 
             <p class="artwork-minimum-bid">Minimum bid: ${{ artwork.starting_bid|intcomma }}</p>
+            {% if can_edit_artwork %}
 
-            <button class="bid-now-button" type="button">Bid now</button>
+            <div class="highest-bids-box">
+                <h2>Highest bids:</h2>
+
+                {% for bid in highest_bids %}
+                    <div class="highest-bid-row">
+                        <div class="highest-bid-left">
+                            <div class="mini-profile"></div>
+
+                            <span>
+                                {{ bid.user.profile.name }}
+                                :
+                                ${{ bid.bid_price }}
+                            </span>
+
+                        </div>
+                        {% if bid.status != "Accepted" %}
+                            <a
+                               href="{% url 'accept_bid' bid.id %}" class="accept-bid-button">
+                                Accept bid
+                            </a>
+
+                        {% else %}
+                            <span class="accepted-text">
+                                Accepted
+                            </span>
+
+                        {% endif %}
+                    </div>
+                {% empty %}
+                    <p>No bids yet.</p>
+
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            {% if not can_edit_artwork %}
+            <form method="POST" class="bid-form">
+                {% csrf_token %}
+
+                <div class="bid-inputs">
+                    {{ form.bid_price }}
+                    {{ form.expiration_date }}
+                </div>
+
+                {% if existing_bid %}
+                    <div class="bid-buttons">
+                        <button class="bid-now-button" type="submit">
+                            Re-submit bid
+                        </button>
+
+                        <a href="{% url 'cancel_bid' existing_bid.id %}"
+                           class="cancel-bid-button">
+                            Cancel bid
+                        </a>
+                    </div>
+
+                {% else %}
+                    <button class="bid-now-button" type="submit">
+                        Bid now
+                    </button>
+
+                {% endif %}
+            </form>
+
+            {% endif %}
 
             {% if can_edit_artwork %}
-                <a class="artwork-edit-link" href="{% url 'edit_artwork' artwork.pk %}">Edit artwork</a>
+                <a class="artwork-edit-button" href="{% url 'edit_artwork' artwork.pk %}">Edit artwork</a>
             {% endif %}
 
             <details class="artwork-detail-panel">
@@ -184,8 +249,30 @@
         </div>
     </div>
 </article>
+<div id="bid-popup"
+     class="bid-popup {% if not show_popup %}hidden{% endif %}">
+
+    <div class="bid-popup-content">
+
+        <button
+            id="close-popup"
+            onclick="document.getElementById('bid-popup').classList.add('hidden')">
+            X
+        </button>
+
+        {% if existing_bid %}
+            <h2>Thank you for re-submitting a bid.</h2>
+        {% else %}
+            <h2>Thank you for submitting a bid.</h2>
+        {% endif %}
+
+        <p>
+            You will get a notification if it is accepted.
+        </p>
+
+    </div>
+
+</div>
+
 {% endblock %}
 
-{% block extra_js %}
-<script src="{% static 'js/artwork_detail.js' %}?v=2"></script>
-{% endblock %}

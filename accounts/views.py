@@ -7,6 +7,7 @@ from django.http import JsonResponse
 from artworks.models import Artwork
 from .forms import SignUpForm, ProfileForm, SellerForm, SellerEditForm
 from .models import Profile, Seller
+from bids.models import Bid
 
 
 def get_or_create_profile(user):
@@ -62,6 +63,7 @@ def profile_view(request):
     profile = get_or_create_profile(request.user)
     seller = None
     artworks = Artwork.objects.none()
+    my_bids = Bid.objects.filter(user=request.user)
 
     if hasattr(request.user, 'seller'):
         seller = request.user.seller
@@ -71,6 +73,7 @@ def profile_view(request):
         'profile': profile,
         'seller': seller,
         'artworks': artworks,
+        "my_bids": my_bids,
     }
     return render(request,'accounts/profile.html',context)
 
