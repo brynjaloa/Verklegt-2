@@ -46,6 +46,9 @@
                 {% if category %}
                     <input type="hidden" name="category" value="{{ category }}">
                 {% endif %}
+                {% if sort %}
+                    <input type="hidden" name="sort" value="{{ sort }}">
+                {% endif %}
 
                 {% if mediums %}
                     <p class="filter-toggle" onclick="toggleFilter('filter-medium')"><strong class="filter-toggle">Medium ▾</strong></p>
@@ -91,11 +94,10 @@
             <div class="listings-toolbar">
 
                 <h2>Listings:</h2>
-                <select class="sort-select">
-
-                    <option>Sort by: Relevance</option>
-                    <option>Sort by: Price (low to high)</option>
-                    <option>Sort by: Price (high to low)</option>
+                <select class="sort-select" onchange="handleSort(this)">
+                    <option value="relevance" {% if not sort or sort == 'relevance' %}selected{% endif %}>Sort by: Relevance</option>
+                    <option value="price_low" {% if sort == 'price_low' %}selected{% endif %}>Sort by: Price (low to high)</option>
+                    <option value="price_high" {% if sort == 'price_high' %}selected{% endif %}>Sort by: Price (high to low)</option>
                 </select>
             </div>
 

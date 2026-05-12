@@ -18,6 +18,9 @@
         <div class="see-all-filter-sidebar">
             <h2>Filters</h2>
             <form method="GET">
+                {% if sort %}
+                    <input type="hidden" name="sort" value="{{ sort }}">
+                {% endif %}
 
                 <p class="filter-toggle" onclick="toggleFilter('filter-category')"><strong class="filter-toggle">Category ▾</strong></p>
                 <div id="filter-category" class="filter-dropdown">
@@ -84,10 +87,10 @@
         <div class="see-all-listings">
             <div class="see-all-toolbar">
                 <h2>Listings:</h2>
-                <select class="see-all-sort-select">
-                    <option>Sort by: Relevance</option>
-                    <option>Sort by: Price (low to high)</option>
-                    <option>Sort by: Price (high to low)</option>
+                <select class="sort-select" onchange="handleSort(this)">
+                    <option value="relevance" {% if not sort or sort == 'relevance' %}selected{% endif %}>Sort by: Relevance</option>
+                    <option value="price_low" {% if sort == 'price_low' %}selected{% endif %}>Sort by: Price (low to high)</option>
+                    <option value="price_high" {% if sort == 'price_high' %}selected{% endif %}>Sort by: Price (high to low)</option>
                 </select>
             </div>
 
@@ -95,8 +98,8 @@
                 {% for artwork in artworks %}
                 <a class="see-all-card-link" href="{% url 'artwork_detail' artwork.pk %}">
                     <div class="see-all-card">
-                        {% if artwork.main_image %}
-                        <img class="see-all-card-image" src="{{ artwork.main_image.url }}" alt="{{ artwork.title }}">
+                        {% if artwork.primary_image %}
+                        <img class="see-all-card-image" src="{{ artwork.primary_image.url }}" alt="{{ artwork.title }}">
                         {% else %}
                         <div class="see-all-card-placeholder"></div>
                         {% endif %}

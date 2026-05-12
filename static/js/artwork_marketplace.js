@@ -31,3 +31,10 @@ slider.noUiSlider.on('update', (values) => {
 
 fromInput.addEventListener('change', () => { slider.noUiSlider.set([fromInput.value, null]); });
 toInput.addEventListener('change', () => { slider.noUiSlider.set([null, toInput.value]); });
+
+function handleSort(select) {
+    const url = new URL(window.location.href);
+    url.searchParams.set('sort', select.value);
+    url.searchParams.delete('page');
+    window.location.href = url.toString();
+}

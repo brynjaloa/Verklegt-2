@@ -63,6 +63,15 @@ FEATURED_CATEGORY_STYLES = {
 }
 
 
+def sort_artworks(artworks, sort):
+    if sort == 'price_low':
+        return artworks.order_by('starting_bid', '-listing_date', '-id')
+    if sort == 'price_high':
+        return artworks.order_by('-starting_bid', '-listing_date', '-id')
+
+    return artworks.order_by('-listing_date', '-id')
+
+
 def artwork_list(request):
     query = request.GET.get('q', '').strip()
     category = request.GET.get('category')
@@ -99,7 +108,10 @@ def artwork_list(request):
     featured_styles = FEATURED_CATEGORY_STYLES.get(category, styles)
     mediums = category_fields.get("mediums", [])
 
-    paginator = Paginator(artworks, 20)
+    sort = request.GET.get('sort', 'relevance')
+    artworks = sort_artworks(artworks, sort)
+
+    paginator = Paginator(artworks, 5)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
@@ -111,6 +123,7 @@ def artwork_list(request):
         'filter_styles': styles,
         'mediums': mediums,
         'page_obj': page_obj,
+        'sort': sort,
     })
 
 
@@ -274,6 +287,7 @@ def artwork_see_all(request):
     category = request.GET.get('category')
     style = request.GET.get('style')
     edition = request.GET.get('edition')
+    sort = request.GET.get('sort', 'relevance')
 
     artworks = Artwork.objects.all()
 
@@ -290,6 +304,8 @@ def artwork_see_all(request):
     if year_to:
         artworks = artworks.filter(year__lte=year_to)
 
+    artworks = sort_artworks(artworks, sort)
+
     all_styles = list({label: value for value, label in (
             list(Artwork.PaintingStyle.choices) +
             list(Artwork.SculptureStyle.choices) +
@@ -297,7 +313,7 @@ def artwork_see_all(request):
             list(Artwork.PhotoStyle.choices)
     )}.items())
 
-    paginator = Paginator(artworks, 20)
+    paginator = Paginator(artworks, 5)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
@@ -311,6 +327,7 @@ def artwork_see_all(request):
         'photo_techniques': Artwork.PhotoTechnique.choices,
         'all_styles': all_styles,
         'page_obj': page_obj,
+        'sort': sort,
     })
 
 @login_required
