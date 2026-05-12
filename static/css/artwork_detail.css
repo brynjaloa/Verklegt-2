@@ -97,6 +97,17 @@
     font-weight: 700;
 }
 
+.artwork-sold-badge {
+    display: inline-block;
+    margin: 0 0 30px;
+    padding: 12px 34px;
+    border-radius: 6px;
+    background: #9b3a35;
+    color: white;
+    font-size: 24px;
+    font-weight: 700;
+}
+
 .bid-now-button {
     display: block;
     margin: 0 0 28px;
@@ -368,5 +379,4 @@
         aspect-ratio: 4 / 5;
     }
 }
-
 

@@ -9,6 +9,7 @@ class Bid(models.Model):
         ACCEPTED = 'Accepted', 'Accepted'
         REJECTED = 'Rejected', 'Rejected'
         CONTINGENT = 'Contingent', 'Contingent'
+        FINALIZED = 'Finalized', 'Finalized'
     user = models.ForeignKey(User, on_delete=models.CASCADE) #Hver setti tilboðið
     artwork = models.ForeignKey(Artwork, on_delete=models.CASCADE) #Hlekkur að listaverkinu
     bid_price = models.DecimalField(max_digits=10, decimal_places=2)
