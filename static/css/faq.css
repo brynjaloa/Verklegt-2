@@ -2,20 +2,142 @@ body {
     font-family: serif;
 }
 
-.faq-question {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    cursor: pointer;
-    padding: 12px 0;
-}
-.faq-icon {
-    margin-left: auto;
-    font-size: 20px;
-    color: #666;
-}
-.faq-answer {
-    padding: 8px 32px;
-    color: #444;
+.faq-page {
+    box-sizing: border-box;
+    padding: 28px;
 }
 
+.faq-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 34px;
+}
+
+.faq-back-link {
+    width: 44px;
+    height: 44px;
+    border: 1px solid #ccc;
+    border-radius: 50%;
+    color: black;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 24px;
+    text-decoration: none;
+}
+
+.faq-title {
+    background-color: #c06060;
+    border-radius: 24px;
+    color: white;
+    font-size: 30px;
+    line-height: 1.2;
+    margin: 0;
+    padding: 12px 32px;
+}
+
+.faq-layout {
+    display: grid;
+    grid-template-columns: minmax(240px, 360px) minmax(0, 780px);
+    gap: 48px;
+    align-items: start;
+}
+
+.faq-list {
+    min-width: 0;
+}
+
+.faq-question {
+    width: 100%;
+    padding: 16px 0;
+    border: 0;
+    background: transparent;
+    color: black;
+    cursor: pointer;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 14px;
+    align-items: center;
+    font: inherit;
+    text-align: left;
+}
+
+.faq-question strong {
+    font-size: 26px;
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+}
+
+.faq-dot {
+    color: #8b0000;
+    font-size: 20px;
+}
+
+.faq-icon {
+    color: #666;
+    font-size: 26px;
+}
+
+.faq-answer {
+    color: #444;
+    font-family: Arial, sans-serif;
+    font-size: 17px;
+    line-height: 1.5;
+    padding: 0 0 14px 34px;
+}
+
+.faq-answer p {
+    margin: 0 0 8px;
+}
+
+.faq-video-area {
+    min-width: 0;
+    text-align: center;
+}
+
+.video-panel video {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    height: auto;
+    border-radius: 8px;
+    background: black;
+    object-fit: contain;
+}
+
+.video-panel p {
+    color: #666;
+    font-family: Arial, sans-serif;
+    margin-top: 8px;
+}
+
+@media (width <= 900px) {
+    .faq-layout {
+        grid-template-columns: 1fr;
+        gap: 26px;
+    }
+
+    .faq-video-area {
+        order: -1;
+    }
+}
+
+@media (width <= 560px) {
+    .faq-page {
+        padding: 18px;
+    }
+
+    .faq-header {
+        align-items: flex-start;
+    }
+
+    .faq-title {
+        font-size: 24px;
+        padding: 10px 20px;
+    }
+
+    .faq-question strong {
+        font-size: 22px;
+    }
+}

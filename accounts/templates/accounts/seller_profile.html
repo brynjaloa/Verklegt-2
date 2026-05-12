@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/seller_profile.css' %}">
+{% endblock %}
+
+{% block content %}
+<article class="seller-profile-page">
+    <header class="seller-profile-header">
+        <a class="seller-profile-back-link" href="{% url 'see_all' %}" aria-label="Back to listings">‹</a>
+        <h1>Seller profile</h1>
+    </header>
+
+    {% if seller.cover_image %}
+        <img class="seller-cover-image" src="{{ seller.cover_image.url }}" alt="{{ seller.name }} cover photo">
+    {% endif %}
+
+    <section class="seller-profile-summary">
+        {% if seller.logo %}
+            <img class="seller-profile-logo" src="{{ seller.logo.url }}" alt="{{ seller.name }}">
+        {% else %}
+            <div class="seller-profile-placeholder" aria-hidden="true">
+                <div class="seller-placeholder-head"></div>
+                <div class="seller-placeholder-body"></div>
+            </div>
+        {% endif %}
+
+        <div class="seller-profile-text">
+            <h2>{{ seller.name }}</h2>
+            <p class="seller-profile-type">Seller type: {{ seller.seller_type }}</p>
+            {% if seller.bio %}
+                <p class="seller-profile-bio">{{ seller.bio }}</p>
+            {% else %}
+                <p class="seller-profile-bio">No bio added yet.</p>
+            {% endif %}
+        </div>
+    </section>
+
+    <section class="seller-listings-section">
+        <h2>Listings</h2>
+
+        {% if artworks %}
+            <div class="seller-listings-grid">
+                {% for artwork in artworks %}
+                    <a class="seller-listing-card" href="{% url 'artwork_detail' artwork.pk %}">
+                        {% if artwork.primary_image %}
+                            <img class="seller-listing-image" src="{{ artwork.primary_image.url }}" alt="{{ artwork.title }}">
+                        {% else %}
+                            <div class="seller-listing-placeholder"></div>
+                        {% endif %}
+
+                        <div class="seller-listing-content">
+                            <h3>{{ artwork.title }}</h3>
+                            <p>{{ artwork.category }}</p>
+                            {% if artwork.highest_bid %}
+                                <p class="seller-listing-price">Highest bid: ${{ artwork.highest_bid.bid_price|intcomma }}</p>
+                            {% else %}
+                                <p class="seller-listing-price">Minimum bid: ${{ artwork.starting_bid|intcomma }}</p>
+                            {% endif %}
+                        </div>
+                    </a>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="seller-empty-listings">This seller has no listings yet.</p>
+        {% endif %}
+    </section>
+</article>
+{% endblock %}

@@ -1,11 +1,12 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block content %}
-
+{% block extra_css %}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.css">
 <link rel="stylesheet" href="{% static 'css/see_all.css' %}">
+{% endblock %}
 
+{% block content %}
 <div class="see-all-page">
 
     <div class="see-all-header">
@@ -19,55 +20,67 @@
             <h2>Filters</h2>
             <form method="GET">
 
-                <p><strong>Category</strong></p>
-                {% for value, label in categories %}
-                <label><input type="checkbox" name="category" value="{{ value }}"> {{ label }}</label><br>
-                {% endfor %}
+                <div class="see-all-filter-groups">
+                    <div class="see-all-filter-group">
+                        <p><strong>Category</strong></p>
+                        {% for value, label in categories %}
+                        <label><input type="checkbox" name="category" value="{{ value }}"> {{ label }}</label>
+                        {% endfor %}
+                    </div>
 
-                <p><strong>Medium / Material</strong></p>
-                <label class="filter-group-label">Painting</label><br>
-                {% for value, label in painting_mediums %}
-                <label><input type="checkbox" name="medium" value="{{ value }}"> {{ label }}</label><br>
-                {% endfor %}
+                    <div class="see-all-filter-group">
+                        <p><strong>Medium / Material</strong></p>
+                        <label class="filter-group-label">Painting</label>
+                        {% for value, label in painting_mediums %}
+                        <label><input type="checkbox" name="medium" value="{{ value }}"> {{ label }}</label>
+                        {% endfor %}
 
-                <label class="filter-group-label filter-group-label-spaced">Sculpture</label>
-                {% for value, label in sculpture_materials %}
-                <label><input type="checkbox" name="medium" value="{{ value }}"> {{ label }}</label><br>
-                {% endfor %}
+                        <label class="filter-group-label filter-group-label-spaced">Sculpture</label>
+                        {% for value, label in sculpture_materials %}
+                        <label><input type="checkbox" name="medium" value="{{ value }}"> {{ label }}</label>
+                        {% endfor %}
 
-                <label class="filter-group-label filter-group-label-spaced">Furniture</label>
-                {% for value, label in furniture_materials %}
-                <label><input type="checkbox" name="medium" value="{{ value }}"> {{ label }}</label><br>
-                {% endfor %}
+                        <label class="filter-group-label filter-group-label-spaced">Furniture</label>
+                        {% for value, label in furniture_materials %}
+                        <label><input type="checkbox" name="medium" value="{{ value }}"> {{ label }}</label>
+                        {% endfor %}
 
-                <label class="filter-group-label filter-group-label-spaced">Photo</label>
-                {% for value, label in photo_techniques %}
-                <label><input type="checkbox" name="medium" value="{{ value }}"> {{ label }}</label><br>
-                {% endfor %}
+                        <label class="filter-group-label filter-group-label-spaced">Photo</label>
+                        {% for value, label in photo_techniques %}
+                        <label><input type="checkbox" name="medium" value="{{ value }}"> {{ label }}</label>
+                        {% endfor %}
+                    </div>
 
-                <p><strong>Style</strong></p>
-                {% for label, value in all_styles %}
-                <label><input type="checkbox" name="style" value="{{ value }}"> {{ label }}</label><br>
-                {% endfor %}
+                    <div class="see-all-filter-group">
+                        <p><strong>Style</strong></p>
+                        {% for label, value in all_styles %}
+                        <label><input type="checkbox" name="style" value="{{ value }}"> {{ label }}</label>
+                        {% endfor %}
+                    </div>
 
-                <p><strong>Edition</strong></p>
-                {% for value, label in editions %}
-                <label><input type="checkbox" name="edition" value="{{ value }}"> {{ label }}</label><br>
-                {% endfor %}
+                    <div class="see-all-filter-group">
+                        <p><strong>Edition</strong></p>
+                        {% for value, label in editions %}
+                        <label><input type="checkbox" name="edition" value="{{ value }}"> {{ label }}</label>
+                        {% endfor %}
+                    </div>
 
-                <p><strong>Year</strong></p>
-                <div class="year-filter-box">
-                    <div id="year-slider" class="see-all-year-slider"></div>
-                    <div class="year-input-row">
-                        <div class="year-input-column">
-                            <label>From</label>
-                            <input type="number" id="year-from-input" name="year_from" min="1300" max="2026"
-                                value="{{ request.GET.year_from|default:'1300' }}">
-                        </div>
-                        <div class="year-input-column">
-                            <label>To</label>
-                            <input type="number" id="year-to-input" name="year_to" min="1300" max="2026"
-                                value="{{ request.GET.year_to|default:'2026' }}">
+                    <div class="see-all-filter-group">
+                        <p><strong>Year</strong></p>
+                        <div class="year-filter-box">
+                            <div id="year-slider" class="see-all-year-slider"></div>
+                            <div class="year-input-row">
+                                <div class="year-input-column">
+                                    <label>From</label>
+                                    <input type="number" id="year-from-input" name="year_from" min="1300" max="2026"
+                                        value="{{ request.GET.year_from|default:'1300' }}">
+                                </div>
+                                <div class="year-input-column">
+                                    <label>To</label>
+                                    <input type="number" id="year-to-input" name="year_to" min="1300" max="2026"
+                                        value="{{ request.GET.year_to|default:'2026' }}">
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -97,18 +110,47 @@
                         {% endif %}
                         <p class="see-all-card-title">{{ artwork.title }}</p>
                         <p class="see-all-card-price">Min bid: ${{ artwork.starting_bid }}</p>
+                        <p class="see-all-card-date">Listed: {{ artwork.listing_date|date:"M j, Y" }}</p>
                     </div>
                 </a>
                 {% empty %}
                 <p class="see-all-empty">No artworks found.</p>
                 {% endfor %}
             </div>
+
+            {% if page_obj.paginator.num_pages > 1 %}
+                <nav class="see-all-pagination" aria-label="Artwork pages">
+                    {% if page_obj.has_previous %}
+                        <a class="pagination-link" href="?{% if pagination_query %}{{ pagination_query }}&{% endif %}page={{ page_obj.previous_page_number }}">Previous</a>
+                    {% else %}
+                        <span class="pagination-link pagination-disabled">Previous</span>
+                    {% endif %}
+
+                    {% for page_number in pagination_pages %}
+                        {% if page_number == page_obj.paginator.ELLIPSIS %}
+                            <span class="pagination-ellipsis">{{ page_number }}</span>
+                        {% elif page_number == page_obj.number %}
+                            <span class="pagination-link pagination-current">{{ page_number }}</span>
+                        {% else %}
+                            <a class="pagination-link" href="?{% if pagination_query %}{{ pagination_query }}&{% endif %}page={{ page_number }}">{{ page_number }}</a>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if page_obj.has_next %}
+                        <a class="pagination-link" href="?{% if pagination_query %}{{ pagination_query }}&{% endif %}page={{ page_obj.next_page_number }}">Next</a>
+                    {% else %}
+                        <span class="pagination-link pagination-disabled">Next</span>
+                    {% endif %}
+                </nav>
+            {% endif %}
         </div>
 
     </div>
 </div>
 
+{% endblock %}
+
+{% block extra_js %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.js"></script>
 <script src="{% static 'artworks/see_all.js' %}"></script>
-
 {% endblock %}

@@ -1,6 +1,8 @@
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
 from django.http import HttpResponseForbidden
 from django.shortcuts import render, get_object_or_404, redirect
+from django.views.decorators.http import require_POST
 
 from .forms import ArtworkForm
 from .models import Artwork, ArtworkImage
@@ -260,6 +262,19 @@ def edit_artwork(request, pk):
     })
 
 
+@login_required
+@require_POST
+def delete_artwork(request, pk):
+    artwork = get_object_or_404(Artwork, pk=pk)
+    seller = getattr(request.user, "seller", None)
+
+    if seller is None or artwork.seller != seller:
+        return HttpResponseForbidden("You cannot remove this artwork.")
+
+    artwork.delete()
+    return redirect("profile")
+
+
 def category_list(request):
     categories = Artwork.Category.choices
     return render(request, 'Category/categories.html', {'categories': categories})
@@ -287,6 +302,12 @@ def artwork_see_all(request):
     if year_to:
         artworks = artworks.filter(year__lte=year_to)
 
+    artworks = artworks.order_by("-listing_date", "-id")
+    paginator = Paginator(artworks, 24)
+    page_obj = paginator.get_page(request.GET.get("page"))
+    pagination_query = request.GET.copy()
+    pagination_query.pop("page", None)
+
     all_styles = list({label: value for value, label in (
             list(Artwork.PaintingStyle.choices) +
             list(Artwork.SculptureStyle.choices) +
@@ -295,7 +316,10 @@ def artwork_see_all(request):
     )}.items())
 
     return render(request, 'artworks/see_all.html', {
-        'artworks': artworks,
+        'artworks': page_obj,
+        'page_obj': page_obj,
+        'pagination_pages': paginator.get_elided_page_range(page_obj.number),
+        'pagination_query': pagination_query.urlencode(),
         'categories': Artwork.Category.choices,
         'editions': Artwork.Edition.choices,
         'painting_mediums': Artwork.PaintingMedium.choices,

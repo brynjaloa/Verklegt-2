@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -76,6 +77,22 @@ def profile_view(request):
         "my_bids": my_bids,
     }
     return render(request,'accounts/profile.html',context)
+
+
+def seller_profile_view(request, seller_id):
+    seller = get_object_or_404(Seller, id=seller_id)
+    artworks = Artwork.objects.filter(
+        seller=seller,
+        is_sold=False,
+    ).order_by("-listing_date", "-id")
+
+    for artwork in artworks:
+        artwork.highest_bid = Bid.objects.filter(artwork=artwork).order_by("-bid_price").first()
+
+    return render(request, "accounts/seller_profile.html", {
+        "seller": seller,
+        "artworks": artworks,
+    })
 
 @login_required
 def edit_profile_view(request):

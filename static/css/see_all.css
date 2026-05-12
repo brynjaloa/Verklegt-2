@@ -51,6 +51,21 @@
     margin-top: 0;
 }
 
+.see-all-filter-groups {
+    display: grid;
+    gap: 16px;
+}
+
+.see-all-filter-group p {
+    margin: 0 0 10px;
+}
+
+.see-all-filter-group label {
+    display: block;
+    line-height: 1.35;
+    margin-bottom: 6px;
+}
+
 .filter-group-label {
     font-size: 12px;
     color: rgb(255 255 255 / 70%);
@@ -130,7 +145,7 @@
 
 .see-all-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
     gap: 16px;
 }
 
@@ -168,8 +183,140 @@
     color: #666;
 }
 
+.see-all-card-date {
+    color: #777;
+    font-size: 14px;
+    margin: 8px 12px;
+}
+
 .see-all-empty {
     color: #999;
+}
+
+.see-all-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 30px;
+}
+
+.pagination-link,
+.pagination-ellipsis {
+    min-width: 36px;
+    padding: 8px 12px;
+    border: 1px solid #d7d7d7;
+    border-radius: 6px;
+    color: black;
+    text-align: center;
+    text-decoration: none;
+}
+
+.pagination-link:hover {
+    border-color: #9b3a35;
+}
+
+.pagination-current {
+    background: #9b3a35;
+    border-color: #9b3a35;
+    color: white;
+}
+
+.pagination-disabled {
+    color: #999;
+}
+
+.pagination-ellipsis {
+    border-color: transparent;
+}
+
+@media (width <= 900px) {
+    .see-all-layout {
+        flex-direction: column;
+    }
+
+    .see-all-filter-sidebar {
+        box-sizing: border-box;
+        max-height: min(280px, 32vh);
+        overflow-y: auto;
+        width: 100%;
+        padding: 22px;
+    }
+
+    .see-all-filter-groups {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (width <= 620px) {
+    .see-all-page {
+        padding: 16px;
+    }
+
+    .see-all-header {
+        align-items: flex-start;
+    }
+
+    .see-all-heading {
+        font-size: 22px;
+    }
+
+    .see-all-filter-sidebar {
+        max-height: min(240px, 30vh);
+        overflow-y: auto;
+        padding: 18px;
+    }
+
+    .see-all-filter-sidebar h2 {
+        font-size: 26px;
+        margin-bottom: 18px;
+    }
+
+    .see-all-filter-groups {
+        grid-template-columns: 1fr;
+        gap: 14px;
+    }
+
+    .see-all-filter-group {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        column-gap: 14px;
+    }
+
+    .see-all-filter-group p,
+    .filter-group-label,
+    .year-filter-box {
+        grid-column: 1 / -1;
+    }
+
+    .see-all-filter-group label {
+        font-size: 16px;
+        margin-bottom: 7px;
+    }
+
+    .see-all-toolbar {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .see-all-sort-select {
+        width: 100%;
+    }
+
+    .see-all-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .see-all-pagination {
+        flex-wrap: wrap;
+    }
+}
+
+@media (width <= 420px) {
+    .see-all-filter-group {
+        grid-template-columns: 1fr;
+    }
 }
 
 .noUi-connect {

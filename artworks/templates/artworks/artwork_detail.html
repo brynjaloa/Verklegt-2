@@ -123,7 +123,16 @@
             {% endif %}
 
             {% if can_edit_artwork %}
-                <a class="artwork-edit-button" href="{% url 'edit_artwork' artwork.pk %}">Edit artwork</a>
+                <div class="artwork-owner-actions">
+                    <a class="artwork-edit-button" href="{% url 'edit_artwork' artwork.pk %}">Edit artwork</a>
+
+                    <form method="POST" action="{% url 'delete_artwork' artwork.pk %}">
+                        {% csrf_token %}
+                        <button class="artwork-delete-button" type="submit">
+                            Remove listing
+                        </button>
+                    </form>
+                </div>
             {% endif %}
 
             <details class="artwork-detail-panel">
@@ -223,12 +232,20 @@
             <details class="artwork-detail-panel">
                 <summary>Seller information</summary>
                 <div class="artwork-panel-content seller-panel">
-                    {% if artwork.seller.logo %}
-                        <img class="seller-logo" src="{{ artwork.seller.logo.url }}" alt="{{ artwork.seller.name }}">
-                    {% endif %}
+                    <a class="seller-logo-link" href="{% url 'seller_profile' artwork.seller.id %}">
+                        {% if artwork.seller.logo %}
+                            <img class="seller-logo" src="{{ artwork.seller.logo.url }}" alt="{{ artwork.seller.name }}">
+                        {% else %}
+                            <span class="seller-logo-placeholder" aria-hidden="true"></span>
+                        {% endif %}
+                    </a>
 
                     <div>
-                        <h2>{{ artwork.seller.name }}</h2>
+                        <h2>
+                            <a class="seller-name-link" href="{% url 'seller_profile' artwork.seller.id %}">
+                                {{ artwork.seller.name }}
+                            </a>
+                        </h2>
                         <p>{{ artwork.seller.seller_type }}</p>
                         {% if artwork.seller.bio %}
                             <p>{{ artwork.seller.bio }}</p>

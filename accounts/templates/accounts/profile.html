@@ -1,9 +1,10 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block content %}
-
+{% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/profile.css' %}">
+{% endblock %}
 
+{% block content %}
 <div class="profile-container">
 
     <div class="profile-top">
@@ -65,6 +66,10 @@
                 {% if seller %}{{ seller.name }}{% else %}{{ profile.name }}{% endif %}
             </div>
 
+            <div class="profile-username">
+                Username: {{ request.user.username }}
+            </div>
+
             {% if seller %}
                 <div class="profile-type">
                     Seller type: {{ seller.seller_type }}
@@ -94,8 +99,17 @@
         <div class="right-side">
 
             {% if seller %}
-                <div class="info-box">
+                <div class="seller-bio-box">
+                    <h1>My bio</h1>
+                    <div class="section-line"></div>
+                    {% if seller.bio %}
+                        <p>{{ seller.bio }}</p>
+                    {% else %}
+                        <p>No bio added yet.</p>
+                    {% endif %}
+                </div>
 
+                <div class="info-box">
                     <div class="inner-box">
                         <h1>What I'm selling</h1>
                         <div class="section-line"></div>

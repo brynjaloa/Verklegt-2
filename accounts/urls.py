@@ -19,5 +19,6 @@ urlpatterns = [
     path('logout/', LogoutView.as_view(), name='logout'),
     path('profile/', views.profile_view, name='profile'),
     path('profile/edit/', views.edit_profile_view, name='edit_profile'),
+    path('sellers/<int:seller_id>/', views.seller_profile_view, name='seller_profile'),
     path('become-seller/', views.become_seller_view, name='become_seller'),
 ]
