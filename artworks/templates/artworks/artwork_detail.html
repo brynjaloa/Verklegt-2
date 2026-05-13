@@ -87,39 +87,34 @@
                                     Contingent
                                 </span>
 
-                            <a href="{% url 'accept_bid' bid.id %}" class="accept-bid-button">
-                                Accept bid
-                            </a>
+                                <a href="{% url 'accept_bid' bid.id %}" class="accept-bid-button">
+                                    Accept bid
+                                </a>
 
-                            <a href="{% url 'reject_bid' bid.id %}"
-                               class="reject-bid-button">
-                                Reject
-                            </a>
+                                <a href="{% url 'reject_bid' bid.id %}"
+                                   class="reject-bid-button">
+                                    Reject
+                                </a>
 
-                        {% else %}
+                            {% else %}
 
-                            <a href="{% url 'accept_bid' bid.id %}"
-                               class="accept-bid-button">
-                                Accept bid
-                            </a>
+                                <a href="{% url 'accept_bid' bid.id %}"
+                                   class="accept-bid-button">
+                                    Accept bid
+                                </a>
 
-                            <a href="{% url 'reject_bid' bid.id %}"
-                               class="reject-bid-button">
-                                Reject
-                            </a>
+                                <a href="{% url 'reject_bid' bid.id %}"
+                                   class="reject-bid-button">
+                                    Reject
+                                </a>
 
-                            <a href="{% url 'contingent_bid' bid.id %}"
-                               class="contingent-bid-button">
-                                Contingent
-                            </a>
+                                <a href="{% url 'contingent_bid' bid.id %}"
+                                   class="contingent-bid-button">
+                                    Contingent
+                                </a>
 
-                        {% endif %}
-
-                    </div>
-
-
-                                {% endif %}
                             {% endif %}
+
                         </div>
                     {% empty %}
                         <p>No bids yet.</p>
@@ -133,15 +128,11 @@
                     {% csrf_token %}
 
                     <div class="bid-inputs">
-                        {{ form.bid_price }}
+                        <div class="bid-field">
+                            {{ form.bid_price }}
+                        </div>
                         {{ form.expiration_date }}
                     </div>
-                <div class="bid-inputs">
-                    <div class="bid-field">
-                        {{ form.bid_price }}
-                    </div>
-                    {{ form.expiration_date }}
-                </div>
 
                     {% if existing_bid %}
                         <div class="bid-buttons">
@@ -334,6 +325,7 @@
             <p>
                 You will get a notification if it is accepted.
             </p>
+        {% endif %}
 
         </div>
 
@@ -342,5 +334,5 @@
     {% endblock %}
 
 {% block extra_js %}
-<script src="{% static 'js/artwork_detail.js' %}?v=4"></script>
+<script src="{% static 'js/artworks/artwork_detail.js' %}?v=4"></script>
 {% endblock %}
