@@ -23,22 +23,28 @@
 
             {% if user.is_authenticated %}
 
-                <a href="{% url 'profile' %}" class="profile-link">
+	                <a href="{% url 'profile' %}" class="profile-link">
 
-                    {% if user.seller and user.seller.logo %}
-                        <img src="{{ user.seller.logo.url }}" class="nav-profile-image" alt="{{ user.seller.name }}">
+                        <div class="nav-profile-wrap">
+	                        {% if user.seller and user.seller.logo %}
+	                            <img src="{{ user.seller.logo.url }}" class="nav-profile-image" alt="{{ user.seller.name }}">
 
-                    {% elif user.profile.profile_image %}
-                        <img src="{{ user.profile.profile_image.url }}" class="nav-profile-image">
+	                        {% elif user.profile.profile_image %}
+	                            <img src="{{ user.profile.profile_image.url }}" class="nav-profile-image">
 
-                    {% else %}
-                        <div class="nav-profile-placeholder">
-                            <div class="nav-head"></div>
-                            <div class="nav-body"></div>
+	                        {% else %}
+	                            <div class="nav-profile-placeholder">
+	                                <div class="nav-head"></div>
+	                                <div class="nav-body"></div>
+	                            </div>
+	                        {% endif %}
+
+                            {% if accepted_bid_count %}
+                                <span class="nav-notification-badge">{{ accepted_bid_count }}</span>
+                            {% endif %}
                         </div>
-                    {% endif %}
 
-                    <span>My profile</span>
+	                    <span>My profile</span>
 
                 </a>
 

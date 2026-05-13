@@ -4,6 +4,10 @@ body {
     font-family: Arial, sans-serif;
 }
 
+.hidden {
+    display: none !important;
+}
+
 .profile-container {
     padding: 40px;
     box-sizing: border-box;
@@ -476,4 +480,44 @@ body {
     .bid-artwork-link {
         font-size: 22px;
     }
+}
+
+.canceled {
+    background: #555;
+    color: white;
+}
+
+.cancel-bid-profile-link {
+    color: #9b3a35;
+    font-weight: 700;
+}
+
+.profile-notification-popup {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgb(0 0 0 / 40%);
+    z-index: 1000;
+}
+
+.profile-notification-content {
+    position: relative;
+    width: min(640px, calc(100% - 40px));
+    background: white;
+    padding: 70px;
+    font-size: 24px;
+    font-weight: 700;
+}
+
+#close-profile-notification {
+    position: absolute;
+    top: 18px;
+    right: 22px;
+    border: none;
+    background: transparent;
+    font: inherit;
+    font-size: 30px;
+    cursor: pointer;
 }
