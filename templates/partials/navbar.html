@@ -13,8 +13,10 @@
             <a href="{% url 'see_all' %}">See all</a>
             <a href="{% url 'category_list' %}">Category</a>
             <a href="{% url 'faq' %}">How to?</a>
-            <a href="#">Buy</a>
-            <a href="{% url 'add_artwork' %}">Sell</a>
+            <a href="{% url 'info' %}">Info</a>
+            {% if user.is_authenticated and user.profile.is_seller %}
+                <a href="{% url 'add_artwork' %}">Sell</a>
+            {% endif %}
         </div>
     </div>
         <div class="nav-right">

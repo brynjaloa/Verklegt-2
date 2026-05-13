@@ -1,6 +1,10 @@
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
 from django.http import HttpResponseForbidden
+from django.db.models import Q
 from django.shortcuts import render, get_object_or_404, redirect
+from django.views.decorators.http import require_POST
+
 from django.urls import reverse
 from django.core.paginator import Paginator
 from .forms import ArtworkForm
@@ -64,11 +68,20 @@ FEATURED_CATEGORY_STYLES = {
 }
 
 
+def sort_artworks(artworks, sort):
+    if sort == 'price_low':
+        return artworks.order_by('starting_bid', '-listing_date', '-id')
+    if sort == 'price_high':
+        return artworks.order_by('-starting_bid', '-listing_date', '-id')
+
+    return artworks.order_by('-listing_date', '-id')
+
+
 def artwork_list(request):
     query = request.GET.get('q', '').strip()
     category = request.GET.get('category')
-    style = request.GET.get('style')
-    medium = request.GET.get('medium')
+    styles_selected = request.GET.getlist('style')
+    mediums_selected = request.GET.getlist('medium')
     year_from = request.GET.get('year_from')
     year_to = request.GET.get('year_to')
 
@@ -89,10 +102,10 @@ def artwork_list(request):
     style_field = category_fields.get("style")
     medium_field = category_fields.get("medium")
 
-    if style and style_field:
-        artworks = artworks.filter(**{style_field: style})
-    if medium and medium_field:
-        artworks = artworks.filter(**{medium_field: medium})
+    if styles_selected and style_field:
+        artworks = artworks.filter(**{f"{style_field}__in": styles_selected})
+    if mediums_selected and medium_field:
+        artworks = artworks.filter(**{f"{medium_field}__in": mediums_selected})
     if year_from:
         artworks = artworks.filter(year__gte=year_from)
     if year_to:
@@ -102,6 +115,13 @@ def artwork_list(request):
     featured_styles = FEATURED_CATEGORY_STYLES.get(category, styles)
     mediums = category_fields.get("mediums", [])
 
+    sort = request.GET.get('sort', 'relevance')
+    artworks = sort_artworks(artworks, sort)
+
+    paginator = Paginator(artworks, 5)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
     return render(request, 'artworks/artwork_marketplace.html', {
         'artworks': artworks,
         'query': query,
@@ -109,6 +129,10 @@ def artwork_list(request):
         'styles': featured_styles,
         'filter_styles': styles,
         'mediums': mediums,
+        'selected_styles': styles_selected,
+        'selected_mediums': mediums_selected,
+        'page_obj': page_obj,
+        'sort': sort,
     })
 
 
@@ -168,11 +192,12 @@ def artwork_detail(request, pk):
         if existing_bid:
             form = BidForm(
                 request.POST,
-                instance=existing_bid
+                instance=existing_bid,
+                artwork=artwork,
             )
 
         else:
-            form = BidForm(request.POST)
+            form = BidForm(request.POST, artwork=artwork)
 
         if form.is_valid():
             bid = form.save(commit=False)
@@ -195,14 +220,28 @@ def artwork_detail(request, pk):
                 "existing_bid": existing_bid,
                 "is_resubmission": is_resubmission,
                 "show_popup": True,
+                "bid_popup_message": "success",
                 "highest_bids": highest_bids,
             })
 
+        return render(request, "artworks/artwork_detail.html", {
+            "artwork": artwork,
+            "primary_image": artwork.primary_image,
+            "extra_images": extra_images,
+            "can_edit_artwork": can_edit_artwork,
+            "show_description_toggle": show_description_toggle,
+            "form": form,
+            "existing_bid": existing_bid,
+            "show_popup": True,
+            "bid_popup_message": "minimum_bid_error",
+            "highest_bids": highest_bids,
+        })
+
     else:
         if existing_bid:
-            form = BidForm(instance=existing_bid)
+            form = BidForm(instance=existing_bid, artwork=artwork)
         else:
-            form = BidForm()
+            form = BidForm(artwork=artwork)
 
     return render(request, "artworks/artwork_detail.html", {
         "artwork": artwork,
@@ -279,32 +318,65 @@ def edit_artwork(request, pk):
     })
 
 
+@login_required
+@require_POST
+def delete_artwork(request, pk):
+    artwork = get_object_or_404(Artwork, pk=pk)
+    seller = getattr(request.user, "seller", None)
+
+    if seller is None or artwork.seller != seller:
+        return HttpResponseForbidden("You cannot remove this artwork.")
+
+    artwork.delete()
+    return redirect("profile")
+
+
 def category_list(request):
     categories = Artwork.Category.choices
     return render(request, 'Category/categories.html', {'categories': categories})
 
 def artwork_see_all(request):
-    medium = request.GET.get('medium')
+    mediums_selected = request.GET.getlist('medium')
     year_from = request.GET.get('year_from')
     year_to = request.GET.get('year_to')
+    categories_selected = request.GET.getlist('category')
+    styles_selected = request.GET.getlist('style')
+    editions_selected = request.GET.getlist('edition')
     category = request.GET.get('category')
     style = request.GET.get('style')
     edition = request.GET.get('edition')
+    sort = request.GET.get('sort', 'relevance')
 
     artworks = Artwork.objects.all()
 
-    if category:
-        artworks = artworks.filter(category=category)
-    if medium:
-        artworks = artworks.filter(painting_medium=medium)
-    if style:
-        artworks = artworks.filter(painting_style=style)
-    if edition:
-        artworks = artworks.filter(edition=edition)
+    if categories_selected:
+        artworks = artworks.filter(category__in=categories_selected)
+    if mediums_selected:
+        artworks = artworks.filter(
+            Q(painting_medium__in=mediums_selected)
+            | Q(sculpture_material__in=mediums_selected)
+            | Q(furniture_material__in=mediums_selected)
+            | Q(photo_technique__in=mediums_selected)
+        )
+    if styles_selected:
+        artworks = artworks.filter(
+            Q(painting_style__in=styles_selected)
+            | Q(sculpture_style__in=styles_selected)
+            | Q(furniture_style__in=styles_selected)
+            | Q(photo_style__in=styles_selected)
+        )
+    if editions_selected:
+        artworks = artworks.filter(edition__in=editions_selected)
     if year_from:
         artworks = artworks.filter(year__gte=year_from)
     if year_to:
         artworks = artworks.filter(year__lte=year_to)
+
+    artworks = artworks.order_by("-listing_date", "-id")
+    paginator = Paginator(artworks, 24)
+    page_obj = paginator.get_page(request.GET.get("page"))
+    pagination_query = request.GET.copy()
+    pagination_query.pop("page", None)
 
     all_styles = list({label: value for value, label in (
             list(Artwork.PaintingStyle.choices) +
@@ -318,7 +390,10 @@ def artwork_see_all(request):
     page_obj = paginator.get_page(page_number)
 
     return render(request, 'artworks/see_all.html', {
-        'artworks': artworks,
+        'artworks': page_obj,
+        'page_obj': page_obj,
+        'pagination_pages': paginator.get_elided_page_range(page_obj.number),
+        'pagination_query': pagination_query.urlencode(),
         'categories': Artwork.Category.choices,
         'editions': Artwork.Edition.choices,
         'painting_mediums': Artwork.PaintingMedium.choices,
@@ -327,6 +402,11 @@ def artwork_see_all(request):
         'photo_techniques': Artwork.PhotoTechnique.choices,
         'all_styles': all_styles,
         'page_obj': page_obj,
+        'selected_categories': categories_selected,
+        'selected_mediums': mediums_selected,
+        'selected_styles': styles_selected,
+        'selected_editions': editions_selected,
+        'sort': sort,
     })
 
 @login_required
@@ -342,4 +422,7 @@ def accept_bid(request, bid_id):
     bid.status = "Accepted"
     bid.save()
 
-    return redirect("artwork_detail",pk=bid.artwork.id)
+    return redirect(
+        "artwork_detail",
+        pk=bid.artwork.id
+    )

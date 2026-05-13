@@ -1,7 +1,7 @@
 body {
     margin: 0;
     background: #f5f5f5;
-    font-family: Georgia;
+    font-family: Arial, sans-serif;
 }
 
 .hidden {
@@ -10,6 +10,9 @@ body {
 
 .profile-container {
     padding: 40px;
+    box-sizing: border-box;
+    max-width: 1500px;
+    margin: 0 auto;
 }
 
 .profile-top {
@@ -38,34 +41,37 @@ body {
     border-radius: 25px;
     font-size: 30px;
     font-weight: bold;
+    line-height: 1.2;
 }
 
 .profile-layout {
     display: flex;
-    gap: 150px;
+    gap: clamp(30px, 7vw, 150px);
     align-items: flex-start;
 }
 
 .left-side {
-    width: 350px;
+    width: min(350px, 100%);
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top:-30px ;
+    margin-top: -30px;
     margin-left: 30px;
+    text-align: center;
+    flex-shrink: 0;
 }
 
 .profile-image {
-    width: 250px;
-    height: 250px;
+    width: clamp(150px, 18vw, 250px);
+    height: clamp(150px, 18vw, 250px);
     border-radius: 50%;
     object-fit: cover;
     border: 2px solid black;
 }
 
 .default-profile {
-    width: 250px;
-    height: 250px;
+    width: clamp(150px, 18vw, 250px);
+    height: clamp(150px, 18vw, 250px);
     border-radius: 50%;
     background: #c84c4c;
     border: 3px solid black;
@@ -97,25 +103,36 @@ body {
 }
 
 .profile-name {
-    font-size: 45px;
+    font-size: clamp(30px, 4vw, 45px);
     margin-top: 20px;
+    overflow-wrap: anywhere;
+}
+
+.profile-username {
+    font-size: clamp(18px, 2vw, 24px);
+    margin-top: 6px;
+    overflow-wrap: anywhere;
 }
 
 .profile-type {
-    font-size: 30px;
+    font-size: clamp(18px, 2vw, 24px);
+    margin-top: 8px;
+    overflow-wrap: anywhere;
 }
 
 .profile-btn {
     display: block;
     text-align: center;
-    width: 280px;
+    width: min(340px, 100%);
+    box-sizing: border-box;
     margin-top: 25px;
     background: #c84c4c;
     color: white;
     text-decoration: none;
     padding: 15px;
     border-radius: 20px;
-    font-size: 24px;
+    font-size: clamp(18px, 2vw, 24px);
+    white-space: nowrap;
 }
 
 .logout-btn {
@@ -126,13 +143,15 @@ body {
 
 .right-side {
     flex: 1;
+    min-width: 0;
 }
 
 .info-box {
     background: #8f2f2f;
     padding: 30px;
     border-radius: 30px;
-    width: 650px;
+    width: min(650px, 100%);
+    box-sizing: border-box;
 }
 
 
@@ -143,6 +162,25 @@ body {
     margin-bottom: 30px;
 }
 
+.seller-bio-box {
+    background: white;
+    border-radius: 20px;
+    box-sizing: border-box;
+    margin: 0 auto 30px;
+    padding: 30px;
+    width: min(650px, 100%);
+}
+
+.seller-bio-box h1 {
+    margin-top: 0;
+}
+
+.seller-bio-box p {
+    font-size: 20px;
+    line-height: 1.5;
+    margin: 0;
+}
+
 .cover-container {
     position: relative;
     margin-bottom: 120px;
@@ -150,14 +188,14 @@ body {
 
 .cover-image {
     width: 100%;
-    height: 250px;
+    height: clamp(180px, 20vw, 300px);
     object-fit: cover;
 }
 
 .floating-profile {
     position: absolute;
-    left: 70px;
-    bottom: -90px;
+    left: clamp(24px, 6vw, 70px);
+    bottom: clamp(-72px, -6vw, -48px);
 }
 
 .back-btn {
@@ -212,6 +250,7 @@ body {
     text-decoration: none;
     font-size: 24px;
     font-weight: bold;
+    gap: 16px;
 }
 
 .listing-dot {
@@ -254,6 +293,7 @@ body {
     gap:20px;
     padding:15px 0;
     border-bottom:1px solid #cfcfcf;
+    gap: 16px;
 }
 
 .profile-bid-main{
@@ -362,6 +402,84 @@ body {
 .finalized {
     background: #2f6f88;
     color: white;
+}
+
+
+@media (width <= 980px) {
+    .profile-container {
+        padding: 28px;
+    }
+
+    .profile-layout {
+        flex-direction: column;
+        gap: 34px;
+    }
+
+    .left-side {
+        width: 100%;
+        margin-left: 0;
+        margin-top: 0;
+    }
+
+    .right-side,
+    .info-box {
+        width: 100%;
+    }
+
+    .cover-container {
+        margin-bottom: 95px;
+    }
+}
+
+@media (width <= 620px) {
+    .profile-container {
+        padding: 18px;
+    }
+
+    .profile-top {
+        align-items: flex-start;
+        gap: 14px;
+        margin-bottom: 28px;
+    }
+
+    .profile-title {
+        font-size: 24px;
+        padding: 12px 24px;
+    }
+
+    .cover-container {
+        margin-bottom: 78px;
+    }
+
+    .cover-image {
+        height: 180px;
+    }
+
+    .floating-profile {
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .info-box,
+    .seller-bio-box,
+    .inner-box {
+        border-radius: 18px;
+        padding: 20px;
+    }
+
+    .artwork-link,
+    .profile-bid {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .listing-left {
+        align-items: flex-start;
+    }
+
+    .bid-artwork-link {
+        font-size: 22px;
+    }
 }
 
 .canceled {

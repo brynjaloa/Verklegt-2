@@ -179,6 +179,42 @@ class Artwork(models.Model):
 
         return None
 
+    @property
+    def display_medium(self):
+        medium_fields = {
+            self.Category.PAINTINGS: self.painting_medium,
+            self.Category.SCULPTURES: self.sculpture_material,
+            self.Category.FURNITURE: self.furniture_material,
+            self.Category.PHOTOS: self.photo_technique,
+        }
+
+        return medium_fields.get(self.category) or "Not specified"
+
+    @property
+    def dimensions_display(self):
+        dimensions = [
+            self._format_dimension(value)
+            for value in (self.width, self.height, self.depth)
+            if value is not None
+        ]
+
+        if not dimensions:
+            return "Not specified"
+
+        return " x ".join(dimensions) + " cm"
+
+    @staticmethod
+    def _format_dimension(value):
+        formatted_value = f"{value.normalize():f}".rstrip("0").rstrip(".")
+        return formatted_value or "0"
+
+    @property
+    def status_display(self):
+        if self.is_sold:
+            return "Sold"
+
+        return "Available"
+
     def __str__(self):
         return self.title
 

@@ -1,0 +1,68 @@
+.location-page {
+    padding: 20px;
+}
+
+.location-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.location-back-link {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    font-size: 18px;
+    color: black;
+}
+
+.location-heading {
+    background-color: #c06060;
+    color: white;
+    padding: 8px 24px;
+    border-radius: 24px;
+    margin: 0;
+    font-size: 24px;
+}
+
+.location-body {
+    display: flex;
+    gap: 60px;
+    align-items: flex-start;
+    margin-top: 20px;
+}
+
+.location-info {
+    flex: 1;
+}
+
+.location-info h2 {
+    font-size: 28px;
+    margin-bottom: 16px;
+    margin-left: 15px;
+}
+
+.location-info p {
+    font-size: 20px;
+    margin-bottom: 8px;
+    margin-left: 40px;
+}
+
+.location-info h2:not(:first-child) {
+    margin-top: 32px;
+}
+
+.location-map {
+    flex: 3;
+}
+
+.location-iframe {
+    border-radius: 12px;
+    border: none;
+}

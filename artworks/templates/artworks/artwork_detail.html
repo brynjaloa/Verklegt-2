@@ -38,6 +38,7 @@
 
         <div class="artwork-detail-info">
             <h1>{{ artwork.title }}</h1>
+            <p class="artwork-listing-date">Listed: {{ artwork.listing_date|date:"M j, Y" }}</p>
 
             <p class="artwork-short-description">
                 {% if artwork.description %}
@@ -146,10 +147,12 @@
                         </div>
                     {% endif %}
 
-                    <div class="bid-inputs">
+                <div class="bid-inputs">
+                    <div class="bid-field">
                         {{ form.bid_price }}
-                        {{ form.expiration_date }}
                     </div>
+                    {{ form.expiration_date }}
+                </div>
 
 	                    {% if existing_bid %}
 	                        <div class="bid-buttons">
@@ -178,8 +181,18 @@
                 {% endif %}
 
                 {% if can_edit_artwork and not is_artwork_sold %}
+            {% if can_edit_artwork %}
+                <div class="artwork-owner-actions">
                     <a class="artwork-edit-button" href="{% url 'edit_artwork' artwork.pk %}">Edit artwork</a>
-                {% endif %}
+
+                    <form method="POST" action="{% url 'delete_artwork' artwork.pk %}">
+                        {% csrf_token %}
+                        <button class="artwork-delete-button" type="submit">
+                            Remove listing
+                        </button>
+                    </form>
+                </div>
+            {% endif %}
 
                 <details class="artwork-detail-panel">
                     <summary>Information</summary>
@@ -275,19 +288,27 @@
                     </div>
                 </details>
 
-                <details class="artwork-detail-panel">
-                    <summary>Seller information</summary>
-                    <div class="artwork-panel-content seller-panel">
+            <details class="artwork-detail-panel">
+                <summary>Seller information</summary>
+                <div class="artwork-panel-content seller-panel">
+                    <a class="seller-logo-link" href="{% url 'seller_profile' artwork.seller.id %}">
                         {% if artwork.seller.logo %}
                             <img class="seller-logo" src="{{ artwork.seller.logo.url }}" alt="{{ artwork.seller.name }}">
+                        {% else %}
+                            <span class="seller-logo-placeholder" aria-hidden="true"></span>
                         {% endif %}
+                    </a>
 
-                        <div>
-                            <h2>{{ artwork.seller.name }}</h2>
-                            <p>{{ artwork.seller.seller_type }}</p>
-                            {% if artwork.seller.bio %}
-                                <p>{{ artwork.seller.bio }}</p>
-                            {% endif %}
+                    <div>
+                        <h2>
+                            <a class="seller-name-link" href="{% url 'seller_profile' artwork.seller.id %}">
+                                {{ artwork.seller.name }}
+                            </a>
+                        </h2>
+                        <p>{{ artwork.seller.seller_type }}</p>
+                        {% if artwork.seller.bio %}
+                            <p>{{ artwork.seller.bio }}</p>
+                        {% endif %}
 
                             {% if artwork.seller.seller_type == "Gallery" %}
                                 {% if artwork.seller.street_name or artwork.seller.city or artwork.seller.postal_code %}
@@ -317,6 +338,11 @@
 
             {% if is_resubmission %}
                 <h2>Thank you for resubmitting a bid.</h2>
+        {% if bid_popup_message == "minimum_bid_error" %}
+            <h2>Bid may not be lower than minimum bid, please bid again using a higher bid</h2>
+        {% else %}
+            {% if existing_bid %}
+                <h2>Thank you for re-submitting a bid.</h2>
             {% else %}
                 <h2>Thank you for submitting a bid.</h2>
             {% endif %}
@@ -332,5 +358,5 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="{% static 'js/artworks/artwork_detail.js' %}"></script>
+<script src="{% static 'js/artwork_detail.js' %}?v=4"></script>
 {% endblock %}

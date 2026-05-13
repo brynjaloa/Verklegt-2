@@ -1,84 +1,84 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block content %}
+{% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/faq.css' %}">
+{% endblock %}
 
-<div style="padding: 20px;">
-    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 24px;">
-        <a href="/" style="width: 40px; height: 40px; border-radius: 50%; border: 1px solid #ccc; display: flex; align-items: center; justify-content: center; text-decoration: none; font-size: 18px; color: black;">‹</a>
-        <h1 style="background-color: #C06060; color: white; padding: 8px 24px; border-radius: 24px; margin: 0; font-size: 24px;">Frequently asked</h1>
+{% block content %}
+<div class="faq-page">
+    <div class="faq-header">
+        <a href="/" class="faq-back-link">‹</a>
+        <h1 class="faq-title">Frequently asked</h1>
     </div>
 
-    <div style="display: flex; gap: 40px;">
-        <!-- FAQ section -->
-        <div style="flex: 1;">
+    <div class="faq-layout">
+        <div class="faq-list">
 
             <div class="faq-item">
-                <div class="faq-question" onclick="toggle(this, 'video-sell')">
-                    <span style="color: #8B0000; font-size: 20px;">●</span>
-                    <strong style="font-size: 24px;">How to sell?</strong>
+                <button class="faq-question" type="button" data-video-id="video-sell">
+                    <span class="faq-dot">●</span>
+                    <strong>How to sell?</strong>
                     <span class="faq-icon">+</span>
-                </div>
-                <div class="faq-answer" style="display: none;">
-                    <p style="font-size: 20px;">Register as a seller on ArtVault.</p>
-                    <p style="font-size: 20px;">Upload your artwork with images and details.</p>
-                    <p style="font-size: 20px;">Set your starting bid price.</p>
-                    <p style="font-size: 20px;">Wait for buyers to place bids.</p>
+                </button>
+                <div class="faq-answer" hidden>
+                    <p>Register as a seller on ArtVault.</p>
+                    <p>Upload your artwork with images and details.</p>
+                    <p>Set your starting bid price.</p>
+                    <p>Wait for buyers to place bids.</p>
                 </div>
                 <hr>
             </div>
 
             <div class="faq-item">
-                <div class="faq-question" onclick="toggle(this, 'video-buy')">
-                    <span style="color: #8B0000; font-size: 20px;">●</span>
-                    <strong style="font-size: 24px;">How to buy?</strong>
+                <button class="faq-question" type="button" data-video-id="video-buy">
+                    <span class="faq-dot">●</span>
+                    <strong>How to buy?</strong>
                     <span class="faq-icon">+</span>
-                </div>
-                <div class="faq-answer" style="display: none;">
-                    <p style="font-size: 20px;">Browse artworks in the catalogue.</p>
-                    <p style="font-size: 20px;">Click on an artwork to see details.</p>
-                    <p style="font-size: 20px;">Submit a bid with your price and expiration date.</p>
-                    <p style="font-size: 20px;">If accepted, finalize the purchase.</p>
+                </button>
+                <div class="faq-answer" hidden>
+                    <p>Browse artworks in the catalogue.</p>
+                    <p>Click on an artwork to see details.</p>
+                    <p>Submit a bid with your price and expiration date.</p>
+                    <p>If accepted, finalize the purchase.</p>
                 </div>
                 <hr>
             </div>
 
             <div class="faq-item">
-                <div class="faq-question" onclick="toggle(this, 'video-signup')">
-                    <span style="color: #8B0000; font-size: 20px;">●</span>
-                    <strong style="font-size: 24px;">How to sign up?</strong>
+                <button class="faq-question" type="button" data-video-id="video-signup">
+                    <span class="faq-dot">●</span>
+                    <strong>How to sign up?</strong>
                     <span class="faq-icon">+</span>
-                </div>
-                <div class="faq-answer" style="display: none;">
-                    <p style="font-size: 20px;">Click the Login button in the top right.</p>
-                    <p style="font-size: 20px;">Select Sign up and fill in your details.</p>
-                    <p style="font-size: 20px;">You're ready to start browsing!</p>
+                </button>
+                <div class="faq-answer" hidden>
+                    <p>Click the Login button in the top right.</p>
+                    <p>Select Sign up and fill in your details.</p>
+                    <p>You're ready to start browsing!</p>
                 </div>
                 <hr>
             </div>
 
         </div>
 
-        <!-- Video section -->
-        <div style="width: 780px; margin-left: 80px; margin-right: 80px; flex-shrink: 0; text-align: center;">
+        <div class="faq-video-area">
 
-            <div id="video-sell" class="video-panel" style="display: none;">
-                <video controls style="width: 100%; height: 425px; border-radius: 8px; object-fit: contain; background: black;">
+            <div id="video-sell" class="video-panel" hidden>
+                <video controls>
                     <source src="{% static 'videos/how_to_sell.mp4' %}" type="video/mp4">
                 </video>
-                <p style="margin-top: 8px; color: #666;">How to sell</p>
+                <p>How to sell</p>
             </div>
 
-            <div id="video-buy" class="video-panel" style="display: none;">
-                <video controls style="width: 100%; height: 425px; border-radius: 8px; object-fit: contain; background: black;">
+            <div id="video-buy" class="video-panel" hidden>
+                <video controls>
                     <source src="{% static 'videos/how_to_buy.mp4' %}" type="video/mp4">
                 </video>
-                <p style="margin-top: 8px; color: #666;">How to buy</p>
+                <p>How to buy</p>
             </div>
 
-            <div id="video-signup" class="video-panel" style="display: none;">
-                <video controls style="width: 100%; height: 425px; border-radius: 8px; object-fit: contain; background: black;">
+            <div id="video-signup" class="video-panel" hidden>
+                <video controls>
                     <source src="{% static 'videos/how_to_signup.mp4' %}" type="video/mp4">
                 </video>
                 <p style="margin-top: 8px; color: #666;">How to sign up</p>
@@ -88,27 +88,8 @@
     </div>
 </div>
 
-<script>
-function toggle(el, videoId) {
-    const answer = el.nextElementSibling;
-    const icon = el.querySelector('.faq-icon');
-    const isOpen = answer.style.display !== 'none';
+{% endblock %}
 
-    // Close all sections and hide all videos
-    document.querySelectorAll('.faq-answer').forEach(a => a.style.display = 'none');
-    document.querySelectorAll('.faq-question .faq-icon').forEach(i => i.textContent = '+');
-    document.querySelectorAll('.video-panel').forEach(v => {
-        v.style.display = 'none';
-        v.querySelector('video').pause();
-    });
-
-    // If it was closed, open it and show its video
-    if (!isOpen) {
-        answer.style.display = 'block';
-        icon.textContent = '-';
-        document.getElementById(videoId).style.display = 'block';
-    }
-}
-</script>
-
+{% block extra_js %}
+<script src="{% static 'js/faq.js' %}"></script>
 {% endblock %}
