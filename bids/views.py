@@ -29,13 +29,14 @@ def form_data_for_session(form):
 @login_required
 def cancel_bid(request, bid_id):
 
-    bid = get_object_or_404(
-        Bid,
+    bid = Bid.objects.filter(
         id=bid_id,
         user=request.user
-    )
+    ).select_related("artwork").first()
 
-    artwork_id = bid.artwork.id
+    if bid is None:
+        return redirect("profile")
+
 
     if bid.status in {Bid.Status.ACCEPTED, Bid.Status.CONTINGENT}:
         bid.status = Bid.Status.CANCELED
@@ -50,13 +51,12 @@ def cancel_bid(request, bid_id):
         if not has_active_accepted_bid:
             bid.artwork.is_sold = False
             bid.artwork.save(update_fields=["is_sold"])
+    elif bid.status == Bid.Status.CANCELED:
+        pass
     else:
         bid.delete()
 
-    return redirect(
-        'artwork_detail',
-        pk=artwork_id
-    )
+    return redirect("profile")
 
 @login_required
 def accept_bid(request, bid_id):
@@ -73,10 +73,11 @@ def accept_bid(request, bid_id):
         return redirect("artwork_detail", pk=bid.artwork.id)
 
     Bid.objects.filter(artwork=bid.artwork).exclude(id=bid.id).update(
-        status=Bid.Status.REJECTED
+        status=Bid.Status.REJECTED,
+        buyer_reject_notification_seen=False,
     )
 
-    bid.status = "Accepted"
+    bid.status = Bid.Status.ACCEPTED
     bid.buyer_accept_notification_seen = False
     bid.save(update_fields=["status", "buyer_accept_notification_seen"])
     bid.artwork.is_sold = True
@@ -92,8 +93,9 @@ def reject_bid(request, bid_id):
     if bid.artwork.seller != request.user.seller:
         return HttpResponseForbidden()
 
-    bid.status = "Rejected"
-    bid.save()
+    bid.status = Bid.Status.REJECTED
+    bid.buyer_reject_notification_seen = False
+    bid.save(update_fields=["status", "buyer_reject_notification_seen"])
 
     return redirect('artwork_detail', pk=bid.artwork.id)
 
@@ -105,8 +107,8 @@ def contingent_bid(request, bid_id):
     if bid.artwork.seller != request.user.seller:
         return HttpResponseForbidden()
 
-    bid.status = "Contingent"
-    bid.save()
+    bid.status = Bid.Status.CONTINGENT
+    bid.save(update_fields=["status"])
 
     return redirect('artwork_detail', pk=bid.artwork.id)
 

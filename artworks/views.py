@@ -6,9 +6,10 @@ from django.http import HttpResponseForbidden
 from django.db.models import Count, Exists, OuterRef, Q
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.http import require_POST
+from django.utils.http import url_has_allowed_host_and_scheme
+from urllib.parse import urlparse
 
 from django.urls import reverse
-from django.utils.http import url_has_allowed_host_and_scheme
 from django.core.paginator import Paginator
 from .forms import ArtworkForm
 from .models import Artwork, ArtworkImage
@@ -102,6 +103,67 @@ def apply_title_search(artworks, query):
     return artworks.filter(title_query)
 
 
+BUILT_IN_STYLE_IMAGES = {
+    Artwork.Category.PAINTINGS: {
+        Artwork.PaintingStyle.MODERNISM.value: "built-in_artworks/Modernism_art.jpeg",
+        Artwork.PaintingStyle.SURREALISM.value: "built-in_artworks/Surrealism_art.jpeg",
+        Artwork.PaintingStyle.REALISM.value: "built-in_artworks/Realism_art.jpeg",
+        Artwork.PaintingStyle.ABSTRACT_ART.value: "built-in_artworks/Abstract_art.jpeg",
+    },
+    Artwork.Category.SCULPTURES: {
+        Artwork.SculptureStyle.SURREALISM.value: "built-in_artworks/Surrealism_sculpture.jpeg",
+        Artwork.SculptureStyle.CONTEMPORARY.value: "built-in_artworks/Contemporary_sculpture.jpeg",
+        Artwork.SculptureStyle.MODERN_ART.value: "built-in_artworks/Modern_art_sculpture.jpeg",
+        Artwork.SculptureStyle.KINETIC_ART.value: "built-in_artworks/Kinetic_art_sculpture.jpeg",
+    },
+    Artwork.Category.PHOTOS: {
+        Artwork.PhotoStyle.LANDSCAPE.value: "built-in_artworks/Landscape_photo.jpeg",
+        Artwork.PhotoStyle.PORTRAIT.value: "built-in_artworks/Portrait_photos.jpeg",
+        Artwork.PhotoStyle.ARCHITECTURAL.value: "built-in_artworks/Architecture_photos.jpeg",
+        Artwork.PhotoStyle.ABSTRACT.value: "built-in_artworks/Abstract_photos.jpeg",
+    },
+    Artwork.Category.FURNITURE: {
+        Artwork.FurnitureStyle.MINIMALISM.value: "built-in_artworks/Minimalism_furniture.jpeg",
+        Artwork.FurnitureStyle.ART_DECO.value: "built-in_artworks/Art_deco_furniture.jpeg",
+        Artwork.FurnitureStyle.MODERNISM.value: "built-in_artworks/Modern_furniture.jpeg",
+        Artwork.FurnitureStyle.CONTEMPORARY.value: "built-in_artworks/Contemporary_furniture.jpeg",
+    },
+}
+
+
+BUILT_IN_CATEGORY_IMAGES = {
+    Artwork.Category.PAINTINGS: "built-in_artworks/Painting.jpeg",
+    Artwork.Category.SCULPTURES: "built-in_artworks/Sculptures.jpeg",
+    Artwork.Category.PHOTOS: "built-in_artworks/Photos.jpeg",
+    Artwork.Category.FURNITURE: "built-in_artworks/Furniture.jpeg",
+}
+
+
+def styles_with_builtin_images(category, styles):
+    image_paths = BUILT_IN_STYLE_IMAGES.get(category, {})
+
+    return [
+        (value, label, image_paths.get(value))
+        for value, label in styles
+    ]
+
+
+def get_artwork_detail_back_url(request):
+    referer = request.META.get("HTTP_REFERER")
+
+    if referer and url_has_allowed_host_and_scheme(
+        referer,
+        allowed_hosts={request.get_host()},
+        require_https=request.is_secure(),
+    ):
+        referer_path = urlparse(referer).path
+
+        if referer_path != request.path:
+            return referer
+
+    return reverse("see_all")
+
+
 def sort_artworks(artworks, sort):
     if sort == 'price_low':
         return artworks.order_by('starting_bid', '-listing_date', '-id')
@@ -189,7 +251,10 @@ def artwork_list(request):
         artworks = artworks.filter(year__lte=year_to)
 
     styles = category_fields.get("styles", [])
-    featured_styles = FEATURED_CATEGORY_STYLES.get(category, styles)
+    featured_styles = styles_with_builtin_images(
+        category,
+        FEATURED_CATEGORY_STYLES.get(category, styles),
+    )
     mediums = category_fields.get("mediums", [])
     show_style_shortcuts = not (
         query
@@ -203,6 +268,9 @@ def artwork_list(request):
 
     sort = request.GET.get('sort', 'relevance')
     artworks = sort_artworks(artworks, sort)
+
+    pagination_query = request.GET.copy()
+    pagination_query.pop("page", None)
 
     paginator = Paginator(artworks, 5)
     page_number = request.GET.get('page')
@@ -226,6 +294,7 @@ def artwork_list(request):
             ("sold", "Sold"),
         ),
         'page_obj': page_obj,
+        'pagination_query': pagination_query.urlencode(),
         'sort': sort,
     })
 
@@ -237,6 +306,7 @@ def home_view(request):
         .filter(bid_count__gt=0)
         .order_by("-bid_count", "-listing_date", "-id")[:8]
     )
+    recent_artworks = Artwork.objects.all().order_by("-listing_date", "-id")[:8]
 
     return render(request, "home.html", {
         "recent_artworks": recent_artworks,
@@ -256,6 +326,10 @@ def artwork_detail(request, pk):
         )
     ) else reverse("see_all")
     highest_bids = Bid.objects.filter(artwork=artwork).order_by("-bid_price")[:3]
+    back_url = get_artwork_detail_back_url(request)
+    highest_bids = Bid.objects.filter(artwork=artwork).exclude(
+        status=Bid.Status.CANCELED
+    ).order_by("-bid_price")[:3]
     has_accepted_bid = Bid.objects.filter(
         artwork=artwork,
         status__in=[Bid.Status.ACCEPTED, Bid.Status.FINALIZED],
@@ -284,7 +358,7 @@ def artwork_detail(request, pk):
         existing_bid = Bid.objects.filter(
             artwork=artwork,
             user=request.user
-        ).first()
+        ).exclude(status=Bid.Status.CANCELED).first()
 
     if request.method == "POST" and is_artwork_sold:
         return redirect("artwork_detail", pk=artwork.pk)
@@ -444,7 +518,10 @@ def delete_artwork(request, pk):
 
 
 def category_list(request):
-    categories = Artwork.Category.choices
+    categories = [
+        (value, label, BUILT_IN_CATEGORY_IMAGES.get(value))
+        for value, label in Artwork.Category.choices
+    ]
     return render(request, 'Category/categories.html', {'categories': categories})
 
 def artwork_see_all(request):

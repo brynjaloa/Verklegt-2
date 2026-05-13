@@ -18,6 +18,7 @@ class Bid(models.Model):
     date_of_bid = models.DateField(auto_now_add=True)
     status = models.CharField(max_length=20, choices=Status.choices, default='Pending') #getur verið 1 af 3: Pending, Accepted, Rejected
     buyer_accept_notification_seen = models.BooleanField(default=False)
+    buyer_reject_notification_seen = models.BooleanField(default=False)
     seller_cancel_notification_seen = models.BooleanField(default=False)
 
     def __str__(self):

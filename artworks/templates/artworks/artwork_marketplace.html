@@ -23,9 +23,12 @@
     <!-- Style thumbnails -->
     {% if show_style_shortcuts and styles %}
     <div class="style-list">
-        {% for value, label in styles %}
+        {% for value, label, image_path in styles %}
         <a class="style-link" href="?category={{ category }}&style={{ value }}">
             <div class="style-tile">
+                {% if image_path %}
+                    <img class="style-tile-image" src="{% get_media_prefix %}{{ image_path }}" alt="{{ label }}">
+                {% endif %}
                 <span class="style-label">{{ label }}</span>
             </div>
             <div class="style-underline"></div>
@@ -134,11 +137,11 @@
             {% if page_obj.has_other_pages %}
             <div class="pagination">
                 {% if page_obj.has_previous %}
-                    <a href="?page={{ page_obj.previous_page_number }}" class="pagination-btn">Previous</a>
+                    <a href="?{% if pagination_query %}{{ pagination_query }}&{% endif %}page={{ page_obj.previous_page_number }}" class="pagination-btn">Previous</a>
                 {% endif %}
                 <span class="pagination-info">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
                 {% if page_obj.has_next %}
-                    <a href="?page={{ page_obj.next_page_number }}" class="pagination-btn">Next</a>
+                    <a href="?{% if pagination_query %}{{ pagination_query }}&{% endif %}page={{ page_obj.next_page_number }}" class="pagination-btn">Next</a>
                 {% endif %}
             </div>
             {% endif %}

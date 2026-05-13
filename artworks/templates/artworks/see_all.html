@@ -42,22 +42,22 @@
                         <p><strong>Medium / Material</strong></p>
                         <label class="filter-group-label">Painting</label>
                         {% for value, label in painting_mediums %}
-                        <label><input type="checkbox" name="painting_medium" value="{{ value }}" {% if value in selected_painting_mediums %}checked{% endif %}> {{ label }}</label>
+                            <label><input type="checkbox" name="painting_medium" value="{{ value }}" {% if value in selected_painting_mediums %}checked{% endif %}> {{ label }}</label>
                         {% endfor %}
 
                         <label class="filter-group-label filter-group-label-spaced">Sculpture</label>
                         {% for value, label in sculpture_materials %}
-                        <label><input type="checkbox" name="sculpture_material" value="{{ value }}" {% if value in selected_sculpture_materials %}checked{% endif %}> {{ label }}</label>
+                            <label><input type="checkbox" name="sculpture_material" value="{{ value }}" {% if value in selected_sculpture_materials %}checked{% endif %}> {{ label }}</label>
                         {% endfor %}
 
                         <label class="filter-group-label filter-group-label-spaced">Furniture</label>
                         {% for value, label in furniture_materials %}
-                        <label><input type="checkbox" name="furniture_material" value="{{ value }}" {% if value in selected_furniture_materials %}checked{% endif %}> {{ label }}</label>
+                            <label><input type="checkbox" name="furniture_material" value="{{ value }}" {% if value in selected_furniture_materials %}checked{% endif %}> {{ label }}</label>
                         {% endfor %}
 
                         <label class="filter-group-label filter-group-label-spaced">Photo</label>
                         {% for value, label in photo_techniques %}
-                        <label><input type="checkbox" name="photo_technique" value="{{ value }}" {% if value in selected_photo_techniques %}checked{% endif %}> {{ label }}</label>
+                            <label><input type="checkbox" name="photo_technique" value="{{ value }}" {% if value in selected_photo_techniques %}checked{% endif %}> {{ label }}</label>
                         {% endfor %}
                     </div>
 
@@ -180,6 +180,7 @@
                     {% endif %}
                 </nav>
             {% endif %}
+
         </div>
 
     </div>

@@ -46,9 +46,11 @@
 }
 
 .style-tile {
+    position: relative;
     width: 160px;
     height: 160px;
     padding: 10px;
+    overflow: hidden;
     border-radius: 10px;
     background: #8b0000;
     display: flex;
@@ -56,9 +58,31 @@
     justify-content: center;
 }
 
+.style-tile::after {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        to top,
+        rgb(0 0 0 / 62%),
+        rgb(0 0 0 / 12%)
+    );
+    content: "";
+}
+
+.style-tile-image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
 .style-label {
+    position: relative;
+    z-index: 1;
     color: white;
     font-weight: bold;
+    text-align: center;
 }
 
 .style-underline {
@@ -86,6 +110,21 @@
 .filter-sidebar h2 {
     margin-top: 0;
     text-align: center;
+}
+
+.marketplace-filter-groups {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.marketplace-filter-group p {
+    margin: 0;
+}
+
+.marketplace-filter-group label {
+    display: block;
+    margin-top: 8px;
 }
 
 .year-filter {

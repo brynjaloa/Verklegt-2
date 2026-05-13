@@ -2,7 +2,8 @@
 from django import forms
 from django.utils import timezone
 from .models import Bid
-
+from django_countries.fields import CountryField
+from django_countries.widgets import CountrySelectWidget
 
 class FormattedDecimalField(forms.DecimalField):
     def to_python(self, value):
@@ -55,6 +56,12 @@ class BidForm(forms.ModelForm):
             )
 
         return bid_price
+
+
+    def __init__(self, *args, artwork=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.artwork = artwork
+        self.fields["expiration_date"].widget.attrs["min"] = timezone.localdate().isoformat()
 
     def clean_expiration_date(self):
         expiration_date = self.cleaned_data["expiration_date"]
