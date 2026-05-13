@@ -1,0 +1,208 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/finalize_bid.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="finalize-page">
+    <div class="finalize-panel">
+        <div class="finalize-header">
+            <div>
+                <p class="finalize-kicker">Finalize bid</p>
+                <h1>{{ bid.artwork.title }}</h1>
+                <p class="finalize-summary">
+                    Bid price: ${{ bid.bid_price }} · Seller: {{ bid.artwork.seller.name }}
+                </p>
+            </div>
+        </div>
+
+        <nav class="finalize-steps" aria-label="Finalize bid steps">
+            <a class="finalize-step {% if step == 'contact' %}active{% endif %}"
+               href="{% url 'finalize_bid' bid.id %}">
+                Contact
+            </a>
+
+            {% if step != "confirmation" %}
+                <a class="finalize-step {% if step == 'payment' %}active{% endif %}"
+                   href="{% url 'finalize_bid_step' bid.id 'payment' %}">
+                    Payment
+                </a>
+                <a class="finalize-step {% if step == 'review' %}active{% endif %}"
+                   href="{% url 'finalize_bid_step' bid.id 'review' %}">
+                    Review
+                </a>
+            {% else %}
+                <span class="finalize-step active">Confirmation</span>
+            {% endif %}
+        </nav>
+
+        {% if step == "contact" %}
+            <form class="finalize-form" method="post">
+                {% csrf_token %}
+
+                <div class="form-grid">
+                    <div class="form-field wide">
+                        <label for="{{ form.street_name.id_for_label }}">Street name</label>
+                        {{ form.street_name }}
+                        {{ form.street_name.errors }}
+                    </div>
+
+                    <div class="form-field">
+                        <label for="{{ form.city.id_for_label }}">City</label>
+                        {{ form.city }}
+                        {{ form.city.errors }}
+                    </div>
+
+                    <div class="form-field">
+                        <label for="{{ form.postal_code.id_for_label }}">Postal code</label>
+                        {{ form.postal_code }}
+                        {{ form.postal_code.errors }}
+                    </div>
+
+                    <div class="form-field">
+                        <label for="{{ form.country.id_for_label }}">Country</label>
+                        {{ form.country }}
+                        {{ form.country.errors }}
+                    </div>
+
+                    <div class="form-field">
+                        <label for="{{ form.national_id.id_for_label }}">National id</label>
+                        {{ form.national_id }}
+                        {{ form.national_id.errors }}
+                    </div>
+                </div>
+
+                <div class="finalize-actions">
+                    <a class="secondary-action" href="{% url 'profile' %}">Back to profile</a>
+                    <button type="submit">Continue to payment</button>
+                </div>
+            </form>
+        {% elif step == "payment" %}
+            <form class="finalize-form" method="post">
+                {% csrf_token %}
+
+                <div class="payment-options">
+                    {{ form.payment_option }}
+                    {{ form.payment_option.errors }}
+                </div>
+
+                {% with selected=form.payment_option.value|default:"credit_card" %}
+                    <div class="payment-detail" data-payment-fields="credit_card" {% if selected != "credit_card" %}hidden{% endif %}>
+                        <div class="form-grid">
+                            <div class="form-field wide">
+                                <label for="{{ form.cardholder_name.id_for_label }}">Cardholder name</label>
+                                {{ form.cardholder_name }}
+                                {{ form.cardholder_name.errors }}
+                            </div>
+                            <div class="form-field wide">
+                                <label for="{{ form.credit_card_number.id_for_label }}">Credit card number</label>
+                                {{ form.credit_card_number }}
+                                {{ form.credit_card_number.errors }}
+                            </div>
+                            <div class="form-field">
+                                <label for="{{ form.expiry_month.id_for_label }}">Expiry month</label>
+                                {{ form.expiry_month }}
+                                {{ form.expiry_month.errors }}
+                            </div>
+                            <div class="form-field">
+                                <label for="{{ form.expiry_year.id_for_label }}">Expiry year</label>
+                                {{ form.expiry_year }}
+                                {{ form.expiry_year.errors }}
+                            </div>
+                            <div class="form-field">
+                                <label for="{{ form.cvc.id_for_label }}">CVV</label>
+                                {{ form.cvc }}
+                                {{ form.cvc.errors }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="payment-detail" data-payment-fields="bank_transfer" {% if selected != "bank_transfer" %}hidden{% endif %}>
+                        <div class="form-field">
+                            <label for="{{ form.bank_account.id_for_label }}">Bank account</label>
+                            {{ form.bank_account }}
+                            {{ form.bank_account.errors }}
+                        </div>
+                    </div>
+
+                    <div class="payment-detail" data-payment-fields="wire_transfer" {% if selected != "wire_transfer" %}hidden{% endif %}>
+                        <div class="form-grid">
+                            <div class="form-field wide">
+                                <label for="{{ form.sending_bank_name.id_for_label }}">Name of sending bank</label>
+                                {{ form.sending_bank_name }}
+                                {{ form.sending_bank_name.errors }}
+                            </div>
+                            <div class="form-field">
+                                <label for="{{ form.routing_number.id_for_label }}">Routing number</label>
+                                {{ form.routing_number }}
+                                {{ form.routing_number.errors }}
+                            </div>
+                            <div class="form-field">
+                                <label for="{{ form.account_number.id_for_label }}">Account number</label>
+                                {{ form.account_number }}
+                                {{ form.account_number.errors }}
+                            </div>
+                        </div>
+                    </div>
+                {% endwith %}
+
+                <div class="finalize-actions">
+                    <button class="secondary-action" type="submit" name="direction" value="back">Back</button>
+                    <button type="submit">Continue to review</button>
+                </div>
+            </form>
+        {% elif step == "review" %}
+            <div class="review-grid">
+                <section>
+                    <h2>Contact information</h2>
+                    <dl>
+                        <div><dt>Street name</dt><dd>{{ contact_data.street_name }}</dd></div>
+                        <div><dt>City</dt><dd>{{ contact_data.city }}</dd></div>
+                        <div><dt>Postal code</dt><dd>{{ contact_data.postal_code }}</dd></div>
+                        <div><dt>Country</dt><dd>{{ contact_data.country }}</dd></div>
+                        <div><dt>National id</dt><dd>{{ contact_data.national_id }}</dd></div>
+                    </dl>
+                </section>
+
+                <section>
+                    <h2>Payment</h2>
+                    <dl>
+                        <div><dt>Payment option</dt><dd>{{ payment_label }}</dd></div>
+
+                        {% if payment_data.payment_option == "credit_card" %}
+                            <div><dt>Cardholder name</dt><dd>{{ payment_data.cardholder_name }}</dd></div>
+                            <div><dt>Credit card number</dt><dd>{{ payment_data.credit_card_number }}</dd></div>
+                            <div><dt>Expiry date</dt><dd>{{ payment_data.expiry_month }}/{{ payment_data.expiry_year }}</dd></div>
+                            <div><dt>CVV</dt><dd>{{ payment_data.cvc }}</dd></div>
+                        {% elif payment_data.payment_option == "bank_transfer" %}
+                            <div><dt>Bank account</dt><dd>{{ payment_data.bank_account }}</dd></div>
+                        {% elif payment_data.payment_option == "wire_transfer" %}
+                            <div><dt>Name of sending bank</dt><dd>{{ payment_data.sending_bank_name }}</dd></div>
+                            <div><dt>Routing number</dt><dd>{{ payment_data.routing_number }}</dd></div>
+                            <div><dt>Account number</dt><dd>{{ payment_data.account_number }}</dd></div>
+                        {% endif %}
+                    </dl>
+                </section>
+            </div>
+
+            <form class="finalize-actions" method="post">
+                {% csrf_token %}
+                <button class="secondary-action" type="submit" name="direction" value="back">Back</button>
+                <button type="submit" name="direction" value="confirm">Confirm bid</button>
+            </form>
+        {% elif step == "confirmation" %}
+            <div class="confirmation-box">
+                <h2>Your bid was successfully finalized.</h2>
+                <p>The seller can now continue with the completed sale.</p>
+                <a class="home-link" href="{% url 'home' %}">Go to homepage</a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/finalize_bid.js' %}"></script>
+{% endblock %}

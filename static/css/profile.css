@@ -269,13 +269,33 @@ body {
     gap: 18px;
 }
 
+.listing-sold-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    border-radius: 6px;
+    background: #9b3a35;
+    color: white;
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+    line-height: 1;
+}
+
 .profile-bid{
     display:flex;
     justify-content:space-between;
-    align-items:center;
+    align-items:flex-start;
+    gap:20px;
     padding:15px 0;
     border-bottom:1px solid #cfcfcf;
     gap: 16px;
+}
+
+.profile-bid-main{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
 }
 
 .bid-artwork-link{
@@ -312,6 +332,74 @@ body {
     border-radius:10px;
     font-size:20px;
 }
+
+.bids-scroll{
+    display:flex;
+    flex-direction:column;
+    gap:20px;
+    max-height:300px;
+    overflow-y:auto;
+}
+
+.bid-card{
+    border-bottom:1px solid #ccc;
+    padding-bottom:18px;
+}
+
+.bid-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:10px;
+}
+
+.bid-artwork-title{
+    font-size:24px;
+    color:black;
+    text-decoration:none;
+    font-weight:600;
+}
+
+.bid-artwork-title:hover{
+    text-decoration:underline;
+}
+
+.bid-info p{
+    margin:4px 0;
+    font-size:18px;
+}
+
+.bid-status{
+    padding:10px 18px;
+    border-radius:8px;
+    color:white;
+    font-weight:700;
+    text-decoration:none;
+}
+
+.pending{
+    background:#777
+}
+
+.rejected{
+    background: #c0392b;
+    color: white;
+}
+
+.accepted{
+    background:#3c9c5d;
+}
+
+.contingent {
+    background: orange;
+    color: white;
+}
+
+.finalized {
+    background: #2f6f88;
+    color: white;
+}
+
 
 @media (width <= 980px) {
     .profile-container {

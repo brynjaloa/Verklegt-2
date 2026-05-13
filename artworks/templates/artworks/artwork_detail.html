@@ -64,36 +64,78 @@
                             <div class="mini-profile"></div>
 
                             <span>
-                                {{ bid.user.profile.name }}
+                                {{ bid.user.username }}
                                 :
                                 ${{ bid.bid_price }}
                             </span>
 
                         </div>
-                        {% if bid.status != "Accepted" %}
-                            <a
-                               href="{% url 'accept_bid' bid.id %}" class="accept-bid-button">
+
+                        <div class="bid-actions">
+                            {% if bid.status == "Accepted" %}
+                                <span class="accepted-text">
+                                    Accepted
+                                </span>
+
+                            {% elif bid.status == "Rejected" %}
+                                <span class="rejected-text">
+                                    Rejected
+                                </span>
+
+                            {% elif bid.status == "Contingent" %}
+                                <span class="contingent-text">
+                                    Contingent
+                                </span>
+
+                            <a href="{% url 'accept_bid' bid.id %}" class="accept-bid-button">
                                 Accept bid
                             </a>
 
+                            <a href="{% url 'reject_bid' bid.id %}"
+                               class="reject-bid-button">
+                                Reject
+                            </a>
+
                         {% else %}
-                            <span class="accepted-text">
-                                Accepted
-                            </span>
+
+                            <a href="{% url 'accept_bid' bid.id %}"
+                               class="accept-bid-button">
+                                Accept bid
+                            </a>
+
+                            <a href="{% url 'reject_bid' bid.id %}"
+                               class="reject-bid-button">
+                                Reject
+                            </a>
+
+                            <a href="{% url 'contingent_bid' bid.id %}"
+                               class="contingent-bid-button">
+                                Contingent
+                            </a>
 
                         {% endif %}
+
                     </div>
-                {% empty %}
-                    <p>No bids yet.</p>
 
-                {% endfor %}
-            </div>
-            {% endif %}
 
-            {% if not can_edit_artwork %}
-            <form method="POST" class="bid-form">
-                {% csrf_token %}
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    {% empty %}
+                        <p>No bids yet.</p>
 
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                {% if not can_edit_artwork %}
+                <form method="POST" class="bid-form">
+                    {% csrf_token %}
+
+                    <div class="bid-inputs">
+                        {{ form.bid_price }}
+                        {{ form.expiration_date }}
+                    </div>
                 <div class="bid-inputs">
                     <div class="bid-field">
                         {{ form.bid_price }}
@@ -101,27 +143,27 @@
                     {{ form.expiration_date }}
                 </div>
 
-                {% if existing_bid %}
-                    <div class="bid-buttons">
+                    {% if existing_bid %}
+                        <div class="bid-buttons">
+                            <button class="bid-now-button" type="submit">
+                                Re-submit bid
+                            </button>
+
+                            <a href="{% url 'cancel_bid' existing_bid.id %}"
+                               class="cancel-bid-button">
+                                Cancel bid
+                            </a>
+                        </div>
+
+                    {% else %}
                         <button class="bid-now-button" type="submit">
-                            Re-submit bid
+                            Bid now
                         </button>
 
-                        <a href="{% url 'cancel_bid' existing_bid.id %}"
-                           class="cancel-bid-button">
-                            Cancel bid
-                        </a>
-                    </div>
-
-                {% else %}
-                    <button class="bid-now-button" type="submit">
-                        Bid now
-                    </button>
+                    {% endif %}
+                </form>
 
                 {% endif %}
-            </form>
-
-            {% endif %}
 
             {% if can_edit_artwork %}
                 <div class="artwork-owner-actions">
@@ -136,57 +178,57 @@
                 </div>
             {% endif %}
 
-            <details class="artwork-detail-panel">
-                <summary>Information</summary>
-                <div class="artwork-panel-content">
+                <details class="artwork-detail-panel">
+                    <summary>Information</summary>
+                    <div class="artwork-panel-content">
 
-                    <dl class="artwork-facts">
-                        <div>
-                            <dt>Category</dt>
-                            <dd>{{ artwork.category }}</dd>
-                        </div>
+                        <dl class="artwork-facts">
+                            <div>
+                                <dt>Category</dt>
+                                <dd>{{ artwork.category }}</dd>
+                            </div>
 
-                        {% if artwork.category == "Paintings" %}
-                        <div>
-                            <dt>Painting Style</dt>
-                            <dd>{{ artwork.painting_style|default:"None" }}</dd>
-                        </div>
+                            {% if artwork.category == "Paintings" %}
+                            <div>
+                                <dt>Painting Style</dt>
+                                <dd>{{ artwork.painting_style|default:"None" }}</dd>
+                            </div>
 
-                        <div>
-                            <dt>Painting Medium</dt>
-                            <dd>{{ artwork.painting_medium|default:"None" }}</dd>
-                        </div>
-                        {% elif artwork.category == "Sculptures" %}
-                        <div>
-                            <dt>Sculpture Style</dt>
-                            <dd>{{ artwork.sculpture_style|default:"None" }}</dd>
-                        </div>
+                            <div>
+                                <dt>Painting Medium</dt>
+                                <dd>{{ artwork.painting_medium|default:"None" }}</dd>
+                            </div>
+                            {% elif artwork.category == "Sculptures" %}
+                            <div>
+                                <dt>Sculpture Style</dt>
+                                <dd>{{ artwork.sculpture_style|default:"None" }}</dd>
+                            </div>
 
-                        <div>
-                            <dt>Sculpture Material</dt>
-                            <dd>{{ artwork.sculpture_material|default:"None" }}</dd>
-                        </div>
-                        {% elif artwork.category == "Furniture" %}
-                        <div>
-                            <dt>Furniture Style</dt>
-                            <dd>{{ artwork.furniture_style|default:"None" }}</dd>
-                        </div>
+                            <div>
+                                <dt>Sculpture Material</dt>
+                                <dd>{{ artwork.sculpture_material|default:"None" }}</dd>
+                            </div>
+                            {% elif artwork.category == "Furniture" %}
+                            <div>
+                                <dt>Furniture Style</dt>
+                                <dd>{{ artwork.furniture_style|default:"None" }}</dd>
+                            </div>
 
-                        <div>
-                            <dt>Furniture Material</dt>
-                            <dd>{{ artwork.furniture_material|default:"None" }}</dd>
-                        </div>
-                        {% elif artwork.category == "Photos" %}
-                        <div>
-                            <dt>Photo Style</dt>
-                            <dd>{{ artwork.photo_style|default:"None" }}</dd>
-                        </div>
+                            <div>
+                                <dt>Furniture Material</dt>
+                                <dd>{{ artwork.furniture_material|default:"None" }}</dd>
+                            </div>
+                            {% elif artwork.category == "Photos" %}
+                            <div>
+                                <dt>Photo Style</dt>
+                                <dd>{{ artwork.photo_style|default:"None" }}</dd>
+                            </div>
 
-                        <div>
-                            <dt>Photo Technique</dt>
-                            <dd>{{ artwork.photo_technique|default:"None" }}</dd>
-                        </div>
-                        {% endif %}
+                            <div>
+                                <dt>Photo Technique</dt>
+                                <dd>{{ artwork.photo_technique|default:"None" }}</dd>
+                            </div>
+                            {% endif %}
 
                         {% if artwork.width or artwork.height or artwork.depth %}
                             <div>
@@ -209,26 +251,26 @@
                             </div>
                         {% endif %}
 
-                        <div>
-                            <dt>Year created</dt>
-                            <dd>{{ artwork.year }}</dd>
-                        </div>
+                            <div>
+                                <dt>Year created</dt>
+                                <dd>{{ artwork.year }}</dd>
+                            </div>
 
-                        <div>
-                            <dt>Edition</dt>
-                            <dd>{{ artwork.edition }}</dd>
-                        </div>
+                            <div>
+                                <dt>Edition</dt>
+                                <dd>{{ artwork.edition }}</dd>
+                            </div>
 
-                        {% if artwork.provenance %}
-                        <div>
-                            <dt>Provenance</dt>
-                            <dd>{{ artwork.provenance }}</dd>
-                        </div>
-                        {% endif %}
+                            {% if artwork.provenance %}
+                            <div>
+                                <dt>Provenance</dt>
+                                <dd>{{ artwork.provenance }}</dd>
+                            </div>
+                            {% endif %}
 
-                    </dl>
-                </div>
-            </details>
+                        </dl>
+                    </div>
+                </details>
 
             <details class="artwork-detail-panel">
                 <summary>Seller information</summary>
@@ -252,34 +294,33 @@
                             <p>{{ artwork.seller.bio }}</p>
                         {% endif %}
 
-                        {% if artwork.seller.seller_type == "Gallery" %}
-                            {% if artwork.seller.street_name or artwork.seller.city or artwork.seller.postal_code %}
-                                <p>
-                                    {% if artwork.seller.street_name %}
-                                        {{ artwork.seller.street_name }}<br>
-                                    {% endif %}
-                                    {{ artwork.seller.city }}{% if artwork.seller.city and artwork.seller.postal_code %}, {% endif %}{{ artwork.seller.postal_code }}
-                                </p>
+                            {% if artwork.seller.seller_type == "Gallery" %}
+                                {% if artwork.seller.street_name or artwork.seller.city or artwork.seller.postal_code %}
+                                    <p>
+                                        {% if artwork.seller.street_name %}
+                                            {{ artwork.seller.street_name }}<br>
+                                        {% endif %}
+                                        {{ artwork.seller.city }}{% if artwork.seller.city and artwork.seller.postal_code %}, {% endif %}{{ artwork.seller.postal_code }}
+                                    </p>
+                                {% endif %}
                             {% endif %}
-                        {% endif %}
+                        </div>
+
                     </div>
-
-                </div>
-            </details>
+                </details>
+            </div>
         </div>
-    </div>
-</article>
-<div id="bid-popup"
-     class="bid-popup {% if not show_popup %}hidden{% endif %}">
+    </article>
+    <div id="bid-popup"
+         class="bid-popup {% if not show_popup %}hidden{% endif %}">
 
-    <div class="bid-popup-content">
+        <div class="bid-popup-content">
 
-        <button
-            id="close-popup"
-            type="button"
-            data-close-popup>
-            X
-        </button>
+            <button
+                id="close-popup"
+                onclick="document.getElementById('bid-popup').classList.add('hidden')">
+                X
+            </button>
 
         {% if bid_popup_message == "minimum_bid_error" %}
             <h2>Bid may not be lower than minimum bid, please bid again using a higher bid</h2>
@@ -293,13 +334,12 @@
             <p>
                 You will get a notification if it is accepted.
             </p>
-        {% endif %}
+
+        </div>
 
     </div>
 
-</div>
-
-{% endblock %}
+    {% endblock %}
 
 {% block extra_js %}
 <script src="{% static 'js/artwork_detail.js' %}?v=4"></script>

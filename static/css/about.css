@@ -1,0 +1,25 @@
+body {
+    font-family: serif;
+    font-size: 100px;
+}
+.founders-frame {
+    position: relative;
+}
+
+.founders-frame::before {
+    content: '';
+    position: absolute;
+    left: -48px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 120px;
+    height: 75%;
+    background-color: #8b3a3a;
+    border-radius: 0 12px 12px 0;
+    z-index: 0;
+}
+
+.founders-img {
+    position: relative;
+    z-index: 1;
+}

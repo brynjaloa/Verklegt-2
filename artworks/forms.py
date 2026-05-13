@@ -1,12 +1,12 @@
 from io import BytesIO
 from pathlib import Path
-from typing import Any, TypeAlias
-
+from typing import Any, Optional
+from typing_extensions import TypeAlias
 from django import forms
 from django.core.files.base import ContentFile
 from PIL import Image, UnidentifiedImageError
-
 from .models import Artwork
+
 
 
 CategoryFields: TypeAlias = dict[str, tuple[str, str]]
@@ -19,7 +19,7 @@ CATEGORY_SPECIFIC_FIELDS: CategoryFields = {
 }
 
 
-def clear_irrelevant_category_fields(cleaned_data: dict[str, Any] | None) -> dict[str, Any]:
+def clear_irrelevant_category_fields(cleaned_data: Optional[dict[str, Any]]) -> dict[str, Any]:
     cleaned_data = cleaned_data or {}
     selected_category = cleaned_data.get("category")
     allowed_fields = set()
@@ -35,7 +35,7 @@ def clear_irrelevant_category_fields(cleaned_data: dict[str, Any] | None) -> dic
     return cleaned_data
 
 
-def clear_irrelevant_dimension_fields(cleaned_data: dict[str, Any] | None) -> dict[str, Any]:
+def clear_irrelevant_dimension_fields(cleaned_data: Optional[dict[str, Any]]) -> dict[str, Any]:
     cleaned_data = cleaned_data or {}
 
     if cleaned_data.get("category") != Artwork.Category.FURNITURE.value:

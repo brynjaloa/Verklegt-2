@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const descriptionToggle = document.querySelector(".description-toggle");
     const bidPriceInput = document.querySelector(".bid-price-input");
     const closePopupButton = document.querySelector("[data-close-popup]");
+    const bidPopup = document.getElementById("bid-popup");
 
     if (mainImage && thumbnails.length > 0) {
         thumbnails.forEach(thumbnail => {
@@ -136,5 +137,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 bidPriceInput.value = bidPriceInput.value.replace(/,/g, "");
             });
         }
+    }
+
+    if (bidPopup && closePopupButton) {
+        closePopupButton.addEventListener("click", function () {
+            bidPopup.classList.add("hidden");
+        });
     }
 });

@@ -5,6 +5,7 @@ from django.db.models import Q
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.http import require_POST
 
+from django.core.paginator import Paginator
 from .forms import ArtworkForm
 from .models import Artwork, ArtworkImage
 
@@ -328,6 +329,10 @@ def artwork_see_all(request):
             list(Artwork.PhotoStyle.choices)
     )}.items())
 
+    paginator = Paginator(artworks, 24)  # 24 artworks per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
     return render(request, 'artworks/see_all.html', {
         'artworks': page_obj,
         'page_obj': page_obj,
@@ -340,6 +345,7 @@ def artwork_see_all(request):
         'furniture_materials': Artwork.FurnitureMaterial.choices,
         'photo_techniques': Artwork.PhotoTechnique.choices,
         'all_styles': all_styles,
+        'page_obj': page_obj,
         'selected_categories': categories_selected,
         'selected_mediums': mediums_selected,
         'selected_styles': styles_selected,
@@ -348,11 +354,13 @@ def artwork_see_all(request):
 
 @login_required
 def accept_bid(request, bid_id):
-
     bid = get_object_or_404(Bid, id=bid_id)
 
     if bid.artwork.seller != request.user.seller:
         return HttpResponseForbidden()
+
+    Bid.objects.filter(
+        artwork=bid.artwork).exclude(id=bid.id).update(status="Rejected")
 
     bid.status = "Accepted"
     bid.save()

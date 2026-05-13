@@ -10,11 +10,11 @@
     {% block extra_css %}
     {% endblock %}
 </head>
-<body>
+<body style="min-height: 100vh; display: flex; flex-direction: column;">
 
     {% include "partials/navbar.html" %}
 
-    <main>
+    <main style="flex: 1;">
         {% block content %}
         {% endblock %}
     </main>

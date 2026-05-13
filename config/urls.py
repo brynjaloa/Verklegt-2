@@ -29,10 +29,12 @@ urlpatterns = [
     path("artworks/", include("artworks.urls")),
     path('', include('accounts.urls')),
     path("faq/", TemplateView.as_view(template_name="faq.html"), name="faq"),
+    path("about/", TemplateView.as_view(template_name="about.html"), name="about"),
+    path("location/", TemplateView.as_view(template_name="location.html"), name="location"),
     path("info/", info_view, name="info"),
     path("info/<slug:slug>/", info_article_view, name="info_article"),
     path('bids/', include('bids.urls')),
-    
+
 ]
 
 if settings.DEBUG:
@@ -40,3 +42,4 @@ if settings.DEBUG:
         settings.MEDIA_URL,
         document_root=settings.MEDIA_ROOT
     )
+
