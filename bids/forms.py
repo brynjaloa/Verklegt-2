@@ -2,8 +2,7 @@
 from django import forms
 from django.utils import timezone
 from .models import Bid
-from django_countries.fields import CountryField
-from django_countries.widgets import CountrySelectWidget
+
 
 class FormattedDecimalField(forms.DecimalField):
     def to_python(self, value):
@@ -24,11 +23,6 @@ class BidForm(forms.ModelForm):
             'autocomplete': 'off',
         }),
     )
-
-    def __init__(self, *args, artwork=None, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.artwork = artwork
-        self.fields["expiration_date"].widget.attrs["min"] = timezone.localdate().isoformat()
 
     class Meta:
 
