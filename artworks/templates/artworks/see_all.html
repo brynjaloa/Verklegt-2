@@ -99,6 +99,28 @@
                         </div>
                     </div>
 
+                    <div class="see-all-filter-group">
+                        <p class="filter-toggle" onclick="toggleFilter('filter-price')"><strong class="filter-toggle">Price ▾</strong></p>
+                        <br>
+                        <div id="filter-price" class="filter-dropdown">
+                            <div class="year-filter-box">
+                                <div id="price-slider" class="see-all-year-slider"></div>
+                                <div class="year-input-row">
+                                    <div class="year-input-column">
+                                        <label>From</label>
+                                        <input type="number" id="price-from-input" name="price_from" min="0" max="100000"
+                                            value="{{ request.GET.price_from|default:'0' }}">
+                                    </div>
+                                    <div class="year-input-column">
+                                        <label>To</label>
+                                        <input type="number" id="price-to-input" name="price_to" min="0" max="100000"
+                                            value="{{ request.GET.price_to|default:'100000' }}">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
 
                 <button class="see-all-filter-button" type="submit">Apply</button>
@@ -112,6 +134,8 @@
                     <option value="relevance" {% if not sort or sort == 'relevance' %}selected{% endif %}>Sort by: Relevance</option>
                     <option value="price_low" {% if sort == 'price_low' %}selected{% endif %}>Sort by: Price (low to high)</option>
                     <option value="price_high" {% if sort == 'price_high' %}selected{% endif %}>Sort by: Price (high to low)</option>
+                    <option value="title_az" {% if sort == 'title_az' %}selected{% endif %}>Sort by: A-Z</option>
+                    <option value="title_za" {% if sort == 'title_za' %}selected{% endif %}>Sort by: Z-A</option>
                 </select>
             </div>
 
@@ -126,6 +150,17 @@
                         {% endif %}
                         <p class="see-all-card-title">{{ artwork.title }}</p>
                         <p class="see-all-card-price">Min bid: ${{ artwork.starting_bid }}</p>
+                        <div class="see-all-card-meta">
+                            <p>Medium:{{ artwork.display_medium }}</p>
+                            <p>Dimensions:{{ artwork.dimensions_display }}</p>
+                            <p>
+                                Status:
+                                <span class="see-all-card-status {% if artwork.is_sold %}is-sold{% else %}is-available{% endif %} ">
+                                    {{ artwork.status_display }}
+                                </span>
+                            </p>
+                        </div>
+                        <p class="see-all-card-date">Listed: {{ artwork.listing_date|date:"M j, Y" }}</p>
                     </div>
                 </a>
                 {% empty %}
@@ -158,9 +193,7 @@
                 {% endif %}
             </nav>
             {% endif %}
-
         </div>
-
     </div>
 </div>
 

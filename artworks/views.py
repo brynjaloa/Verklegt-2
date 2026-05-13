@@ -136,6 +136,10 @@ def sort_artworks(artworks, sort):
         return artworks.order_by('starting_bid', '-listing_date', '-id')
     if sort == 'price_high':
         return artworks.order_by('-starting_bid', '-listing_date', '-id')
+    if sort == 'title_az':
+        return artworks.order_by('title', '-listing_date', '-id')
+    if sort == 'title_za':
+        return artworks.order_by('-title', '-listing_date', '-id')
 
     return artworks.order_by('-listing_date', '-id')
 
@@ -147,6 +151,8 @@ def artwork_list(request):
     mediums_selected = request.GET.getlist('medium')
     year_from = request.GET.get('year_from')
     year_to = request.GET.get('year_to')
+    price_from = request.GET.get('price_from')
+    price_to = request.GET.get('price_to')
 
     artworks = Artwork.objects.all()
 
@@ -173,6 +179,10 @@ def artwork_list(request):
         artworks = artworks.filter(year__gte=year_from)
     if year_to:
         artworks = artworks.filter(year__lte=year_to)
+    if price_from:
+        artworks = artworks.filter(starting_bid__gte=price_from)
+    if price_to:
+        artworks = artworks.filter(starting_bid__lte=price_to)
 
     styles = category_fields.get("styles", [])
     featured_styles = styles_with_builtin_images(
@@ -217,6 +227,7 @@ def home_view(request):
 def artwork_detail(request, pk):
     artwork = get_object_or_404(Artwork, pk=pk)
     back_url = get_artwork_detail_back_url(request)
+    show_finalize_invalid_popup = request.GET.get("popup") == "finalize_invalid"
     highest_bids = Bid.objects.filter(artwork=artwork).exclude(
         status=Bid.Status.CANCELED
     ).order_by("-bid_price")[:3]
@@ -328,6 +339,8 @@ def artwork_detail(request, pk):
         "show_description_toggle": show_description_toggle,
         "form": form,
         "existing_bid": existing_bid,
+        "show_popup": show_finalize_invalid_popup,
+        "bid_popup_message": "finalize_invalid" if show_finalize_invalid_popup else "",
         "highest_bids": highest_bids,
         "back_url": back_url,
     })
@@ -418,6 +431,8 @@ def artwork_see_all(request):
     mediums_selected = request.GET.getlist('medium')
     year_from = request.GET.get('year_from')
     year_to = request.GET.get('year_to')
+    price_from = request.GET.get('price_from')
+    price_to = request.GET.get('price_to')
     categories_selected = request.GET.getlist('category')
     styles_selected = request.GET.getlist('style')
     editions_selected = request.GET.getlist('edition')
@@ -450,9 +465,13 @@ def artwork_see_all(request):
         artworks = artworks.filter(year__gte=year_from)
     if year_to:
         artworks = artworks.filter(year__lte=year_to)
+    if price_from:
+        artworks = artworks.filter(starting_bid__gte=price_from)
+    if price_to:
+        artworks = artworks.filter(starting_bid__lte=price_to)
 
     artworks = sort_artworks(artworks, sort)
-    paginator = Paginator(artworks, 24)
+    paginator = Paginator(artworks, 20)
     page_obj = paginator.get_page(request.GET.get("page"))
     pagination_query = request.GET.copy()
     pagination_query.pop("page", None)
@@ -464,7 +483,7 @@ def artwork_see_all(request):
             list(Artwork.PhotoStyle.choices)
     )}.items())
 
-    paginator = Paginator(artworks, 24)  # 24 artworks per page
+    paginator = Paginator(artworks, 20)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 

@@ -1,25 +1,139 @@
 body {
     font-family: serif;
-    font-size: 100px;
 }
+
+.about-page {
+    box-sizing: border-box;
+    width: min(100%, 1440px);
+    margin: 0 auto;
+    padding: 28px;
+}
+
+.about-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 34px;
+}
+
+.about-back-link {
+    width: 44px;
+    height: 44px;
+    border: 1px solid #ccc;
+    border-radius: 50%;
+    color: black;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 24px;
+    text-decoration: none;
+}
+
+.about-heading {
+    margin: 0;
+    padding: 12px 32px;
+    border-radius: 24px;
+    background-color: #c06060;
+    color: white;
+    font-size: 30px;
+    line-height: 1.2;
+}
+
+.about-body {
+    display: grid;
+    grid-template-columns: minmax(320px, 560px) minmax(320px, 1fr);
+    gap: clamp(32px, 5vw, 72px);
+    align-items: start;
+}
+
+.about-media {
+    min-width: 0;
+    text-align: center;
+}
+
 .founders-frame {
     position: relative;
+    display: inline-block;
+    width: min(100%, 550px);
+    margin-top: 20px;
 }
 
 .founders-frame::before {
-    content: '';
     position: absolute;
-    left: -48px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 120px;
-    height: 75%;
-    background-color: #8b3a3a;
-    border-radius: 0 12px 12px 0;
     z-index: 0;
+    top: 50%;
+    right: -5%;
+    width: 120vw;
+    height: 72%;
+    border-radius: 0 12px 12px 0;
+    background-color: #84302f;
+    content: "";
+    transform: translateY(-50%);
 }
 
 .founders-img {
     position: relative;
     z-index: 1;
+    display: block;
+    width: 100%;
+    border-radius: 4px;
+}
+
+.about-media p {
+    margin-top: 12px;
+    color: #444;
+}
+
+.about-copy {
+    min-width: 0;
+    max-width: 760px;
+}
+
+.about-copy h2 {
+    margin: 0 0 12px;
+    font-size: 28px;
+}
+
+.about-copy h2:not(:first-child) {
+    margin-top: 32px;
+}
+
+.about-copy p {
+    margin: 0 0 14px;
+    font-size: 20px;
+    line-height: 1.45;
+}
+
+@media (width <= 900px) {
+    .about-body {
+        grid-template-columns: 1fr;
+    }
+
+    .about-copy {
+        max-width: none;
+    }
+}
+
+@media (width <= 560px) {
+    .about-page {
+        padding: 18px;
+    }
+
+    .about-header {
+        align-items: flex-start;
+    }
+
+    .about-heading {
+        padding: 10px 20px;
+        font-size: 24px;
+    }
+
+    .about-copy h2 {
+        font-size: 24px;
+    }
+
+    .about-copy p {
+        font-size: 18px;
+    }
 }

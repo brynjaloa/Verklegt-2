@@ -97,6 +97,28 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="marketplace-filter-group">
+                        <p class="filter-toggle" onclick="toggleFilter('filter-price')"><strong class="filter-toggle">Price ▾</strong></p>
+                        <br>
+                        <div id="filter-price" class="filter-dropdown">
+                            <div class="year-filter">
+                                <div id="price-slider" class="year-slider"></div>
+                                <div class="year-inputs">
+                                    <div class="year-input-group">
+                                        <label>From</label>
+                                        <input type="number" id="price-from-input" name="price_from" min="0" max="100000"
+                                            value="{{ request.GET.price_from|default:'0' }}">
+                                    </div>
+                                    <div class="year-input-group">
+                                        <label>To</label>
+                                        <input type="number" id="price-to-input" name="price_to" min="0" max="100000"
+                                            value="{{ request.GET.price_to|default:'100000' }}">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <button class="filter-button" type="submit">Apply</button>
@@ -112,6 +134,8 @@
                     <option value="relevance" {% if not sort or sort == 'relevance' %}selected{% endif %}>Sort by: Relevance</option>
                     <option value="price_low" {% if sort == 'price_low' %}selected{% endif %}>Sort by: Price (low to high)</option>
                     <option value="price_high" {% if sort == 'price_high' %}selected{% endif %}>Sort by: Price (high to low)</option>
+                    <option value="title_az" {% if sort == 'title_az' %}selected{% endif %}>Sort by: A-Z</option>
+                    <option value="title_za" {% if sort == 'title_za' %}selected{% endif %}>Sort by: Z-A</option>
                 </select>
             </div>
 

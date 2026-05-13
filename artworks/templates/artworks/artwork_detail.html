@@ -339,15 +339,23 @@
 
             {% if bid_popup_message == "minimum_bid_error" %}
                 <h2>Bid may not be lower than minimum bid, please bid again using a higher bid</h2>
+            {% elif bid_popup_message == "finalize_invalid" %}
+                <h2>Only accepted or contingent bids can be finalized.</h2>
             {% elif is_resubmission %}
                 <h2>Thank you for re-submitting a bid.</h2>
             {% else %}
                 <h2>Thank you for submitting a bid.</h2>
             {% endif %}
 
-            <p>
-                You will get a notification if it is accepted.
-            </p>
+            {% if bid_popup_message == "finalize_invalid" %}
+                <p>
+                    Wait until the seller accepts or marks your bid as contingent before finalizing.
+                </p>
+            {% else %}
+                <p>
+                    You will get a notification if it is accepted.
+                </p>
+            {% endif %}
 
         </div>
 

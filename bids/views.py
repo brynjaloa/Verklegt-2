@@ -1,6 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
 from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 
 from .forms import ContactInformationForm, PaymentInformationForm
 from .models import Bid
@@ -122,7 +123,8 @@ def finalize_bid(request, bid_id, step="contact"):
     )
 
     if bid.status not in {Bid.Status.ACCEPTED, Bid.Status.CONTINGENT, Bid.Status.FINALIZED}:
-        return HttpResponseForbidden("Only accepted or contingent bids can be finalized.")
+        artwork_url = reverse("artwork_detail", kwargs={"pk": bid.artwork.id})
+        return redirect(f"{artwork_url}?popup=finalize_invalid")
 
     if step not in FINALIZE_STEPS:
         return redirect("finalize_bid", bid_id=bid.id)
