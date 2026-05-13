@@ -1,7 +1,29 @@
 .artwork-detail-page {
+    position: relative;
     padding: 52px 72px;
     background: #fff;
     box-sizing: border-box;
+}
+
+.artwork-detail-back-link {
+    position: absolute;
+    top: 24px;
+    left: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #c06060;
+    color: white;
+    font-size: 38px;
+    line-height: 1;
+    text-decoration: none;
+}
+
+.artwork-detail-back-link:hover {
+    background: #9b3a35;
 }
 
 .artwork-detail-layout {
