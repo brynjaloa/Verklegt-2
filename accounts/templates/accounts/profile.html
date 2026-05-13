@@ -116,7 +116,7 @@
                         {% if artworks %}
                             <div class="listing-scroll">
                                 {% for artwork in artworks %}
-                                    <a href="{% url 'artwork_detail' artwork.id %}" class="artwork-link">
+                                    <a href="{% url 'artwork_detail' artwork.id %}?back={{ request.get_full_path|urlencode }}" class="artwork-link">
 
 	                                            <div class="listing-left">
 	                                                <span class="listing-dot"></span>
@@ -149,7 +149,7 @@
 
                                     <div class="bid-top">
 
-                                        <a href="{% url 'artwork_detail' bid.artwork.id %}"
+                                        <a href="{% url 'artwork_detail' bid.artwork.id %}?back={{ request.get_full_path|urlencode }}"
                                            class="bid-artwork-title">
 
                                             {{ bid.artwork.title }}
@@ -248,7 +248,7 @@
                                     {% for purchase in my_purchases %}
                                         <div class="bid-card">
                                             <div class="bid-top">
-                                                <a href="{% url 'artwork_detail' purchase.artwork.id %}"
+                                                <a href="{% url 'artwork_detail' purchase.artwork.id %}?back={{ request.get_full_path|urlencode }}"
                                                    class="bid-artwork-title">
                                                     {{ purchase.artwork.title }}
                                                 </a>
@@ -290,7 +290,7 @@
 	                                    <div class="profile-bid">
 
                                             <div class="profile-bid-main">
-                                                <a href="{% url 'artwork_detail' bid.artwork.id %}"
+                                                <a href="{% url 'artwork_detail' bid.artwork.id %}?back={{ request.get_full_path|urlencode }}"
                                                    class="bid-artwork-link">
 
                                                     {{ bid.artwork.title }}
@@ -387,7 +387,7 @@
                                     {% for purchase in my_purchases %}
                                         <div class="profile-bid">
                                             <div class="profile-bid-main">
-                                                <a href="{% url 'artwork_detail' purchase.artwork.id %}"
+                                                <a href="{% url 'artwork_detail' purchase.artwork.id %}?back={{ request.get_full_path|urlencode }}"
                                                    class="bid-artwork-link">
                                                     {{ purchase.artwork.title }}
                                                 </a>

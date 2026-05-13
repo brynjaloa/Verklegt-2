@@ -8,8 +8,7 @@
 
 {% block content %}
 <article class="artwork-detail-page">
-    <a class="artwork-detail-back-link" href="{{ back_url }}" aria-label="Back">‹</a>
-
+    <a class="artwork-detail-back-link" href="{{ back_url }}" aria-label="Back to previous listings">‹</a>
     <div class="artwork-detail-layout">
         <div class="artwork-detail-media">
             {% if primary_image %}
@@ -41,6 +40,12 @@
         <div class="artwork-detail-info">
             <h1>{{ artwork.title }}</h1>
             <p class="artwork-listing-date">Listed: {{ artwork.listing_date|date:"M j, Y" }}</p>
+            <p class="artwork-detail-seller">
+                Seller:
+                <a href="{% url 'seller_profile' artwork.seller.id %}?back={{ request.get_full_path|urlencode }}">
+                    {{ artwork.seller.name }}
+                </a>
+            </p>
 
             <p class="artwork-short-description">
                 {% if artwork.description %}
@@ -60,6 +65,14 @@
                 </div>
             {% else %}
                 <p class="artwork-minimum-bid">Minimum bid: ${{ artwork.starting_bid|intcomma }}</p>
+                <p class="artwork-highest-bid">
+                    Highest bid:
+                    {% if highest_bids %}
+                        ${{ highest_bids.0.bid_price|intcomma }}
+                    {% else %}
+                        No bids yet
+                    {% endif %}
+                </p>
             {% endif %}
 
             {% if can_edit_artwork and not is_artwork_sold %}
@@ -298,7 +311,7 @@
             <details class="artwork-detail-panel">
                 <summary>Seller information</summary>
                 <div class="artwork-panel-content seller-panel">
-                    <a class="seller-logo-link" href="{% url 'seller_profile' artwork.seller.id %}">
+                    <a class="seller-logo-link" href="{% url 'seller_profile' artwork.seller.id %}?back={{ request.get_full_path|urlencode }}">
                         {% if artwork.seller.logo %}
                             <img class="seller-logo" src="{{ artwork.seller.logo.url }}" alt="{{ artwork.seller.name }}">
                         {% else %}
@@ -308,7 +321,7 @@
 
                     <div>
                         <h2>
-                            <a class="seller-name-link" href="{% url 'seller_profile' artwork.seller.id %}">
+                            <a class="seller-name-link" href="{% url 'seller_profile' artwork.seller.id %}?back={{ request.get_full_path|urlencode }}">
                                 {{ artwork.seller.name }}
                             </a>
                         </h2>
@@ -339,7 +352,7 @@
 
         <div class="bid-popup-content">
 
-            <button id="close-popup" type="button" data-close-popup>
+            <button id="close-popup" type="button">
                 X
             </button>
 
@@ -347,13 +360,12 @@
                 <h2>Bid may not be lower than minimum bid, please bid again using a higher bid</h2>
             {% elif is_resubmission %}
                 <h2>Thank you for re-submitting a bid.</h2>
-            {% else %}
+                {% else %}
                 <h2>Thank you for submitting a bid.</h2>
-            {% endif %}
-
-            <p>
-                You will get a notification if it is accepted.
-            </p>
+                {% endif %}
+                <p>
+                    You will get a notification if it is accepted.
+                </p>
 
         </div>
 

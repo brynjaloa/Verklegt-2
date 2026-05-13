@@ -129,17 +129,17 @@
 
 .year-filter {
     padding: 0 8px;
-    margin-bottom: 12px;
+    margin: 4px 0 12px;
 }
 
 .year-slider {
-    margin: 16px 0;
+    margin: 8px 0 10px;
 }
 
 .year-inputs {
     display: flex;
     gap: 12px;
-    margin-top: 12px;
+    margin-top: 6px;
 }
 
 .year-input-group {

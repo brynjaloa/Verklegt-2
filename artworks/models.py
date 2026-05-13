@@ -188,7 +188,22 @@ class Artwork(models.Model):
             self.Category.PHOTOS: self.photo_technique,
         }
 
-        return medium_fields.get(self.category) or "Not specified"
+        medium = medium_fields.get(self.category)
+
+        if not medium:
+            return "Not specified"
+
+        return self._clean_medium_label(medium)
+
+    @staticmethod
+    def _clean_medium_label(medium):
+        labels_to_remove = (" painting", " Painting", " sculpture", " Sculpture")
+
+        for label in labels_to_remove:
+            if medium.endswith(label):
+                return medium[:-len(label)]
+
+        return medium
 
     @property
     def dimensions_display(self):
