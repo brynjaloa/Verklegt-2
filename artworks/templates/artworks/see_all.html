@@ -19,6 +19,9 @@
         <div class="see-all-filter-sidebar">
             <h2>Filters</h2>
             <form method="GET">
+                {% if sort %}
+                    <input type="hidden" name="sort" value="{{ sort }}">
+                {% endif %}
 
                 <div class="see-all-filter-groups">
                     <div class="see-all-filter-group">
@@ -92,10 +95,10 @@
         <div class="see-all-listings">
             <div class="see-all-toolbar">
                 <h2>Listings:</h2>
-                <select class="see-all-sort-select">
-                    <option>Sort by: Relevance</option>
-                    <option>Sort by: Price (low to high)</option>
-                    <option>Sort by: Price (high to low)</option>
+                <select class="sort-select" onchange="handleSort(this)">
+                    <option value="relevance" {% if not sort or sort == 'relevance' %}selected{% endif %}>Sort by: Relevance</option>
+                    <option value="price_low" {% if sort == 'price_low' %}selected{% endif %}>Sort by: Price (low to high)</option>
+                    <option value="price_high" {% if sort == 'price_high' %}selected{% endif %}>Sort by: Price (high to low)</option>
                 </select>
             </div>
 

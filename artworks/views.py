@@ -67,6 +67,15 @@ FEATURED_CATEGORY_STYLES = {
 }
 
 
+def sort_artworks(artworks, sort):
+    if sort == 'price_low':
+        return artworks.order_by('starting_bid', '-listing_date', '-id')
+    if sort == 'price_high':
+        return artworks.order_by('-starting_bid', '-listing_date', '-id')
+
+    return artworks.order_by('-listing_date', '-id')
+
+
 def artwork_list(request):
     query = request.GET.get('q', '').strip()
     category = request.GET.get('category')
@@ -105,6 +114,13 @@ def artwork_list(request):
     featured_styles = FEATURED_CATEGORY_STYLES.get(category, styles)
     mediums = category_fields.get("mediums", [])
 
+    sort = request.GET.get('sort', 'relevance')
+    artworks = sort_artworks(artworks, sort)
+
+    paginator = Paginator(artworks, 5)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
     return render(request, 'artworks/artwork_marketplace.html', {
         'artworks': artworks,
         'query': query,
@@ -114,6 +130,8 @@ def artwork_list(request):
         'mediums': mediums,
         'selected_styles': styles_selected,
         'selected_mediums': mediums_selected,
+        'page_obj': page_obj,
+        'sort': sort,
     })
 
 
@@ -290,6 +308,10 @@ def artwork_see_all(request):
     categories_selected = request.GET.getlist('category')
     styles_selected = request.GET.getlist('style')
     editions_selected = request.GET.getlist('edition')
+    category = request.GET.get('category')
+    style = request.GET.get('style')
+    edition = request.GET.get('edition')
+    sort = request.GET.get('sort', 'relevance')
 
     artworks = Artwork.objects.all()
 
@@ -350,6 +372,7 @@ def artwork_see_all(request):
         'selected_mediums': mediums_selected,
         'selected_styles': styles_selected,
         'selected_editions': editions_selected,
+        'sort': sort,
     })
 
 @login_required

@@ -2,6 +2,7 @@
 {% load static %}
 
 {% block content %}
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.css">
 <link rel="stylesheet" href="{% static 'css/artwork_marketplace.css' %}">
 
@@ -45,12 +46,21 @@
                 {% if category %}
                     <input type="hidden" name="category" value="{{ category }}">
                 {% endif %}
+                {% if sort %}
+                    <input type="hidden" name="sort" value="{{ sort }}">
+                {% endif %}
 
                 {% if mediums %}
                     <p><strong>Medium</strong></p>
                     {% for value, label in mediums %}
                         <label><input type="checkbox" name="medium" value="{{ value }}" {% if value in selected_mediums %}checked{% endif %}> {{ label }}</label><br>
                     {% endfor %}
+                    <p class="filter-toggle" onclick="toggleFilter('filter-medium')"><strong class="filter-toggle">Medium ▾</strong></p>
+                    <div id="filter-medium" class="filter-dropdown">
+                        {% for value, label in mediums %}
+                            <label><input type="checkbox" name="medium" value="{{ value }}"> {{ label }}</label><br>
+                        {% endfor %}
+                    </div>
                 {% endif %}
 
                 {% if filter_styles %}
@@ -58,9 +68,14 @@
                     {% for value, label in filter_styles %}
                         <label><input type="checkbox" name="style" value="{{ value }}" {% if value in selected_styles %}checked{% endif %}> {{ label }}</label><br>
                     {% endfor %}
+                    <p class="filter-toggle" onclick="toggleFilter('filter-style')"><strong class="filter-toggle">Style ▾</strong></p>
+                    <div id="filter-style" class="filter-dropdown">
+                        {% for value, label in filter_styles %}
+                            <label><input type="checkbox" name="style" value="{{ value }}"> {{ label }}</label><br>
+                        {% endfor %}
+                    </div>
                 {% endif %}
-
-                <p><strong>Year</strong></p>
+                <p><strong>Year:</strong></p>
                 <br>
                 <div class="year-filter">
                     <div id="year-slider" class="year-slider"></div>
@@ -87,16 +102,15 @@
             <div class="listings-toolbar">
 
                 <h2>Listings:</h2>
-                <select class="sort-select">
-
-                    <option>Sort by: Relevance</option>
-                    <option>Sort by: Price (low to high)</option>
-                    <option>Sort by: Price (high to low)</option>
+                <select class="sort-select" onchange="handleSort(this)">
+                    <option value="relevance" {% if not sort or sort == 'relevance' %}selected{% endif %}>Sort by: Relevance</option>
+                    <option value="price_low" {% if sort == 'price_low' %}selected{% endif %}>Sort by: Price (low to high)</option>
+                    <option value="price_high" {% if sort == 'price_high' %}selected{% endif %}>Sort by: Price (high to low)</option>
                 </select>
             </div>
 
             <div class="marketplace-grid">
-                {% for artwork in artworks %}
+                {% for artwork in page_obj %}
                 <a class="marketplace-card-link" href="{% url 'artwork_detail' artwork.pk %}">
                     <div class="marketplace-card">
 
@@ -124,6 +138,17 @@
                 {% empty %}
                     <p class="empty-listings">No artworks found.</p>
                 {% endfor %}
+            {% if page_obj.has_other_pages %}
+            <div class="pagination">
+                {% if page_obj.has_previous %}
+                    <a href="?page={{ page_obj.previous_page_number }}" class="pagination-btn">Previous</a>
+                {% endif %}
+                <span class="pagination-info">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}" class="pagination-btn">Next</a>
+                {% endif %}
+            </div>
+            {% endif %}
             </div>
         </div>
 
