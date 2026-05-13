@@ -20,6 +20,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.views.generic import TemplateView
 from artworks.views import home_view
+from .views import info_article_view, info_view
 
 
 urlpatterns = [
@@ -28,6 +29,8 @@ urlpatterns = [
     path("artworks/", include("artworks.urls")),
     path('', include('accounts.urls')),
     path("faq/", TemplateView.as_view(template_name="faq.html"), name="faq"),
+    path("info/", info_view, name="info"),
+    path("info/<slug:slug>/", info_article_view, name="info_article"),
     path('bids/', include('bids.urls')),
     
 ]
@@ -37,4 +40,3 @@ if settings.DEBUG:
         settings.MEDIA_URL,
         document_root=settings.MEDIA_ROOT
     )
-

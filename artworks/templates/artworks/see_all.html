@@ -24,7 +24,7 @@
                     <div class="see-all-filter-group">
                         <p><strong>Category</strong></p>
                         {% for value, label in categories %}
-                        <label><input type="checkbox" name="category" value="{{ value }}"> {{ label }}</label>
+                        <label><input type="checkbox" name="category" value="{{ value }}" {% if value in selected_categories %}checked{% endif %}> {{ label }}</label>
                         {% endfor %}
                     </div>
 
@@ -32,36 +32,36 @@
                         <p><strong>Medium / Material</strong></p>
                         <label class="filter-group-label">Painting</label>
                         {% for value, label in painting_mediums %}
-                        <label><input type="checkbox" name="medium" value="{{ value }}"> {{ label }}</label>
+                        <label><input type="checkbox" name="medium" value="{{ value }}" {% if value in selected_mediums %}checked{% endif %}> {{ label }}</label>
                         {% endfor %}
 
                         <label class="filter-group-label filter-group-label-spaced">Sculpture</label>
                         {% for value, label in sculpture_materials %}
-                        <label><input type="checkbox" name="medium" value="{{ value }}"> {{ label }}</label>
+                        <label><input type="checkbox" name="medium" value="{{ value }}" {% if value in selected_mediums %}checked{% endif %}> {{ label }}</label>
                         {% endfor %}
 
                         <label class="filter-group-label filter-group-label-spaced">Furniture</label>
                         {% for value, label in furniture_materials %}
-                        <label><input type="checkbox" name="medium" value="{{ value }}"> {{ label }}</label>
+                        <label><input type="checkbox" name="medium" value="{{ value }}" {% if value in selected_mediums %}checked{% endif %}> {{ label }}</label>
                         {% endfor %}
 
                         <label class="filter-group-label filter-group-label-spaced">Photo</label>
                         {% for value, label in photo_techniques %}
-                        <label><input type="checkbox" name="medium" value="{{ value }}"> {{ label }}</label>
+                        <label><input type="checkbox" name="medium" value="{{ value }}" {% if value in selected_mediums %}checked{% endif %}> {{ label }}</label>
                         {% endfor %}
                     </div>
 
                     <div class="see-all-filter-group">
                         <p><strong>Style</strong></p>
                         {% for label, value in all_styles %}
-                        <label><input type="checkbox" name="style" value="{{ value }}"> {{ label }}</label>
+                        <label><input type="checkbox" name="style" value="{{ value }}" {% if value in selected_styles %}checked{% endif %}> {{ label }}</label>
                         {% endfor %}
                     </div>
 
                     <div class="see-all-filter-group">
                         <p><strong>Edition</strong></p>
                         {% for value, label in editions %}
-                        <label><input type="checkbox" name="edition" value="{{ value }}"> {{ label }}</label>
+                        <label><input type="checkbox" name="edition" value="{{ value }}" {% if value in selected_editions %}checked{% endif %}> {{ label }}</label>
                         {% endfor %}
                     </div>
 
@@ -110,6 +110,16 @@
                         {% endif %}
                         <p class="see-all-card-title">{{ artwork.title }}</p>
                         <p class="see-all-card-price">Min bid: ${{ artwork.starting_bid }}</p>
+                        <div class="see-all-card-meta">
+                            <p>Medium: {{ artwork.display_medium }}</p>
+                            <p>Dimensions: {{ artwork.dimensions_display }}</p>
+                            <p>
+                                Status:
+                                <span class="see-all-card-status {% if artwork.is_sold %}is-sold{% else %}is-available{% endif %}">
+                                    {{ artwork.status_display }}
+                                </span>
+                            </p>
+                        </div>
                         <p class="see-all-card-date">Listed: {{ artwork.listing_date|date:"M j, Y" }}</p>
                     </div>
                 </a>

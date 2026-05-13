@@ -145,7 +145,7 @@
 
 .see-all-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 16px;
 }
 
@@ -175,11 +175,37 @@
 }
 
 .see-all-card-title {
+    margin: 10px 8px 4px;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.25;
+}
+
+.see-all-card-meta {
     margin: 8px;
+    color: #555;
+    font-size: 14px;
+    line-height: 1.35;
+}
+
+.see-all-card-meta p {
+    margin: 4px 0;
+}
+
+.see-all-card-status {
+    font-weight: 700;
+}
+
+.see-all-card-status.is-sold {
+    color: #8b0000;
+}
+
+.see-all-card-status.is-available {
+    color: #2f6f3e;
 }
 
 .see-all-card-price {
-    margin: 8px;
+    margin: 4px 8px 8px;
     color: #666;
 }
 
@@ -191,6 +217,24 @@
 
 .see-all-empty {
     color: #999;
+}
+
+@media (width <= 1100px) {
+    .see-all-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (width <= 820px) {
+    .see-all-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (width <= 520px) {
+    .see-all-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
 .see-all-pagination {

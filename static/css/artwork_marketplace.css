@@ -157,7 +157,7 @@
 
 .marketplace-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 16px;
 }
 
@@ -176,7 +176,9 @@
 .marketplace-card-placeholder {
     width: 100%;
     height: 180px;
-    display: block;
+}
+
+.marketplace-card-image {
     object-fit: cover;
 }
 
@@ -184,16 +186,67 @@
     background: #eee;
 }
 
-.marketplace-card p {
+.marketplace-card-title {
+    margin: 10px 8px 4px;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.25;
+}
+
+.marketplace-card-meta {
     margin: 8px;
+    color: #555;
+    font-size: 14px;
+    line-height: 1.35;
+}
+
+.marketplace-card-meta p {
+    margin: 4px 0;
+}
+
+.marketplace-card-status {
+    font-weight: 700;
+}
+
+.marketplace-card-status.is-sold {
+    color: #8b0000;
+}
+
+.marketplace-card-status.is-available {
+    color: #2f6f3e;
 }
 
 .marketplace-card-price {
+    margin: 4px 8px 8px;
     color: #666;
+}
+
+.marketplace-card-date {
+    color: #777;
+    font-size: 14px;
+    margin: 8px 12px;
 }
 
 .empty-listings {
     color: #999;
+}
+
+@media (width <= 1100px) {
+    .marketplace-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (width <= 820px) {
+    .marketplace-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (width <= 520px) {
+    .marketplace-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
 /* stylelint-disable selector-class-pattern -- noUiSlider uses these external class names. */

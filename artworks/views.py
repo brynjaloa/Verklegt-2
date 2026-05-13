@@ -1,6 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.http import HttpResponseForbidden
+from django.db.models import Q
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.http import require_POST
 
@@ -68,8 +69,8 @@ FEATURED_CATEGORY_STYLES = {
 def artwork_list(request):
     query = request.GET.get('q', '').strip()
     category = request.GET.get('category')
-    style = request.GET.get('style')
-    medium = request.GET.get('medium')
+    styles_selected = request.GET.getlist('style')
+    mediums_selected = request.GET.getlist('medium')
     year_from = request.GET.get('year_from')
     year_to = request.GET.get('year_to')
 
@@ -90,10 +91,10 @@ def artwork_list(request):
     style_field = category_fields.get("style")
     medium_field = category_fields.get("medium")
 
-    if style and style_field:
-        artworks = artworks.filter(**{style_field: style})
-    if medium and medium_field:
-        artworks = artworks.filter(**{medium_field: medium})
+    if styles_selected and style_field:
+        artworks = artworks.filter(**{f"{style_field}__in": styles_selected})
+    if mediums_selected and medium_field:
+        artworks = artworks.filter(**{f"{medium_field}__in": mediums_selected})
     if year_from:
         artworks = artworks.filter(year__gte=year_from)
     if year_to:
@@ -110,6 +111,8 @@ def artwork_list(request):
         'styles': featured_styles,
         'filter_styles': styles,
         'mediums': mediums,
+        'selected_styles': styles_selected,
+        'selected_mediums': mediums_selected,
     })
 
 
@@ -280,23 +283,33 @@ def category_list(request):
     return render(request, 'Category/categories.html', {'categories': categories})
 
 def artwork_see_all(request):
-    medium = request.GET.get('medium')
+    mediums_selected = request.GET.getlist('medium')
     year_from = request.GET.get('year_from')
     year_to = request.GET.get('year_to')
-    category = request.GET.get('category')
-    style = request.GET.get('style')
-    edition = request.GET.get('edition')
+    categories_selected = request.GET.getlist('category')
+    styles_selected = request.GET.getlist('style')
+    editions_selected = request.GET.getlist('edition')
 
     artworks = Artwork.objects.all()
 
-    if category:
-        artworks = artworks.filter(category=category)
-    if medium:
-        artworks = artworks.filter(painting_medium=medium)
-    if style:
-        artworks = artworks.filter(painting_style=style)
-    if edition:
-        artworks = artworks.filter(edition=edition)
+    if categories_selected:
+        artworks = artworks.filter(category__in=categories_selected)
+    if mediums_selected:
+        artworks = artworks.filter(
+            Q(painting_medium__in=mediums_selected)
+            | Q(sculpture_material__in=mediums_selected)
+            | Q(furniture_material__in=mediums_selected)
+            | Q(photo_technique__in=mediums_selected)
+        )
+    if styles_selected:
+        artworks = artworks.filter(
+            Q(painting_style__in=styles_selected)
+            | Q(sculpture_style__in=styles_selected)
+            | Q(furniture_style__in=styles_selected)
+            | Q(photo_style__in=styles_selected)
+        )
+    if editions_selected:
+        artworks = artworks.filter(edition__in=editions_selected)
     if year_from:
         artworks = artworks.filter(year__gte=year_from)
     if year_to:
@@ -327,6 +340,10 @@ def artwork_see_all(request):
         'furniture_materials': Artwork.FurnitureMaterial.choices,
         'photo_techniques': Artwork.PhotoTechnique.choices,
         'all_styles': all_styles,
+        'selected_categories': categories_selected,
+        'selected_mediums': mediums_selected,
+        'selected_styles': styles_selected,
+        'selected_editions': editions_selected,
     })
 
 @login_required

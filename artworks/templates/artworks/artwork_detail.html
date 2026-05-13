@@ -38,6 +38,7 @@
 
         <div class="artwork-detail-info">
             <h1>{{ artwork.title }}</h1>
+            <p class="artwork-listing-date">Listed: {{ artwork.listing_date|date:"M j, Y" }}</p>
 
             <p class="artwork-short-description">
                 {% if artwork.description %}
