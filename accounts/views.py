@@ -6,6 +6,7 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.db.models import Exists, OuterRef
+from django.views.decorators.cache import never_cache
 from artworks.models import Artwork
 from .forms import SignUpForm, ProfileForm, SellerForm, SellerEditForm
 from .models import Profile, Seller
@@ -21,6 +22,11 @@ def get_or_create_profile(user):
 
 def login_view(request):
     return render(request, 'accounts/login.html')
+
+
+def csrf_failure_view(request, reason=""):
+    messages.error(request, "Your login session expired. Please try again.")
+    return redirect('login')
 
 
 def signup_view(request):
@@ -62,17 +68,24 @@ def check_email_view(request):
 
 
 @login_required
+@never_cache
 def profile_view(request):
     profile = get_or_create_profile(request.user)
     seller = None
     artworks = Artwork.objects.none()
     user_bids = Bid.objects.filter(user=request.user).select_related("artwork", "artwork__seller")
-    my_bids = user_bids.exclude(status=Bid.Status.FINALIZED)
+    my_bids = user_bids.exclude(status__in=[Bid.Status.FINALIZED, Bid.Status.CANCELED])
     my_purchases = user_bids.filter(status=Bid.Status.FINALIZED)
     accepted_bid_notifications = list(
         user_bids.filter(
             status=Bid.Status.ACCEPTED,
             buyer_accept_notification_seen=False,
+        )
+    )
+    rejected_bid_notifications = list(
+        user_bids.filter(
+            status=Bid.Status.REJECTED,
+            buyer_reject_notification_seen=False,
         )
     )
     canceled_bid_notifications = []
@@ -81,6 +94,11 @@ def profile_view(request):
         Bid.objects.filter(
             id__in=[bid.id for bid in accepted_bid_notifications]
         ).update(buyer_accept_notification_seen=True)
+
+    if rejected_bid_notifications:
+        Bid.objects.filter(
+            id__in=[bid.id for bid in rejected_bid_notifications]
+        ).update(buyer_reject_notification_seen=True)
 
     if hasattr(request.user, 'seller'):
         seller = request.user.seller
@@ -111,6 +129,7 @@ def profile_view(request):
         "my_bids": my_bids,
         "my_purchases": my_purchases,
         "accepted_bid_notifications": accepted_bid_notifications,
+        "rejected_bid_notifications": rejected_bid_notifications,
         "canceled_bid_notifications": canceled_bid_notifications,
     }
     return render(request,'accounts/profile.html',context)

@@ -150,6 +150,7 @@ MEDIA_ROOT = BASE_DIR / 'media'
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'profile'
 LOGOUT_REDIRECT_URL = 'home'
+CSRF_FAILURE_VIEW = 'accounts.views.csrf_failure_view'
 
 STORAGES = {
     "default": {

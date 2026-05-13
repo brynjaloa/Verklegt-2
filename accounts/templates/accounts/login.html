@@ -8,6 +8,11 @@
     </h1>
     <form method="post" action="{% url 'login' %}">
         {% csrf_token %}
+        {% if messages %}
+            {% for message in messages %}
+                <p class="login-error">{{ message }}</p>
+            {% endfor %}
+        {% endif %}
         {% if form.errors %}
             <p class="login-error">Invalid username or password.</p>
         {% endif %}

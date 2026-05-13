@@ -218,13 +218,15 @@
 	                                            ${{ bid.bid_price }}
 	                                        </p>
 
-                                            {% if bid.status == "Accepted" or bid.status == "Contingent" %}
-                                                <p>
-                                                    <a class="cancel-bid-profile-link" href="{% url 'cancel_bid' bid.id %}">
+                                            <p>
+                                                <a class="cancel-bid-profile-link" href="{% url 'cancel_bid' bid.id %}">
+                                                    {% if bid.status == "Rejected" %}
+                                                        Remove from my bids
+                                                    {% else %}
                                                         Cancel bid
-                                                    </a>
-                                                </p>
-                                            {% endif %}
+                                                    {% endif %}
+                                                </a>
+                                            </p>
 
 	                                    </div>
 
@@ -313,13 +315,15 @@
 	                                                        ${{ bid.bid_price }}
 	                                                    </p>
 
-                                                    {% if bid.status == "Accepted" or bid.status == "Contingent" %}
-                                                        <p>
-                                                            <a class="cancel-bid-profile-link" href="{% url 'cancel_bid' bid.id %}">
+                                                    <p>
+                                                        <a class="cancel-bid-profile-link" href="{% url 'cancel_bid' bid.id %}">
+                                                            {% if bid.status == "Rejected" %}
+                                                                Remove from my bids
+                                                            {% else %}
                                                                 Cancel bid
-                                                            </a>
-                                                        </p>
-                                                    {% endif %}
+                                                            {% endif %}
+                                                        </a>
+                                                    </p>
 	                                                </div>
 	                                            </div>
 
@@ -412,13 +416,17 @@
 	    </div>
 	</div>
 
-    {% if accepted_bid_notifications or canceled_bid_notifications %}
+    {% if accepted_bid_notifications or rejected_bid_notifications or canceled_bid_notifications %}
         <div id="profile-notification-popup" class="profile-notification-popup">
             <div class="profile-notification-content">
                 <button id="close-profile-notification" type="button">X</button>
 
                 {% for bid in accepted_bid_notifications %}
                     <p>Your bid on "{{ bid.artwork.title }}" has been accepted!</p>
+                {% endfor %}
+
+                {% for bid in rejected_bid_notifications %}
+                    <p>Your bid on "{{ bid.artwork.title }}" has been rejected.</p>
                 {% endfor %}
 
                 {% for bid in canceled_bid_notifications %}
@@ -430,5 +438,5 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="{% static 'js/profile.js' %}"></script>
+<script src="{% static 'js/profile.js' %}?v=2"></script>
 {% endblock %}

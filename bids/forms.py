@@ -24,10 +24,6 @@ class BidForm(forms.ModelForm):
         }),
     )
 
-    def __init__(self, *args, artwork=None, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.artwork = artwork
-
     class Meta:
 
         model = Bid
@@ -56,8 +52,9 @@ class BidForm(forms.ModelForm):
         return bid_price
 
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, artwork=None, **kwargs):
         super().__init__(*args, **kwargs)
+        self.artwork = artwork
         self.fields["expiration_date"].widget.attrs["min"] = timezone.localdate().isoformat()
 
     def clean_expiration_date(self):

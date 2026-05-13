@@ -4,6 +4,8 @@ from django.http import HttpResponseForbidden
 from django.db.models import Q
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.http import require_POST
+from django.utils.http import url_has_allowed_host_and_scheme
+from urllib.parse import urlparse
 
 from django.urls import reverse
 from django.core.paginator import Paginator
@@ -66,6 +68,22 @@ FEATURED_CATEGORY_STYLES = {
         (Artwork.FurnitureStyle.CONTEMPORARY.value, Artwork.FurnitureStyle.CONTEMPORARY.label),
     ),
 }
+
+
+def get_artwork_detail_back_url(request):
+    referer = request.META.get("HTTP_REFERER")
+
+    if referer and url_has_allowed_host_and_scheme(
+        referer,
+        allowed_hosts={request.get_host()},
+        require_https=request.is_secure(),
+    ):
+        referer_path = urlparse(referer).path
+
+        if referer_path != request.path:
+            return referer
+
+    return reverse("see_all")
 
 
 def sort_artworks(artworks, sort):
@@ -146,7 +164,10 @@ def home_view(request):
 
 def artwork_detail(request, pk):
     artwork = get_object_or_404(Artwork, pk=pk)
-    highest_bids = Bid.objects.filter(artwork=artwork).order_by("-bid_price")[:3]
+    back_url = get_artwork_detail_back_url(request)
+    highest_bids = Bid.objects.filter(artwork=artwork).exclude(
+        status=Bid.Status.CANCELED
+    ).order_by("-bid_price")[:3]
     has_accepted_bid = Bid.objects.filter(
         artwork=artwork,
         status__in=[Bid.Status.ACCEPTED, Bid.Status.FINALIZED],
@@ -175,7 +196,7 @@ def artwork_detail(request, pk):
         existing_bid = Bid.objects.filter(
             artwork=artwork,
             user=request.user
-        ).first()
+        ).exclude(status=Bid.Status.CANCELED).first()
 
     if request.method == "POST" and is_artwork_sold:
         return redirect("artwork_detail", pk=artwork.pk)
@@ -222,6 +243,7 @@ def artwork_detail(request, pk):
                 "show_popup": True,
                 "bid_popup_message": "success",
                 "highest_bids": highest_bids,
+                "back_url": back_url,
             })
 
         return render(request, "artworks/artwork_detail.html", {
@@ -235,6 +257,7 @@ def artwork_detail(request, pk):
             "show_popup": True,
             "bid_popup_message": "minimum_bid_error",
             "highest_bids": highest_bids,
+            "back_url": back_url,
         })
 
     else:
@@ -254,6 +277,7 @@ def artwork_detail(request, pk):
         "form": form,
         "existing_bid": existing_bid,
         "highest_bids": highest_bids,
+        "back_url": back_url,
     })
 
 

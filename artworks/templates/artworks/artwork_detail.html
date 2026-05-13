@@ -3,11 +3,13 @@
 {% load humanize %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/artwork_detail.css' %}?v=4">
+<link rel="stylesheet" href="{% static 'css/artwork_detail.css' %}?v=5">
 {% endblock %}
 
 {% block content %}
 <article class="artwork-detail-page">
+    <a class="artwork-detail-back-link" href="{{ back_url }}" aria-label="Back">‹</a>
+
     <div class="artwork-detail-layout">
         <div class="artwork-detail-media">
             {% if primary_image %}
@@ -180,8 +182,7 @@
 
                 {% endif %}
 
-                {% if can_edit_artwork and not is_artwork_sold %}
-            {% if can_edit_artwork %}
+            {% if can_edit_artwork and not is_artwork_sold %}
                 <div class="artwork-owner-actions">
                     <a class="artwork-edit-button" href="{% url 'edit_artwork' artwork.pk %}">Edit artwork</a>
 
@@ -332,16 +333,13 @@
 
         <div class="bid-popup-content">
 
-            <button id="close-popup" type="button">
+            <button id="close-popup" type="button" data-close-popup>
                 X
             </button>
 
-            {% if is_resubmission %}
-                <h2>Thank you for resubmitting a bid.</h2>
-        {% if bid_popup_message == "minimum_bid_error" %}
-            <h2>Bid may not be lower than minimum bid, please bid again using a higher bid</h2>
-        {% else %}
-            {% if existing_bid %}
+            {% if bid_popup_message == "minimum_bid_error" %}
+                <h2>Bid may not be lower than minimum bid, please bid again using a higher bid</h2>
+            {% elif is_resubmission %}
                 <h2>Thank you for re-submitting a bid.</h2>
             {% else %}
                 <h2>Thank you for submitting a bid.</h2>
@@ -358,5 +356,5 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="{% static 'js/artwork_detail.js' %}?v=4"></script>
+<script src="{% static 'js/artworks/artwork_detail.js' %}?v=5"></script>
 {% endblock %}
