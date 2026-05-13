@@ -1,0 +1,188 @@
+.finalize-page {
+    padding: 40px;
+    font-family: Georgia, serif;
+}
+
+.finalize-panel {
+    max-width: 900px;
+    margin: 0 auto;
+    background: #8f2f2f;
+    border-radius: 24px;
+    padding: 28px;
+}
+
+.finalize-header,
+.finalize-form,
+.review-grid section,
+.confirmation-box {
+    background: white;
+    border-radius: 16px;
+    padding: 28px;
+}
+
+.finalize-kicker {
+    margin: 0 0 8px;
+    color: #8f2f2f;
+    font-weight: 700;
+}
+
+.finalize-header h1 {
+    margin: 0;
+    font-size: 36px;
+}
+
+.finalize-summary {
+    margin: 10px 0 0;
+    font-size: 18px;
+}
+
+.finalize-steps {
+    display: flex;
+    gap: 12px;
+    margin: 22px 0;
+}
+
+.finalize-step {
+    background: white;
+    color: black;
+    text-decoration: none;
+    padding: 10px 18px;
+    border-radius: 10px;
+    border: 2px solid transparent;
+}
+
+.finalize-step.active {
+    border-color: black;
+    font-weight: 700;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-field.wide {
+    grid-column: 1 / -1;
+}
+
+.form-field input,
+.form-field select {
+    padding: 12px;
+    border: 1px solid #bbb;
+    border-radius: 8px;
+    font: inherit;
+}
+
+.errorlist {
+    margin: 0;
+    padding-left: 18px;
+    color: #b00020;
+}
+
+.payment-options ul {
+    display: flex;
+    gap: 16px;
+    list-style: none;
+    padding: 0;
+    margin: 0 0 22px;
+}
+
+.payment-options label {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    background: #f2f2f2;
+    padding: 10px 14px;
+    border-radius: 8px;
+}
+
+.payment-detail {
+    margin-top: 12px;
+}
+
+.review-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 22px;
+}
+
+.review-grid h2 {
+    margin-top: 0;
+}
+
+.review-grid dl {
+    margin: 0;
+}
+
+.review-grid dl div {
+    margin-bottom: 14px;
+}
+
+.review-grid dt {
+    font-weight: 700;
+}
+
+.review-grid dd {
+    margin: 4px 0 0;
+}
+
+.finalize-actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    margin-top: 22px;
+}
+
+.finalize-actions button,
+.secondary-action,
+.home-link {
+    border: none;
+    border-radius: 10px;
+    padding: 12px 20px;
+    font: inherit;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.finalize-actions button:not(.secondary-action),
+.home-link {
+    background: #3c9c5d;
+    color: white;
+}
+
+.secondary-action {
+    background: #ddd;
+    color: black;
+}
+
+.confirmation-box {
+    text-align: center;
+}
+
+.confirmation-box h2 {
+    margin-top: 0;
+}
+
+@media (max-width: 700px) {
+    .finalize-page {
+        padding: 18px;
+    }
+
+    .form-grid,
+    .review-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .payment-options ul,
+    .finalize-steps,
+    .finalize-actions {
+        flex-direction: column;
+    }
+}

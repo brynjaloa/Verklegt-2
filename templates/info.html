@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/info.css' %}">
+{% endblock %}
+
+{% block content %}
+<article class="info-page">
+    <header class="info-header">
+        <a href="{% url 'home' %}" class="info-back-link" aria-label="Back to home">‹</a>
+        <h1>Info</h1>
+    </header>
+
+    <section class="info-articles" aria-label="Articles">
+        {% for article in articles %}
+            <a href="{% url 'info_article' article.slug %}" class="info-card">
+                <img src="{{ article.image_url }}" alt="{{ article.title }}" class="info-card-image">
+
+                <div class="info-card-content">
+                    <h2>{{ article.title }}</h2>
+                    <p>{{ article.intro }}</p>
+                    <span class="info-card-link">Read article</span>
+                </div>
+            </a>
+        {% endfor %}
+    </section>
+</article>
+{% endblock %}

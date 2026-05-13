@@ -3,11 +3,12 @@ body{
 }
 .categories-container {
     padding: 20px;
+    box-sizing: border-box;
 }
 
 .categories-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(220px, 1fr));
     gap: 20px;
     padding: 20px;
     max-width: 900px;
@@ -30,4 +31,20 @@ body{
     color: white;
     font-size: 22px;
     font-weight: bold;
+    text-align: center;
+}
+
+@media (width <= 560px) {
+    .categories-container {
+        padding: 14px;
+    }
+
+    .categories-grid {
+        grid-template-columns: 1fr;
+        padding: 10px 0;
+    }
+
+    .category-card {
+        height: 180px;
+    }
 }

@@ -1,18 +1,38 @@
-function toggle(el, videoId) {
-    const answer = el.nextElementSibling;
-    const icon = el.querySelector('.faq-icon');
-    const isOpen = answer.style.display !== 'none';
+document.addEventListener("DOMContentLoaded", function () {
+    const questions = document.querySelectorAll(".faq-question");
 
-    document.querySelectorAll('.faq-answer').forEach(a => a.style.display = 'none');
-    document.querySelectorAll('.faq-question .faq-icon').forEach(i => i.textContent = '+');
-    document.querySelectorAll('.video-panel').forEach(v => {
-        v.style.display = 'none';
-        v.querySelector('video').pause();
+    questions.forEach(question => {
+        question.addEventListener("click", function () {
+            const answer = question.nextElementSibling;
+            const icon = question.querySelector(".faq-icon");
+            const videoPanel = document.getElementById(question.dataset.videoId);
+            const isOpen = !answer.hidden;
+
+            document.querySelectorAll(".faq-answer").forEach(item => {
+                item.hidden = true;
+            });
+
+            document.querySelectorAll(".faq-question .faq-icon").forEach(item => {
+                item.textContent = "+";
+            });
+
+            document.querySelectorAll(".video-panel").forEach(panel => {
+                panel.hidden = true;
+
+                const video = panel.querySelector("video");
+                if (video) {
+                    video.pause();
+                }
+            });
+
+            if (!isOpen) {
+                answer.hidden = false;
+                icon.textContent = "-";
+
+                if (videoPanel) {
+                    videoPanel.hidden = false;
+                }
+            }
+        });
     });
-
-    if (!isOpen) {
-        answer.style.display = 'block';
-        icon.textContent = '-';
-        document.getElementById(videoId).style.display = 'block';
-    }
-}
+});

@@ -20,6 +20,8 @@ nav {
     justify-content: space-between;
     padding: 22px 40px;
     gap: 18px;
+    box-sizing: border-box;
+    width: 100%;
 }
 
 /* LOGO */
@@ -36,7 +38,7 @@ nav {
     display: flex;
     align-items: center;
     gap: 30px;
-    margin-left: 80px;
+    margin-left: 36px;
     min-width: 0;
     flex: 1;
     justify-content: flex-end;
@@ -45,12 +47,16 @@ nav {
 /* SEARCH */
 .search-box {
     position: relative;
+    flex: 0 1 260px;
+    min-width: 150px;
 }
 
 .search-box input {
     padding: 8px 35px 8px 12px;
     border-radius: 20px;
     border: none;
+    box-sizing: border-box;
+    width: 100%;
 }
 
 .search-icon {
@@ -68,7 +74,7 @@ nav {
 /* LINKS */
 .nav-links {
     display: flex;
-    gap: 24px;
+    gap: 22px;
     align-items: center;
     flex-wrap: nowrap;
 }
@@ -455,6 +461,199 @@ nav {
     bottom: -15px;
     left: 50%;
     transform: translateX(-50%);
+}
+
+@media (width <= 1180px) {
+    .navbar {
+        align-items: center;
+        flex-wrap: nowrap;
+        padding: 18px 28px;
+        gap: 14px;
+    }
+
+    .logo {
+        font-size: 40px;
+    }
+
+    .nav-center {
+        margin-left: 0;
+        gap: 22px;
+        justify-content: flex-end;
+    }
+
+    .search-box {
+        flex-basis: 220px;
+    }
+
+    .nav-links a {
+        font-size: 23px;
+    }
+
+    .nav-links {
+        gap: 18px;
+    }
+
+    .nav-profile-image,
+    .nav-profile-placeholder {
+        width: 62px;
+        height: 62px;
+    }
+}
+
+@media (width <= 900px) {
+    .navbar {
+        align-items: flex-start;
+        flex-wrap: wrap;
+        gap: 16px;
+        padding: 16px 18px;
+    }
+
+    .nav-left,
+    .nav-right {
+        flex: 1 1 auto;
+    }
+
+    .nav-right {
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    .logo {
+        font-size: 34px;
+    }
+
+    .nav-center {
+        align-items: stretch;
+        flex-basis: 100%;
+        flex-direction: column;
+        gap: 16px;
+        order: 3;
+    }
+
+    .search-box {
+        flex-basis: auto;
+        width: 100%;
+    }
+
+    .nav-links {
+        justify-content: center;
+        gap: 18px;
+        overflow-x: auto;
+        padding-bottom: 4px;
+    }
+
+    .nav-links a {
+        font-size: 22px;
+    }
+
+    .nav-profile-image,
+    .nav-profile-placeholder {
+        width: 54px;
+        height: 54px;
+    }
+
+    .profile-link span {
+        font-size: 14px;
+    }
+
+    .login-btn {
+        font-size: 22px;
+        padding: 8px 18px;
+    }
+}
+
+@media (width <= 820px) {
+    .front-box-container {
+        padding: 24px;
+    }
+
+    .front-box {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .front-box-text {
+        max-width: none;
+        padding-right: 0;
+        border-right: 0;
+        border-bottom: 2px solid rgb(255 255 255 / 50%);
+        padding-bottom: 22px;
+    }
+
+    .recent-carousel {
+        grid-template-columns: 40px minmax(0, 1fr) 40px;
+        gap: 10px;
+        padding: 0 18px;
+    }
+
+    .recent-carousel .art-card {
+        flex-basis: calc((100% - 32px) / 2);
+    }
+
+    .art-card,
+    .art-title,
+    .price {
+        width: 150px;
+    }
+
+    .art-box,
+    .art-image-link .art-box {
+        width: 150px;
+        height: 150px;
+    }
+
+    .footer {
+        flex-direction: column;
+        gap: 24px;
+    }
+}
+
+@media (width <= 420px) {
+    .navbar {
+        align-items: center;
+        flex-direction: column;
+    }
+
+    .nav-left,
+    .nav-right {
+        width: 100%;
+    }
+
+    .nav-left,
+    .nav-right {
+        display: flex;
+        justify-content: center;
+    }
+
+    .nav-center {
+        order: 0;
+        width: 100%;
+    }
+
+    .nav-links {
+        justify-content: flex-start;
+    }
+
+    .front-box-container {
+        padding: 16px;
+    }
+
+    .front-box-text h2 {
+        font-size: 26px;
+    }
+
+    .section-title {
+        margin: 28px 18px;
+    }
+
+    .recent-carousel {
+        grid-template-columns: 34px minmax(0, 1fr) 34px;
+        padding: 0 10px;
+    }
+
+    .recent-carousel .art-card {
+        flex-basis: 100%;
+    }
 }
 
 /* footer */

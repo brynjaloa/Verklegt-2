@@ -1,26 +1,27 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block content %}
+{% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/faq.css' %}">
+{% endblock %}
 
+{% block content %}
 <div class="faq-page">
     <div class="faq-header">
         <a href="/" class="faq-back-link">‹</a>
-        <h1 class="faq-heading">Frequently asked</h1>
+        <h1 class="faq-title">Frequently asked</h1>
     </div>
 
     <div class="faq-layout">
-        <!-- FAQ section -->
-        <div class="faq-questions">
+        <div class="faq-list">
 
             <div class="faq-item">
-                <div class="faq-question" onclick="toggle(this, 'video-sell')">
+                <button class="faq-question" type="button" data-video-id="video-sell">
                     <span class="faq-dot">●</span>
-                    <strong class="faq-question-text">How to sell?</strong>
+                    <strong>How to sell?</strong>
                     <span class="faq-icon">+</span>
-                </div>
-                <div class="faq-answer">
+                </button>
+                <div class="faq-answer" hidden>
                     <p>Register as a seller on ArtVault.</p>
                     <p>Upload your artwork with images and details.</p>
                     <p>Set your starting bid price.</p>
@@ -30,12 +31,12 @@
             </div>
 
             <div class="faq-item">
-                <div class="faq-question" onclick="toggle(this, 'video-buy')">
+                <button class="faq-question" type="button" data-video-id="video-buy">
                     <span class="faq-dot">●</span>
-                    <strong class="faq-question-text">How to buy?</strong>
+                    <strong>How to buy?</strong>
                     <span class="faq-icon">+</span>
-                </div>
-                <div class="faq-answer">
+                </button>
+                <div class="faq-answer" hidden>
                     <p>Browse artworks in the catalogue.</p>
                     <p>Click on an artwork to see details.</p>
                     <p>Submit a bid with your price and expiration date.</p>
@@ -45,12 +46,12 @@
             </div>
 
             <div class="faq-item">
-                <div class="faq-question" onclick="toggle(this, 'video-signup')">
+                <button class="faq-question" type="button" data-video-id="video-signup">
                     <span class="faq-dot">●</span>
-                    <strong class="faq-question-text">How to sign up?</strong>
+                    <strong>How to sign up?</strong>
                     <span class="faq-icon">+</span>
-                </div>
-                <div class="faq-answer">
+                </button>
+                <div class="faq-answer" hidden>
                     <p>Click the Login button in the top right.</p>
                     <p>Select Sign up and fill in your details.</p>
                     <p>You're ready to start browsing!</p>
@@ -60,31 +61,35 @@
 
         </div>
 
-        <!-- Video section -->
-        <div class="faq-videos">
-            <div id="video-sell" class="video-panel">
-                <video class="faq-video" controls>
+        <div class="faq-video-area">
+
+            <div id="video-sell" class="video-panel" hidden>
+                <video controls>
                     <source src="{% static 'videos/how_to_sell.mp4' %}" type="video/mp4">
                 </video>
-                <p class="faq-video-caption">How to sell</p>
+                <p>How to sell</p>
             </div>
 
-            <div id="video-buy" class="video-panel">
-                <video class="faq-video" controls>
+            <div id="video-buy" class="video-panel" hidden>
+                <video controls>
                     <source src="{% static 'videos/how_to_buy.mp4' %}" type="video/mp4">
                 </video>
-                <p class="faq-video-caption">How to buy</p>
+                <p>How to buy</p>
             </div>
 
-            <div id="video-signup" class="video-panel">
-                <video class="faq-video" controls>
+            <div id="video-signup" class="video-panel" hidden>
+                <video controls>
                     <source src="{% static 'videos/how_to_signup.mp4' %}" type="video/mp4">
                 </video>
-                <p class="faq-video-caption">How to sign up</p>
+                <p style="margin-top: 8px; color: #666;">How to sign up</p>
             </div>
+
         </div>
     </div>
 </div>
 
-    <script src="{% static 'js/faq.js' %}"></script>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/faq.js' %}"></script>
 {% endblock %}

@@ -51,6 +51,10 @@
                 {% endif %}
 
                 {% if mediums %}
+                    <p><strong>Medium</strong></p>
+                    {% for value, label in mediums %}
+                        <label><input type="checkbox" name="medium" value="{{ value }}" {% if value in selected_mediums %}checked{% endif %}> {{ label }}</label><br>
+                    {% endfor %}
                     <p class="filter-toggle" onclick="toggleFilter('filter-medium')"><strong class="filter-toggle">Medium ▾</strong></p>
                     <div id="filter-medium" class="filter-dropdown">
                         {% for value, label in mediums %}
@@ -60,6 +64,10 @@
                 {% endif %}
 
                 {% if filter_styles %}
+                    <p><strong>Style</strong></p>
+                    {% for value, label in filter_styles %}
+                        <label><input type="checkbox" name="style" value="{{ value }}" {% if value in selected_styles %}checked{% endif %}> {{ label }}</label><br>
+                    {% endfor %}
                     <p class="filter-toggle" onclick="toggleFilter('filter-style')"><strong class="filter-toggle">Style ▾</strong></p>
                     <div id="filter-style" class="filter-dropdown">
                         {% for value, label in filter_styles %}
@@ -112,20 +120,19 @@
                             <div class="marketplace-card-placeholder"></div>
                         {% endif %}
 
-                        <p>{{ artwork.title }}</p>
-                        {% if artwork.highest_bid %}
-
-                            <p class="marketplace-card-price">
-                                Highest bid:
-                                ${{ artwork.highest_bid.bid_price }}
+                        <p class="marketplace-card-title">{{ artwork.title }}</p>
+                        <p class="marketplace-card-price">Min bid: ${{ artwork.starting_bid }}</p>
+                        <div class="marketplace-card-meta">
+                            <p>Medium: {{ artwork.display_medium }}</p>
+                            <p>Dimensions: {{ artwork.dimensions_display }}</p>
+                            <p>
+                                Status:
+                                <span class="marketplace-card-status {% if artwork.is_sold %}is-sold{% else %}is-available{% endif %}">
+                                    {{ artwork.status_display }}
+                                </span>
                             </p>
-
-                        {% else %}
-                            <p class="marketplace-card-price">
-                                Min bid:
-                                ${{ artwork.starting_bid }}
-                            </p>
-                        {% endif %}
+                        </div>
+                        <p class="marketplace-card-date">Listed: {{ artwork.listing_date|date:"M j, Y" }}</p>
                     </div>
                 </a>
                 {% empty %}
@@ -149,6 +156,6 @@
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.js"></script>
-<script src="{% static 'js/artwork_marketplace.js' %}"></script>
+<script src="{% static 'artworks/artwork_marketplace.js' %}"></script>
 
 {% endblock %}
