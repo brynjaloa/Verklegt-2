@@ -4,6 +4,20 @@
     box-sizing: border-box;
 }
 
+.artwork-detail-back-link {
+    width: 40px;
+    height: 40px;
+    border: 1px solid #ccc;
+    border-radius: 50%;
+    color: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    margin: 0 0 24px;
+    text-decoration: none;
+}
+
 .artwork-detail-layout {
     display: grid;
     grid-template-columns: minmax(320px, 430px) minmax(0, 1fr);
@@ -71,10 +85,27 @@
 }
 
 .artwork-listing-date {
+    margin: 0 0 6px;
+    color: #555;
+    font-size: 17px;
+    line-height: 1.3;
+}
+
+.artwork-detail-seller {
     margin: 0 0 22px;
     color: #555;
     font-size: 17px;
     line-height: 1.3;
+}
+
+.artwork-detail-seller a {
+    color: black;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.artwork-detail-seller a:hover {
+    text-decoration: underline;
 }
 
 .artwork-short-description {
@@ -100,9 +131,16 @@
 }
 
 .artwork-minimum-bid {
-    margin: 0 0 30px;
+    margin: 0 0 8px;
     font-size: 24px;
     font-weight: 700;
+}
+
+.artwork-highest-bid {
+    color: #777;
+    font-size: 18px;
+    font-weight: 500;
+    margin: 0 0 30px;
 }
 
 .artwork-sold-badge {
@@ -440,6 +478,10 @@
 
     .artwork-minimum-bid {
         font-size: 22px;
+    }
+
+    .artwork-highest-bid {
+        font-size: 17px;
     }
 
     .bid-popup-content {

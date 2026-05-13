@@ -6,6 +6,8 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.db.models import Exists, OuterRef
+from django.urls import reverse
+from django.utils.http import url_has_allowed_host_and_scheme
 from artworks.models import Artwork
 from .forms import SignUpForm, ProfileForm, SellerForm, SellerEditForm
 from .models import Profile, Seller
@@ -118,9 +120,22 @@ def profile_view(request):
 
 def seller_profile_view(request, seller_id):
     seller = get_object_or_404(Seller, id=seller_id)
-    artworks = Artwork.objects.filter(
-        seller=seller,
-        is_sold=False,
+    requested_back_url = request.GET.get("back")
+    back_url = requested_back_url if (
+        requested_back_url
+        and url_has_allowed_host_and_scheme(
+            requested_back_url,
+            allowed_hosts={request.get_host()},
+            require_https=request.is_secure(),
+        )
+    ) else reverse("see_all")
+    artworks = Artwork.objects.filter(seller=seller).annotate(
+        sold_by_bid=Exists(
+            Bid.objects.filter(
+                artwork=OuterRef("pk"),
+                status__in=[Bid.Status.ACCEPTED, Bid.Status.FINALIZED],
+            )
+        )
     ).order_by("-listing_date", "-id")
 
     for artwork in artworks:
@@ -129,6 +144,7 @@ def seller_profile_view(request, seller_id):
     return render(request, "accounts/seller_profile.html", {
         "seller": seller,
         "artworks": artworks,
+        "back_url": back_url,
     })
 
 @login_required

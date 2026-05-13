@@ -110,6 +110,14 @@
     margin: 0 0 18px;
 }
 
+.seller-profile-address {
+    color: #333;
+    font-size: 18px;
+    font-style: normal;
+    line-height: 1.45;
+    margin: 0 0 18px;
+}
+
 .seller-profile-bio {
     color: #333;
     font-size: 18px;
@@ -124,58 +132,92 @@
 
 .seller-listings-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-    gap: 18px;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.seller-listing-card-link {
+    color: black;
+    text-decoration: none;
 }
 
 .seller-listing-card {
     border: 1px solid #ddd;
     border-radius: 8px;
-    color: black;
-    display: flex;
-    flex-direction: column;
     overflow: hidden;
-    text-decoration: none;
 }
 
-.seller-listing-card:hover {
-    border-color: #9b3a35;
-}
-
-.seller-listing-image,
-.seller-listing-placeholder {
-    aspect-ratio: 4 / 3;
-    display: block;
-    object-fit: cover;
+.seller-listing-card-image,
+.seller-listing-card-placeholder {
     width: 100%;
+    height: 180px;
+    display: block;
 }
 
-.seller-listing-placeholder {
+.seller-listing-card-image {
+    object-fit: cover;
+}
+
+.seller-listing-card-placeholder {
     background: #eee;
 }
 
-.seller-listing-content {
-    padding: 14px;
+.seller-listing-card-title {
+    margin: 10px 8px 4px;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.25;
 }
 
-.seller-listing-content h3 {
-    font-size: 21px;
-    line-height: 1.2;
-    margin: 0 0 8px;
+.seller-listing-card-price {
+    color: #666;
+    margin: 4px 8px 8px;
 }
 
-.seller-listing-content p {
+.seller-listing-card-meta {
     color: #555;
-    margin: 0 0 8px;
+    font-size: 14px;
+    line-height: 1.35;
+    margin: 8px;
 }
 
-.seller-listing-price {
-    font-weight: bold;
+.seller-listing-card-meta p {
+    margin: 4px 0;
+}
+
+.seller-listing-card-status {
+    font-weight: 700;
+}
+
+.seller-listing-card-status.is-sold {
+    color: #8b0000;
+}
+
+.seller-listing-card-status.is-available {
+    color: #2f6f3e;
+}
+
+.seller-listing-card-date {
+    color: #777;
+    font-size: 14px;
+    margin: 8px 12px;
 }
 
 .seller-empty-listings {
     color: #666;
     font-size: 18px;
+}
+
+@media (max-width: 1100px) {
+    .seller-listings-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 820px) {
+    .seller-listings-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
 }
 
 @media (max-width: 700px) {
@@ -200,7 +242,9 @@
     .seller-cover-image {
         height: 190px;
     }
+}
 
+@media (max-width: 520px) {
     .seller-listings-grid {
         grid-template-columns: 1fr;
     }

@@ -4,7 +4,7 @@
     </div>
 
     <div class="nav-center">
-        <form class="search-box" method="GET" action="{% url 'artwork_list' %}">
+        <form class="search-box" method="GET" action="{% url 'artwork_list' %}" data-preserve-query>
             <input type="text" name="q" value="{{ request.GET.q }}" placeholder="Search...">
             <button class="search-icon" type="submit" aria-label="Search">🔍</button>
         </form>

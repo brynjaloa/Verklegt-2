@@ -3,11 +3,12 @@
 {% load humanize %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/artwork_detail.css' %}?v=4">
+<link rel="stylesheet" href="{% static 'css/artwork_detail.css' %}?v=5">
 {% endblock %}
 
 {% block content %}
 <article class="artwork-detail-page">
+    <a class="artwork-detail-back-link" href="{{ back_url }}" aria-label="Back to previous listings">‹</a>
     <div class="artwork-detail-layout">
         <div class="artwork-detail-media">
             {% if primary_image %}
@@ -39,6 +40,12 @@
         <div class="artwork-detail-info">
             <h1>{{ artwork.title }}</h1>
             <p class="artwork-listing-date">Listed: {{ artwork.listing_date|date:"M j, Y" }}</p>
+            <p class="artwork-detail-seller">
+                Seller:
+                <a href="{% url 'seller_profile' artwork.seller.id %}?back={{ request.get_full_path|urlencode }}">
+                    {{ artwork.seller.name }}
+                </a>
+            </p>
 
             <p class="artwork-short-description">
                 {% if artwork.description %}
@@ -58,6 +65,14 @@
                 </div>
             {% else %}
                 <p class="artwork-minimum-bid">Minimum bid: ${{ artwork.starting_bid|intcomma }}</p>
+                <p class="artwork-highest-bid">
+                    Highest bid:
+                    {% if highest_bids %}
+                        ${{ highest_bids.0.bid_price|intcomma }}
+                    {% else %}
+                        No bids yet
+                    {% endif %}
+                </p>
             {% endif %}
 
             {% if can_edit_artwork and not is_artwork_sold %}
@@ -181,7 +196,6 @@
                 {% endif %}
 
                 {% if can_edit_artwork and not is_artwork_sold %}
-            {% if can_edit_artwork %}
                 <div class="artwork-owner-actions">
                     <a class="artwork-edit-button" href="{% url 'edit_artwork' artwork.pk %}">Edit artwork</a>
 
@@ -291,7 +305,7 @@
             <details class="artwork-detail-panel">
                 <summary>Seller information</summary>
                 <div class="artwork-panel-content seller-panel">
-                    <a class="seller-logo-link" href="{% url 'seller_profile' artwork.seller.id %}">
+                    <a class="seller-logo-link" href="{% url 'seller_profile' artwork.seller.id %}?back={{ request.get_full_path|urlencode }}">
                         {% if artwork.seller.logo %}
                             <img class="seller-logo" src="{{ artwork.seller.logo.url }}" alt="{{ artwork.seller.name }}">
                         {% else %}
@@ -301,7 +315,7 @@
 
                     <div>
                         <h2>
-                            <a class="seller-name-link" href="{% url 'seller_profile' artwork.seller.id %}">
+                            <a class="seller-name-link" href="{% url 'seller_profile' artwork.seller.id %}?back={{ request.get_full_path|urlencode }}">
                                 {{ artwork.seller.name }}
                             </a>
                         </h2>
@@ -336,21 +350,19 @@
                 X
             </button>
 
-            {% if is_resubmission %}
-                <h2>Thank you for resubmitting a bid.</h2>
-        {% if bid_popup_message == "minimum_bid_error" %}
-            <h2>Bid may not be lower than minimum bid, please bid again using a higher bid</h2>
-        {% else %}
-            {% if existing_bid %}
-                <h2>Thank you for re-submitting a bid.</h2>
+            {% if bid_popup_message == "minimum_bid_error" %}
+                <h2>Bid may not be lower than minimum bid, please bid again using a higher bid</h2>
             {% else %}
+                {% if is_resubmission or existing_bid %}
+                <h2>Thank you for re-submitting a bid.</h2>
+                {% else %}
                 <h2>Thank you for submitting a bid.</h2>
-            {% endif %}
+                {% endif %}
 
-            <p>
-                You will get a notification if it is accepted.
-            </p>
-        {% endif %}
+                <p>
+                    You will get a notification if it is accepted.
+                </p>
+            {% endif %}
 
         </div>
 

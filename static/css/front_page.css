@@ -207,6 +207,13 @@ nav {
     align-items: center;
 }
 
+.most-bidded-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 180px);
+    gap: 38px 64px;
+    justify-content: center;
+}
+
 .carousel-arrow {
     width: 48px;
     height: 48px;
@@ -276,6 +283,8 @@ nav {
 .empty-section {
     color: #666;
     font-size: 18px;
+    width: 100%;
+    text-align: center;
 }
 
 .artwork-detail-page {
@@ -615,6 +624,11 @@ nav {
         flex-basis: calc((100% - 32px) / 2);
     }
 
+    .most-bidded-grid {
+        grid-template-columns: repeat(2, 150px);
+        gap: 32px;
+    }
+
     .art-card,
     .art-title,
     .price {
@@ -678,6 +692,11 @@ nav {
 
     .recent-carousel .art-card {
         flex-basis: 100%;
+    }
+
+    .most-bidded-grid {
+        grid-template-columns: 1fr;
+        justify-items: center;
     }
 }
 
