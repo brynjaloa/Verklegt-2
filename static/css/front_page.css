@@ -222,6 +222,7 @@ nav {
 .carousel-arrow:disabled {
     cursor: default;
     opacity: 0.35;
+    visibility: hidden;
 }
 
 .art-card {
@@ -276,6 +277,8 @@ nav {
 .empty-section {
     color: #666;
     font-size: 18px;
+    width: 100%;
+    text-align: center;
 }
 
 .artwork-detail-page {

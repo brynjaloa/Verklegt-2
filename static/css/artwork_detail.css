@@ -155,6 +155,11 @@
     background: #84302f;
 }
 
+.login-to-bid-button {
+    display: inline-block;
+    text-decoration: none;
+}
+
 .artwork-edit-link {
     display: inline-block;
     margin-bottom: 24px;

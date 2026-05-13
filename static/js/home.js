@@ -36,9 +36,9 @@ document.addEventListener("DOMContentLoaded", function () {
     function updateCarousel() {
         const maxIndex = Math.max(cards.length - visibleCount, 0);
         if (currentIndex < 0) {
-            currentIndex = maxIndex;
-        } else if (currentIndex > maxIndex) {
             currentIndex = 0;
+        } else if (currentIndex > maxIndex) {
+            currentIndex = maxIndex;
         }
 
         track.style.transform = `translateX(-${currentIndex * getStepSize()}px)`;

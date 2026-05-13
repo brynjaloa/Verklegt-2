@@ -3,7 +3,7 @@
 {% load humanize %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/artwork_detail.css' %}?v=5">
+<link rel="stylesheet" href="{% static 'css/artwork_detail.css' %}?v=6">
 {% endblock %}
 
 {% block content %}
@@ -137,48 +137,54 @@
                 </div>
 	                {% endif %}
 
-	                {% if not can_edit_artwork and not is_artwork_sold %}
-	                <form method="POST" class="bid-form">
-                    {% csrf_token %}
+                {% if not can_edit_artwork and not is_artwork_sold %}
+                    {% if user.is_authenticated %}
+                        <form method="POST" class="bid-form">
+                            {% csrf_token %}
 
-                    {% if form.errors %}
-                        <div class="bid-form-errors">
-                            {{ form.non_field_errors }}
-                            {{ form.bid_price.errors }}
-                            {{ form.expiration_date.errors }}
-                        </div>
+                            {% if form.errors %}
+                                <div class="bid-form-errors">
+                                    {{ form.non_field_errors }}
+                                    {{ form.bid_price.errors }}
+                                    {{ form.expiration_date.errors }}
+                                </div>
+                            {% endif %}
+
+                            <div class="bid-inputs">
+                                <div class="bid-field">
+                                    {{ form.bid_price }}
+                                </div>
+                                {{ form.expiration_date }}
+                            </div>
+
+                            {% if existing_bid %}
+                                <div class="bid-buttons">
+                                    <button class="bid-now-button" type="submit">
+                                        Resubmit a bid
+                                    </button>
+
+                                    <span class="bid-status {{ existing_bid.status|lower }}">
+                                        {{ existing_bid.status }}
+                                    </span>
+
+                                    <a href="{% url 'cancel_bid' existing_bid.id %}"
+                                       class="cancel-bid-button">
+                                        Cancel bid
+                                    </a>
+                                </div>
+
+                            {% else %}
+                                <button class="bid-now-button" type="submit">
+                                    Submit a bid
+                                </button>
+
+                            {% endif %}
+                        </form>
+                    {% else %}
+                        <a class="bid-now-button login-to-bid-button" href="{% url 'login' %}?next={{ request.get_full_path|urlencode }}">
+                            Login to submit a bid
+                        </a>
                     {% endif %}
-
-                <div class="bid-inputs">
-                    <div class="bid-field">
-                        {{ form.bid_price }}
-                    </div>
-                    {{ form.expiration_date }}
-                </div>
-
-	                    {% if existing_bid %}
-	                        <div class="bid-buttons">
-	                            <button class="bid-now-button" type="submit">
-	                                Resubmit a bid
-	                            </button>
-
-                                <span class="bid-status {{ existing_bid.status|lower }}">
-                                    {{ existing_bid.status }}
-                                </span>
-
-	                            <a href="{% url 'cancel_bid' existing_bid.id %}"
-	                               class="cancel-bid-button">
-                                Cancel bid
-                            </a>
-                        </div>
-
-	                    {% else %}
-	                        <button class="bid-now-button" type="submit">
-	                            Submit a bid
-	                        </button>
-
-                    {% endif %}
-                </form>
 
                 {% endif %}
 

@@ -207,7 +207,7 @@ def artwork_list(request):
 
 
 def home_view(request):
-    recent_artworks = Artwork.objects.filter(is_sold=False).order_by("-listing_date", "-id")[:10]
+    recent_artworks = Artwork.objects.all().order_by("-listing_date", "-id")[:8]
 
     return render(request, "home.html", {
         "recent_artworks": recent_artworks,
