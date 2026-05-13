@@ -37,7 +37,21 @@ def cancel_bid(request, bid_id):
 
     artwork_id = bid.artwork.id
 
-    bid.delete()
+    if bid.status in {Bid.Status.ACCEPTED, Bid.Status.CONTINGENT}:
+        bid.status = Bid.Status.CANCELED
+        bid.seller_cancel_notification_seen = False
+        bid.save(update_fields=["status", "seller_cancel_notification_seen"])
+
+        has_active_accepted_bid = Bid.objects.filter(
+            artwork=bid.artwork,
+            status__in=[Bid.Status.ACCEPTED, Bid.Status.FINALIZED],
+        ).exists()
+
+        if not has_active_accepted_bid:
+            bid.artwork.is_sold = False
+            bid.artwork.save(update_fields=["is_sold"])
+    else:
+        bid.delete()
 
     return redirect(
         'artwork_detail',
@@ -63,7 +77,10 @@ def accept_bid(request, bid_id):
     )
 
     bid.status = "Accepted"
-    bid.save()
+    bid.buyer_accept_notification_seen = False
+    bid.save(update_fields=["status", "buyer_accept_notification_seen"])
+    bid.artwork.is_sold = True
+    bid.artwork.save(update_fields=["is_sold"])
 
     return redirect("artwork_detail", pk=bid.artwork.id)
 
@@ -102,8 +119,8 @@ def finalize_bid(request, bid_id, step="contact"):
         user=request.user,
     )
 
-    if bid.status not in {Bid.Status.ACCEPTED, Bid.Status.FINALIZED}:
-        return HttpResponseForbidden("Only accepted bids can be finalized.")
+    if bid.status not in {Bid.Status.ACCEPTED, Bid.Status.CONTINGENT, Bid.Status.FINALIZED}:
+        return HttpResponseForbidden("Only accepted or contingent bids can be finalized.")
 
     if step not in FINALIZE_STEPS:
         return redirect("finalize_bid", bid_id=bid.id)
@@ -182,6 +199,9 @@ def finalize_bid(request, bid_id, step="contact"):
 
             bid.status = Bid.Status.FINALIZED
             bid.save()
+            Bid.objects.filter(artwork=bid.artwork).exclude(id=bid.id).update(
+                status=Bid.Status.REJECTED
+            )
             bid.artwork.is_sold = True
             bid.artwork.save(update_fields=["is_sold"])
 

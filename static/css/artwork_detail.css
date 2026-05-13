@@ -241,6 +241,18 @@
     flex-direction: column;
 }
 
+.bid-form-errors {
+    margin: 0 0 14px;
+    color: #9b3a35;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.bid-form-errors ul {
+    margin: 0 0 6px;
+    padding-left: 20px;
+}
+
 .bid-input{
     padding:14px;
     width:220px;
@@ -294,7 +306,9 @@
     border:none;
     font-size:30px;
     cursor:pointer;
+    z-index:1;
 }
+
 
 .bid-buttons{
     display:flex;

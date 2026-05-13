@@ -5,6 +5,7 @@ from django.db.models import Q
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.http import require_POST
 
+from django.urls import reverse
 from django.core.paginator import Paginator
 from .forms import ArtworkForm
 from .models import Artwork, ArtworkImage
@@ -198,6 +199,16 @@ def home_view(request):
 def artwork_detail(request, pk):
     artwork = get_object_or_404(Artwork, pk=pk)
     highest_bids = Bid.objects.filter(artwork=artwork).order_by("-bid_price")[:3]
+    has_accepted_bid = Bid.objects.filter(
+        artwork=artwork,
+        status__in=[Bid.Status.ACCEPTED, Bid.Status.FINALIZED],
+    ).exists()
+    is_artwork_sold = artwork.is_sold or has_accepted_bid
+
+    if has_accepted_bid and not artwork.is_sold:
+        artwork.is_sold = True
+        artwork.save(update_fields=["is_sold"])
+
     extra_images = list(artwork.images.all())
     seller = getattr(request.user, "seller", None)
     can_edit_artwork = (
@@ -218,7 +229,18 @@ def artwork_detail(request, pk):
             user=request.user
         ).first()
 
+    if request.method == "POST" and is_artwork_sold:
+        return redirect("artwork_detail", pk=artwork.pk)
+
     if request.method == "POST":
+        if not request.user.is_authenticated:
+            return redirect(f"{reverse('login')}?next={request.path}")
+
+        if can_edit_artwork:
+            return HttpResponseForbidden("You cannot bid on your own artwork.")
+
+        is_resubmission = existing_bid is not None
+
         if existing_bid:
             form = BidForm(
                 request.POST,
@@ -233,6 +255,7 @@ def artwork_detail(request, pk):
             bid = form.save(commit=False)
             bid.artwork = artwork
             bid.user = request.user
+            bid.status = Bid.Status.PENDING
             bid.save()
             existing_bid = bid
 
@@ -242,9 +265,12 @@ def artwork_detail(request, pk):
                 "primary_image": artwork.primary_image,
                 "extra_images": extra_images,
                 "can_edit_artwork": can_edit_artwork,
+                "is_artwork_sold": is_artwork_sold,
+                "has_accepted_bid": has_accepted_bid,
                 "show_description_toggle": show_description_toggle,
                 "form": form,
                 "existing_bid": existing_bid,
+                "is_resubmission": is_resubmission,
                 "show_popup": True,
                 "bid_popup_message": "success",
                 "highest_bids": highest_bids,
@@ -274,6 +300,8 @@ def artwork_detail(request, pk):
         "primary_image": artwork.primary_image,
         "extra_images": extra_images,
         "can_edit_artwork": can_edit_artwork,
+        "is_artwork_sold": is_artwork_sold,
+        "has_accepted_bid": has_accepted_bid,
         "show_description_toggle": show_description_toggle,
         "form": form,
         "existing_bid": existing_bid,
@@ -315,6 +343,12 @@ def edit_artwork(request, pk):
 
     if seller is None or artwork.seller != seller:
         return HttpResponseForbidden("You cannot edit this artwork.")
+
+    if artwork.is_sold or Bid.objects.filter(
+        artwork=artwork,
+        status__in=[Bid.Status.ACCEPTED, Bid.Status.FINALIZED],
+    ).exists():
+        return HttpResponseForbidden("Sold artworks cannot be edited.")
 
     if request.method == "POST":
         form = ArtworkForm(request.POST, request.FILES, instance=artwork)
