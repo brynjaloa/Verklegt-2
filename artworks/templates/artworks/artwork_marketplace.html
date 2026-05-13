@@ -23,9 +23,12 @@
     <!-- Style thumbnails -->
     {% if styles %}
     <div class="style-list">
-        {% for value, label in styles %}
+        {% for value, label, image_path in styles %}
         <a class="style-link" href="?category={{ category }}&style={{ value }}">
             <div class="style-tile">
+                {% if image_path %}
+                    <img class="style-tile-image" src="{% get_media_prefix %}{{ image_path }}" alt="{{ label }}">
+                {% endif %}
                 <span class="style-label">{{ label }}</span>
             </div>
             <div class="style-underline"></div>
@@ -50,45 +53,48 @@
                     <input type="hidden" name="sort" value="{{ sort }}">
                 {% endif %}
 
-                {% if mediums %}
-                    <p><strong>Medium</strong></p>
-                    {% for value, label in mediums %}
-                        <label><input type="checkbox" name="medium" value="{{ value }}" {% if value in selected_mediums %}checked{% endif %}> {{ label }}</label><br>
-                    {% endfor %}
-                    <p class="filter-toggle" onclick="toggleFilter('filter-medium')"><strong class="filter-toggle">Medium ▾</strong></p>
-                    <div id="filter-medium" class="filter-dropdown">
+                <div class="marketplace-filter-groups">
+                    {% if mediums %}
+                    <div class="marketplace-filter-group">
+                        <p class="filter-toggle" onclick="toggleFilter('filter-medium')"><strong class="filter-toggle">Medium ▾</strong></p>
+                        <div id="filter-medium" class="filter-dropdown">
                         {% for value, label in mediums %}
-                            <label><input type="checkbox" name="medium" value="{{ value }}"> {{ label }}</label><br>
+                            <label><input type="checkbox" name="medium" value="{{ value }}" {% if value in selected_mediums %}checked{% endif %}> {{ label }}</label>
                         {% endfor %}
-                    </div>
-                {% endif %}
-
-                {% if filter_styles %}
-                    <p><strong>Style</strong></p>
-                    {% for value, label in filter_styles %}
-                        <label><input type="checkbox" name="style" value="{{ value }}" {% if value in selected_styles %}checked{% endif %}> {{ label }}</label><br>
-                    {% endfor %}
-                    <p class="filter-toggle" onclick="toggleFilter('filter-style')"><strong class="filter-toggle">Style ▾</strong></p>
-                    <div id="filter-style" class="filter-dropdown">
-                        {% for value, label in filter_styles %}
-                            <label><input type="checkbox" name="style" value="{{ value }}"> {{ label }}</label><br>
-                        {% endfor %}
-                    </div>
-                {% endif %}
-                <p><strong>Year:</strong></p>
-                <br>
-                <div class="year-filter">
-                    <div id="year-slider" class="year-slider"></div>
-                    <div class="year-inputs">
-                        <div class="year-input-group">
-                            <label>From</label>
-                            <input type="number" id="year-from-input" name="year_from" min="1300" max="2025"
-                                value="{{ request.GET.year_from|default:'1300' }}">
                         </div>
-                        <div class="year-input-group">
-                            <label>To</label>
-                            <input type="number" id="year-to-input" name="year_to" min="1300" max="2025"
-                                value="{{ request.GET.year_to|default:'2025' }}">
+                    </div>
+                    {% endif %}
+
+                    {% if filter_styles %}
+                    <div class="marketplace-filter-group">
+                        <p class="filter-toggle" onclick="toggleFilter('filter-style')"><strong class="filter-toggle">Style ▾</strong></p>
+                        <div id="filter-style" class="filter-dropdown">
+                        {% for value, label in filter_styles %}
+                            <label><input type="checkbox" name="style" value="{{ value }}" {% if value in selected_styles %}checked{% endif %}> {{ label }}</label>
+                        {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <div class="marketplace-filter-group">
+                        <p class="filter-toggle" onclick="toggleFilter('filter-year')"><strong class="filter-toggle">Year ▾</strong></p>
+                        <br>
+                        <div id="filter-year" class="filter-dropdown">
+                            <div class="year-filter">
+                                <div id="year-slider" class="year-slider"></div>
+                                <div class="year-inputs">
+                                    <div class="year-input-group">
+                                        <label>From</label>
+                                        <input type="number" id="year-from-input" name="year_from" min="1300" max="2025"
+                                            value="{{ request.GET.year_from|default:'1300' }}">
+                                    </div>
+                                    <div class="year-input-group">
+                                        <label>To</label>
+                                        <input type="number" id="year-to-input" name="year_to" min="1300" max="2025"
+                                            value="{{ request.GET.year_to|default:'2025' }}">
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -141,11 +147,11 @@
             {% if page_obj.has_other_pages %}
             <div class="pagination">
                 {% if page_obj.has_previous %}
-                    <a href="?page={{ page_obj.previous_page_number }}" class="pagination-btn">Previous</a>
+                    <a href="?{% if pagination_query %}{{ pagination_query }}&{% endif %}page={{ page_obj.previous_page_number }}" class="pagination-btn">Previous</a>
                 {% endif %}
                 <span class="pagination-info">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
                 {% if page_obj.has_next %}
-                    <a href="?page={{ page_obj.next_page_number }}" class="pagination-btn">Next</a>
+                    <a href="?{% if pagination_query %}{{ pagination_query }}&{% endif %}page={{ page_obj.next_page_number }}" class="pagination-btn">Next</a>
                 {% endif %}
             </div>
             {% endif %}
@@ -156,6 +162,6 @@
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.js"></script>
-<script src="{% static 'artworks/artwork_marketplace.js' %}"></script>
+<script src="{% static 'js/artwork_marketplace.js' %}"></script>
 
 {% endblock %}

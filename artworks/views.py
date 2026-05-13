@@ -67,6 +67,51 @@ FEATURED_CATEGORY_STYLES = {
 }
 
 
+BUILT_IN_STYLE_IMAGES = {
+    Artwork.Category.PAINTINGS: {
+        Artwork.PaintingStyle.MODERNISM.value: "built-in_artworks/Modernism_art.jpeg",
+        Artwork.PaintingStyle.SURREALISM.value: "built-in_artworks/Surrealism_art.jpeg",
+        Artwork.PaintingStyle.REALISM.value: "built-in_artworks/Realism_art.jpeg",
+        Artwork.PaintingStyle.ABSTRACT_ART.value: "built-in_artworks/Abstract_art.jpeg",
+    },
+    Artwork.Category.SCULPTURES: {
+        Artwork.SculptureStyle.SURREALISM.value: "built-in_artworks/Surrealism_sculpture.jpeg",
+        Artwork.SculptureStyle.CONTEMPORARY.value: "built-in_artworks/Contemporary_sculpture.jpeg",
+        Artwork.SculptureStyle.MODERN_ART.value: "built-in_artworks/Modern_art_sculpture.jpeg",
+        Artwork.SculptureStyle.KINETIC_ART.value: "built-in_artworks/Kinetic_art_sculpture.jpeg",
+    },
+    Artwork.Category.PHOTOS: {
+        Artwork.PhotoStyle.LANDSCAPE.value: "built-in_artworks/Landscape_photo.jpeg",
+        Artwork.PhotoStyle.PORTRAIT.value: "built-in_artworks/Portrait_photos.jpeg",
+        Artwork.PhotoStyle.ARCHITECTURAL.value: "built-in_artworks/Architecture_photos.jpeg",
+        Artwork.PhotoStyle.ABSTRACT.value: "built-in_artworks/Abstract_photos.jpeg",
+    },
+    Artwork.Category.FURNITURE: {
+        Artwork.FurnitureStyle.MINIMALISM.value: "built-in_artworks/Minimalism_furniture.jpeg",
+        Artwork.FurnitureStyle.ART_DECO.value: "built-in_artworks/Art_deco_furniture.jpeg",
+        Artwork.FurnitureStyle.MODERNISM.value: "built-in_artworks/Modern_furniture.jpeg",
+        Artwork.FurnitureStyle.CONTEMPORARY.value: "built-in_artworks/Contemporary_furniture.jpeg",
+    },
+}
+
+
+BUILT_IN_CATEGORY_IMAGES = {
+    Artwork.Category.PAINTINGS: "built-in_artworks/Painting.jpeg",
+    Artwork.Category.SCULPTURES: "built-in_artworks/Sculptures.jpeg",
+    Artwork.Category.PHOTOS: "built-in_artworks/Photos.jpeg",
+    Artwork.Category.FURNITURE: "built-in_artworks/Furniture.jpeg",
+}
+
+
+def styles_with_builtin_images(category, styles):
+    image_paths = BUILT_IN_STYLE_IMAGES.get(category, {})
+
+    return [
+        (value, label, image_paths.get(value))
+        for value, label in styles
+    ]
+
+
 def sort_artworks(artworks, sort):
     if sort == 'price_low':
         return artworks.order_by('starting_bid', '-listing_date', '-id')
@@ -111,11 +156,17 @@ def artwork_list(request):
         artworks = artworks.filter(year__lte=year_to)
 
     styles = category_fields.get("styles", [])
-    featured_styles = FEATURED_CATEGORY_STYLES.get(category, styles)
+    featured_styles = styles_with_builtin_images(
+        category,
+        FEATURED_CATEGORY_STYLES.get(category, styles),
+    )
     mediums = category_fields.get("mediums", [])
 
     sort = request.GET.get('sort', 'relevance')
     artworks = sort_artworks(artworks, sort)
+
+    pagination_query = request.GET.copy()
+    pagination_query.pop("page", None)
 
     paginator = Paginator(artworks, 5)
     page_number = request.GET.get('page')
@@ -131,6 +182,7 @@ def artwork_list(request):
         'selected_styles': styles_selected,
         'selected_mediums': mediums_selected,
         'page_obj': page_obj,
+        'pagination_query': pagination_query.urlencode(),
         'sort': sort,
     })
 
@@ -298,7 +350,10 @@ def delete_artwork(request, pk):
 
 
 def category_list(request):
-    categories = Artwork.Category.choices
+    categories = [
+        (value, label, BUILT_IN_CATEGORY_IMAGES.get(value))
+        for value, label in Artwork.Category.choices
+    ]
     return render(request, 'Category/categories.html', {'categories': categories})
 
 def artwork_see_all(request):
@@ -338,7 +393,7 @@ def artwork_see_all(request):
     if year_to:
         artworks = artworks.filter(year__lte=year_to)
 
-    artworks = artworks.order_by("-listing_date", "-id")
+    artworks = sort_artworks(artworks, sort)
     paginator = Paginator(artworks, 24)
     page_obj = paginator.get_page(request.GET.get("page"))
     pagination_query = request.GET.copy()

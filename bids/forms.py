@@ -1,7 +1,7 @@
-
 from django import forms
 from .models import Bid
-
+from django_countries.fields import CountryField
+from django_countries.widgets import CountrySelectWidget
 
 class FormattedDecimalField(forms.DecimalField):
     def to_python(self, value):
@@ -53,3 +53,28 @@ class BidForm(forms.ModelForm):
             )
 
         return bid_price
+class ContactInformationForm(forms.Form):
+    street_name = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'finalize-input'}))
+    city = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'finalize-input'}))
+    postal_code = forms.CharField(max_length=20, widget=forms.TextInput(attrs={'class': 'finalize-input'}))
+    country = CountryField().formfield(widget=CountrySelectWidget(attrs={'class': 'finalize-input'}))
+    national_id = forms.CharField(max_length=20, widget=forms.TextInput(attrs={'class': 'finalize-input'}))
+
+
+PAYMENT_CHOICES = [
+    ('credit_card', 'Credit Card'),
+    ('bank_transfer', 'Bank Transfer'),
+    ('wire_transfer', 'Wire Transfer'),
+]
+
+
+class PaymentInformationForm(forms.Form):
+    payment_method = forms.ChoiceField(choices=PAYMENT_CHOICES, widget=forms.RadioSelect)
+    cardholder_name = forms.CharField(required=False, widget=forms.TextInput(attrs={'class': 'finalize-input'}))
+    credit_card_number = forms.CharField(required=False, widget=forms.TextInput(attrs={'class': 'finalize-input'}))
+    expiry_date = forms.CharField(required=False, widget=forms.TextInput(attrs={'class': 'finalize-input', 'placeholder': 'MM/YY'}))
+    cvc = forms.CharField(required=False, widget=forms.TextInput(attrs={'class': 'finalize-input'}))
+    bank_account = forms.CharField(required=False, widget=forms.TextInput(attrs={'class': 'finalize-input'}))
+    sending_bank_name = forms.CharField(required=False, widget=forms.TextInput(attrs={'class': 'finalize-input'}))
+    routing_number = forms.CharField(required=False, widget=forms.TextInput(attrs={'class': 'finalize-input'}))
+    account_number = forms.CharField(required=False, widget=forms.TextInput(attrs={'class': 'finalize-input'}))

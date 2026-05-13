@@ -8,8 +8,11 @@
         <h1 style="background-color: #C06060; color: white; padding: 8px 24px; border-radius: 24px; margin: 0; font-size: 24px;">Categories</h1>
     </div>
     <div class="categories-grid">
-        {% for value, label in categories %}
+        {% for value, label, image_path in categories %}
         <a href="{% url 'artwork_list' %}?category={{ value }}" class="category-card">
+            {% if image_path %}
+                <img class="category-card-image" src="{% get_media_prefix %}{{ image_path }}" alt="{{ label }}">
+            {% endif %}
             <span>{{ label }}</span>
         </a>
         {% endfor %}

@@ -4,12 +4,6 @@ function toggleFilter(id) {
         el.style.display = el.style.display === 'none' || el.style.display === '' ? 'block' : 'none';
     }
 }
-function toggleFilter(id) {
-    const el = document.getElementById(id);
-    if (el) {
-        el.style.display = el.style.display === 'none' || el.style.display === '' ? 'block' : 'none';
-    }
-}
 
 const slider = document.getElementById('year-slider');
 const fromInput = document.getElementById('year-from-input');
