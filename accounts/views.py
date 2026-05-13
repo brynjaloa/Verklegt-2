@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.http import JsonResponse
+from django.db.models import Exists, OuterRef
 from artworks.models import Artwork
 from .forms import SignUpForm, ProfileForm, SellerForm, SellerEditForm
 from .models import Profile, Seller
@@ -64,17 +65,52 @@ def profile_view(request):
     profile = get_or_create_profile(request.user)
     seller = None
     artworks = Artwork.objects.none()
-    my_bids = Bid.objects.filter(user=request.user).select_related("artwork", "artwork__seller")
+    user_bids = Bid.objects.filter(user=request.user).select_related("artwork", "artwork__seller")
+    my_bids = user_bids.exclude(status=Bid.Status.FINALIZED)
+    my_purchases = user_bids.filter(status=Bid.Status.FINALIZED)
+    accepted_bid_notifications = list(
+        user_bids.filter(
+            status=Bid.Status.ACCEPTED,
+            buyer_accept_notification_seen=False,
+        )
+    )
+    canceled_bid_notifications = []
+
+    if accepted_bid_notifications:
+        Bid.objects.filter(
+            id__in=[bid.id for bid in accepted_bid_notifications]
+        ).update(buyer_accept_notification_seen=True)
 
     if hasattr(request.user, 'seller'):
         seller = request.user.seller
-        artworks = Artwork.objects.filter(seller=seller)
+        finalized_bids = Bid.objects.filter(
+            artwork=OuterRef("pk"),
+            status=Bid.Status.FINALIZED,
+        )
+        artworks = Artwork.objects.filter(seller=seller).annotate(
+            has_finalized_bid=Exists(finalized_bids)
+        )
+        canceled_bid_notifications = list(
+            Bid.objects.filter(
+                artwork__seller=seller,
+                status=Bid.Status.CANCELED,
+                seller_cancel_notification_seen=False,
+            ).select_related("artwork", "user")
+        )
+
+        if canceled_bid_notifications:
+            Bid.objects.filter(
+                id__in=[bid.id for bid in canceled_bid_notifications]
+            ).update(seller_cancel_notification_seen=True)
 
     context = {
         'profile': profile,
         'seller': seller,
         'artworks': artworks,
         "my_bids": my_bids,
+        "my_purchases": my_purchases,
+        "accepted_bid_notifications": accepted_bid_notifications,
+        "canceled_bid_notifications": canceled_bid_notifications,
     }
     return render(request,'accounts/profile.html',context)
 

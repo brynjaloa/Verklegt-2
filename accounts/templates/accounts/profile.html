@@ -91,38 +91,39 @@
         </div>
 
 
-        <div class="right-side">
+	        <div class="right-side">
+	            {% if seller %}
+                    <div class="info-box">
+	                        <div class="inner-box">
+	                            <h1>What I'm selling</h1>
+	                            <div class="section-line"></div>
+	                            {% if artworks %}
+	                                <div class="listing-scroll">
+                                    {% for artwork in artworks %}
+                                        <a href="{% url 'artwork_detail' artwork.id %}" class="artwork-link">
 
-            {% if seller %}
-                <div class="info-box">
+	                                            <div class="listing-left">
+	                                                <span class="listing-dot"></span>
+                                                    <span>{{ artwork.title }}</span>
+                                                    {% if artwork.is_sold or artwork.has_finalized_bid %}
+                                                        <span class="listing-sold-badge">Sold</span>
+                                                    {% endif %}
+	                                            </div>
 
-                    <div class="inner-box">
-                        <h1>What I'm selling</h1>
-                        <div class="section-line"></div>
-                        {% if artworks %}
-                            <div class="listing-scroll">
-                                {% for artwork in artworks %}
-                                    <a href="{% url 'artwork_detail' artwork.id %}" class="artwork-link">
+                                            <span class="listing-action">
+                                                See listing
+                                            </span>
+                                        </a>
+	                                    {% endfor %}
+	                                </div>
 
-                                        <div class="listing-left">
-                                            <span class="listing-dot"></span>
-                                            {{ artwork.title }}
-                                        </div>
+	                            {% else %}
+	                                <p>No artworks listed yet.</p>
+	                            {% endif %}
+	                        </div>
 
-                                        <span class="listing-action">
-                                            See listing
-                                        </span>
-                                    </a>
-                                {% endfor %}
-                            </div>
-
-                            {% else %}
-                                <p>No artworks listed yet.</p>
-                            {% endif %}
-                            </div>
-
-                    <div class="inner-box">
-                        <h1>My bids</h1>
+	                    <div class="inner-box">
+	                        <h1>My bids</h1>
 
                         <div class="bids-scroll">
 
@@ -141,7 +142,7 @@
 
                                         {% if bid.status == "Accepted" %}
 
-                                            <a href="#"
+                                            <a href="{% url 'finalize_bid' bid.id %}"
                                                class="bid-status accepted">
 
                                                 Accepted / Finalize
@@ -156,8 +157,20 @@
 
                                         {% elif bid.status == "Contingent" %}
 
-                                            <div class="bid-status contingent">
+                                            <a href="{% url 'finalize_bid' bid.id %}" class="bid-status contingent">
                                                 Contingent
+                                            </a>
+
+                                        {% elif bid.status == "Canceled" %}
+
+                                            <div class="bid-status canceled">
+                                                Canceled
+                                            </div>
+
+	                                        {% elif bid.status == "Finalized" %}
+
+                                            <div class="bid-status finalized">
+                                                Finalized
                                             </div>
 
                                         {% else %}
@@ -184,12 +197,20 @@
                                             {{ bid.artwork.seller.name }}
                                         </p>
 
-                                        <p>
-                                            Bid price:
-                                            ${{ bid.bid_price }}
-                                        </p>
+	                                        <p>
+	                                            Bid price:
+	                                            ${{ bid.bid_price }}
+	                                        </p>
 
-                                    </div>
+                                            {% if bid.status == "Accepted" or bid.status == "Contingent" %}
+                                                <p>
+                                                    <a class="cancel-bid-profile-link" href="{% url 'cancel_bid' bid.id %}">
+                                                        Cancel bid
+                                                    </a>
+                                                </p>
+                                            {% endif %}
+
+	                                    </div>
 
                                 </div>
 
@@ -202,13 +223,36 @@
                         </div>
                     </div>
 
-                    <div class="inner-box">
-                        <div class="section-line"></div>
-                        <h1>My buys</h1>
-                        <p>No purchases yet.</p>
-                    </div>
-                </div>
-            {% else %}
+	                    <div class="inner-box">
+	                        <div class="section-line"></div>
+		                        <h1>My buys</h1>
+                                <div class="bids-scroll">
+                                    {% for purchase in my_purchases %}
+                                        <div class="bid-card">
+                                            <div class="bid-top">
+                                                <a href="{% url 'artwork_detail' purchase.artwork.id %}"
+                                                   class="bid-artwork-title">
+                                                    {{ purchase.artwork.title }}
+                                                </a>
+
+                                                <div class="bid-status finalized">
+                                                    Finalized
+                                                </div>
+                                            </div>
+
+                                            <div class="bid-info">
+                                                <p>Date of bid: {{ purchase.date_of_bid }}</p>
+                                                <p>Seller: {{ purchase.artwork.seller.name }}</p>
+                                                <p>Final price: ${{ purchase.bid_price }}</p>
+                                            </div>
+                                        </div>
+                                    {% empty %}
+                                        <p>No purchases yet.</p>
+                                    {% endfor %}
+                                </div>
+		                    </div>
+	                </div>
+	            {% else %}
 
 
                 <div class="info-box">
@@ -225,18 +269,47 @@
 
                                 {% for bid in my_bids %}
 
-                                    <div class="profile-bid">
+	                                    <div class="profile-bid">
 
-                                        <a href="{% url 'artwork_detail' bid.artwork.id %}"
-                                           class="bid-artwork-link">
+                                            <div class="profile-bid-main">
+                                                <a href="{% url 'artwork_detail' bid.artwork.id %}"
+                                                   class="bid-artwork-link">
 
-                                            {{ bid.artwork.title }}
+                                                    {{ bid.artwork.title }}
 
-                                        </a>
+                                                </a>
 
-                                        {% if bid.status == "Accepted" %}
-                                            <a href="{% url 'artwork_detail' bid.artwork.id %}"
-                                                   class="bid-status accepted">
+                                                <div class="bid-info">
+                                                    <p>Date of bid: {{ bid.date_of_bid }}</p>
+
+                                                    <p>
+                                                        Expiration date:
+                                                        {{ bid.expiration_date }}
+                                                    </p>
+
+                                                    <p>
+                                                        Seller:
+                                                        {{ bid.artwork.seller.name }}
+                                                    </p>
+
+	                                                    <p>
+	                                                        Bid price:
+	                                                        ${{ bid.bid_price }}
+	                                                    </p>
+
+                                                    {% if bid.status == "Accepted" or bid.status == "Contingent" %}
+                                                        <p>
+                                                            <a class="cancel-bid-profile-link" href="{% url 'cancel_bid' bid.id %}">
+                                                                Cancel bid
+                                                            </a>
+                                                        </p>
+                                                    {% endif %}
+	                                                </div>
+	                                            </div>
+
+	                                        {% if bid.status == "Accepted" %}
+		                                            <a href="{% url 'finalize_bid' bid.id %}"
+		                                                   class="bid-status accepted">
                                                     Accepted / Finalize
                                                 </a>
 
@@ -245,21 +318,33 @@
                                                 <div class="bid-status rejected">
                                                     Rejected
                                                 </div>
-                                            {% elif bid.status == "Contingent" %}
+		                                            {% elif bid.status == "Contingent" %}
 
-                                                <div class="bid-status contingent">
-                                                    Contingent
+			                                                <a href="{% url 'finalize_bid' bid.id %}" class="bid-status contingent">
+			                                                    Contingent
+			                                                </a>
+
+                                            {% elif bid.status == "Canceled" %}
+
+                                                <div class="bid-status canceled">
+                                                    Canceled
                                                 </div>
 
-                                            {% else %}
+	                                            {% elif bid.status == "Finalized" %}
+
+                                                <div class="bid-status finalized">
+                                                    Finalized
+                                                </div>
+
+	                                            {% else %}
 
                                                 <div class="bid-status pending">
                                                     Pending
                                                 </div>
 
-                                            {% endif %}
+	                                            {% endif %}
 
-                                    </div>
+		                                    </div>
 
                                 {% endfor %}
 
@@ -273,15 +358,61 @@
 
                     </div>
 
-                    <div class="inner-box">
-                        <h1>My buys</h1>
-                        <!--placeholder-->
-                        <p>No purchases yet</p>
-                    </div>
+	                    <div class="inner-box">
+	                        <h1>My buys</h1>
+                            <div class="section-line"></div>
+
+                            {% if my_purchases %}
+                                <div class="listing-scroll">
+                                    {% for purchase in my_purchases %}
+                                        <div class="profile-bid">
+                                            <div class="profile-bid-main">
+                                                <a href="{% url 'artwork_detail' purchase.artwork.id %}"
+                                                   class="bid-artwork-link">
+                                                    {{ purchase.artwork.title }}
+                                                </a>
+
+                                                <div class="bid-info">
+                                                    <p>Date of bid: {{ purchase.date_of_bid }}</p>
+                                                    <p>Seller: {{ purchase.artwork.seller.name }}</p>
+                                                    <p>Final price: ${{ purchase.bid_price }}</p>
+                                                </div>
+                                            </div>
+
+                                            <div class="bid-status finalized">
+                                                Finalized
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+	                            <p>No purchases yet.</p>
+                            {% endif %}
+	                    </div>
 
                 </div>
             {% endif %}
+	        </div>
+	    </div>
+	</div>
+
+    {% if accepted_bid_notifications or canceled_bid_notifications %}
+        <div id="profile-notification-popup" class="profile-notification-popup">
+            <div class="profile-notification-content">
+                <button id="close-profile-notification" type="button">X</button>
+
+                {% for bid in accepted_bid_notifications %}
+                    <p>Your bid on "{{ bid.artwork.title }}" has been accepted!</p>
+                {% endfor %}
+
+                {% for bid in canceled_bid_notifications %}
+                    <p>The bid you accepted for "{{ bid.artwork.title }}" has been canceled.</p>
+                {% endfor %}
+            </div>
         </div>
-    </div>
-</div>
+    {% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/profile.js' %}"></script>
 {% endblock %}

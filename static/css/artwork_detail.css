@@ -205,6 +205,18 @@
     margin-bottom:20px;
 }
 
+.bid-form-errors {
+    margin: 0 0 14px;
+    color: #9b3a35;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.bid-form-errors ul {
+    margin: 0 0 6px;
+    padding-left: 20px;
+}
+
 .bid-input{
     padding:14px;
     width:220px;
@@ -245,40 +257,7 @@
     border:none;
     font-size:30px;
     cursor:pointer;
-}
-
-.bid-popup{
-    position:fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    background:rgb(0 0 0 / 40%);
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    z-index:999;
-}
-
-.hidden{
-    display:none;
-}
-
-.bid-popup-content{
-    background:white;
-    width:700px;
-    padding:80px;
-    position:relative;
-}
-
-#close-popup{
-    position:absolute;
-    top:20px;
-    right:20px;
-    background:none;
-    border:none;
-    font-size:30px;
-    cursor:pointer;
+    z-index:1;
 }
 
 .bid-buttons{
@@ -379,4 +358,3 @@
         aspect-ratio: 4 / 5;
     }
 }
-
