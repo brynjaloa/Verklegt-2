@@ -167,9 +167,14 @@ def get_safe_back_url(request, fallback_url_name):
         allowed_hosts={request.get_host()},
         require_https=request.is_secure(),
     ):
-        referer_path = urlparse(referer).path
+        parsed_referer = urlparse(referer)
+        referer_path = parsed_referer.path
+        referer_full_path = referer_path
 
-        if referer_path != request.path:
+        if parsed_referer.query:
+            referer_full_path = f"{referer_full_path}?{parsed_referer.query}"
+
+        if referer_full_path != request.get_full_path():
             return referer
 
     return reverse(fallback_url_name)
@@ -276,25 +281,7 @@ def apply_status_filter(artworks, statuses_selected):
 
 
 def get_marketplace_back_url(request, category):
-    filter_params = {
-        "style",
-        "medium",
-        "edition",
-        "status",
-        "year_from",
-        "year_to",
-        "price_from",
-        "price_to",
-    }
-    has_active_filter = any(request.GET.getlist(param) for param in filter_params)
-
-    if category and has_active_filter:
-        query = request.GET.copy()
-        query.clear()
-        query["category"] = category
-        return f"{reverse('artwork_list')}?{query.urlencode()}"
-
-    return reverse("category_list")
+    return get_safe_back_url(request, "category_list")
 
 
 def get_page_url(page_number, pagination_query):
