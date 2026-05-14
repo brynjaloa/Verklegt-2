@@ -167,9 +167,13 @@ def get_safe_back_url(request, fallback_url_name):
         allowed_hosts={request.get_host()},
         require_https=request.is_secure(),
     ):
-        referer_path = urlparse(referer).path
+        parsed_referer = urlparse(referer)
+        referer_path = parsed_referer.path
 
-        if referer_path != request.path:
+        if parsed_referer.query:
+            referer_path = f"{referer_path}?{parsed_referer.query}"
+
+        if referer_path != request.get_full_path():
             return referer
 
     return reverse(fallback_url_name)
@@ -275,7 +279,7 @@ def apply_status_filter(artworks, statuses_selected):
     return artworks
 
 
-def get_marketplace_back_url(request, category):
+def get_marketplace_back_url(request, category, query=""):
     filter_params = {
         "style",
         "medium",
@@ -287,6 +291,9 @@ def get_marketplace_back_url(request, category):
         "price_to",
     }
     has_active_filter = any(request.GET.getlist(param) for param in filter_params)
+
+    if query:
+        return get_safe_back_url(request, "home")
 
     if category and has_active_filter:
         query = request.GET.copy()
@@ -552,7 +559,7 @@ def artwork_list(request):
         'category': category,
         'clear_filters_url': clear_filters_url,
         'heading': heading,
-        'marketplace_back_url': get_marketplace_back_url(request, category),
+        'marketplace_back_url': get_marketplace_back_url(request, category, query),
         'styles': featured_styles,
         'show_style_shortcuts': show_style_shortcuts,
         'filter_styles': style_filter_options,
