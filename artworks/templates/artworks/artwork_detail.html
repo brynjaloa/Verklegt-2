@@ -158,14 +158,6 @@
                         <form method="POST" class="bid-form">
                             {% csrf_token %}
 
-                            {% if form.errors %}
-                                <div class="bid-form-errors">
-                                    {{ form.non_field_errors }}
-                                    {{ form.bid_price.errors }}
-                                    {{ form.expiration_date.errors }}
-                                </div>
-                            {% endif %}
-
                             <div class="bid-inputs">
                                 <div class="bid-field">
                                     {{ form.bid_price }}

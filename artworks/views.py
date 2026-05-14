@@ -1,7 +1,6 @@
 import unicodedata
 
 from django.contrib.auth.decorators import login_required
-from django.core.paginator import Paginator
 from django.http import HttpResponseForbidden
 from django.db.models import Count, Exists, OuterRef, Q
 from django.shortcuts import render, get_object_or_404, redirect

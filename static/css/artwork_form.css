@@ -96,6 +96,18 @@
     gap: 16px;
 }
 
+.category-fields {
+    display: none;
+}
+
+.category-fields.is-visible {
+    display: grid;
+}
+
+.form-row.is-hidden {
+    display: none;
+}
+
 .file-row input[type="file"] {
     color: white;
     height: auto;
