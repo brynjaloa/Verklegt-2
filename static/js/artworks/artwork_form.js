@@ -1,9 +1,10 @@
 document.addEventListener("DOMContentLoaded", function () {
     const categorySelect = document.getElementById("id_category");
-    const furnitureDepthField = document.querySelector(".furniture-depth-field");
+    const categoryGroups = document.querySelectorAll("[data-category-field]");
+    const furnitureDepthField = document.querySelector("[data-furniture-depth]");
     const artworkForm = document.querySelector(".artwork-form");
 
-    if (!categorySelect) {
+    if (!categorySelect || categoryGroups.length === 0) {
         return;
     }
 
@@ -26,6 +27,34 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
+    function setControlsEnabled(container, isEnabled) {
+        container.querySelectorAll("input, select, textarea").forEach(control => {
+            control.disabled = !isEnabled;
+
+            if (!isEnabled) {
+                control.value = "";
+            }
+        });
+    }
+
+    function updateCategoryFields() {
+        const selectedCategory = categorySelect.value;
+
+        categoryGroups.forEach(group => {
+            const isSelected = group.dataset.categoryField === selectedCategory;
+
+            group.classList.toggle("is-visible", isSelected);
+            setControlsEnabled(group, isSelected);
+        });
+
+        if (furnitureDepthField) {
+            const isFurniture = selectedCategory === "Furniture";
+
+            furnitureDepthField.classList.toggle("is-hidden", !isFurniture);
+            setControlsEnabled(furnitureDepthField, isFurniture);
+        }
+    }
+
     if (artworkForm) {
         artworkForm.addEventListener("keydown", function (event) {
             if (event.key !== "Enter" || event.target.tagName === "TEXTAREA") {
@@ -37,43 +66,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    const fields = {
-        Paintings: document.querySelector(".painting-field"),
-        Sculptures: document.querySelector(".sculpture-field"),
-        Furniture: document.querySelector(".furniture-field"),
-        Photos: document.querySelector(".photo-field"),
-    };
-
-    function setFieldGroupState(field, isVisible) {
-        if (!field) {
-            return;
-        }
-
-        const visibleDisplay = field.classList.contains("form-row") ? "flex" : "grid";
-        field.style.display = isVisible ? visibleDisplay : "none";
-        field.querySelectorAll("input, select, textarea").forEach(input => {
-            input.disabled = !isVisible;
-        });
-    }
-
-    function hideAllFields() {
-        Object.values(fields).forEach(field => {
-            setFieldGroupState(field, false);
-        });
-    }
-
-    function showCorrectField() {
-        hideAllFields();
-
-        const selectedCategory = categorySelect.value;
-
-        if (fields[selectedCategory]) {
-            setFieldGroupState(fields[selectedCategory], true);
-        }
-
-        setFieldGroupState(furnitureDepthField, selectedCategory === "Furniture");
-    }
-
-    categorySelect.addEventListener("change", showCorrectField);
-    showCorrectField();
+    categorySelect.addEventListener("change", updateCategoryFields);
+    updateCategoryFields();
 });

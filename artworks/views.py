@@ -1,12 +1,10 @@
 import unicodedata
 
 from django.contrib.auth.decorators import login_required
-from django.core.paginator import Paginator
 from django.http import HttpResponseForbidden
 from django.db.models import Count, Exists, Max, OuterRef, Q
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.http import require_POST
-from django.utils.http import url_has_allowed_host_and_scheme
 from urllib.parse import urlparse
 
 from django.urls import reverse
@@ -720,15 +718,6 @@ def artwork_see_all(request):
     page_obj = paginator.get_page(request.GET.get("page"))
     pagination_query = request.GET.copy()
     pagination_query.pop("page", None)
-    all_styles = list({
-        label: value
-        for value, label in (
-            list(Artwork.PaintingStyle.choices)
-            + list(Artwork.SculptureStyle.choices)
-            + list(Artwork.FurnitureStyle.choices)
-            + list(Artwork.PhotoStyle.choices)
-        )
-    }.items())
 
     return render(request, 'artworks/see_all.html', {
         'artworks': page_obj,
@@ -745,7 +734,6 @@ def artwork_see_all(request):
         'sculpture_styles': Artwork.SculptureStyle.choices,
         'furniture_styles': Artwork.FurnitureStyle.choices,
         'photo_styles': Artwork.PhotoStyle.choices,
-        'all_styles': all_styles,
         'selected_categories': categories_selected,
         'selected_painting_mediums': painting_mediums_selected,
         'selected_sculpture_materials': sculpture_materials_selected,
@@ -755,7 +743,6 @@ def artwork_see_all(request):
         'selected_sculpture_styles': sculpture_styles_selected,
         'selected_furniture_styles': furniture_styles_selected,
         'selected_photo_styles': photo_styles_selected,
-        'selected_styles': legacy_styles_selected,
         'selected_editions': editions_selected,
         'selected_statuses': statuses_selected,
         'status_choices': (
