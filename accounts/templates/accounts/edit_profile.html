@@ -7,7 +7,7 @@
 
 {% block content %}
 <div class="edit-profile-top">
-    <a class="edit-profile-back-link" href="{% url 'profile' %}" aria-label="Back to profile">‹</a>
+    <a class="edit-profile-back-link" href="{{ previous_page_url }}" aria-label="Back to previous page">‹</a>
     <div class="edit-profile-title">
         {% if seller %}Edit seller profile{% else %}Edit profile{% endif %}
     </div>

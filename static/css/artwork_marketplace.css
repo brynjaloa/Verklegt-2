@@ -137,40 +137,6 @@
     margin-bottom: 6px;
 }
 
-.year-filter {
-    padding: 0 8px;
-    margin: 4px 0 12px;
-}
-
-.year-slider {
-    margin: 8px 0 10px;
-}
-
-.year-inputs {
-    display: flex;
-    gap: 12px;
-    margin-top: 6px;
-}
-
-.year-input-group {
-    flex: 1;
-}
-
-.year-input-group label {
-    display: block;
-    margin-bottom: 4px;
-    font-size: 12px;
-}
-
-.year-input-group input {
-    width: 100%;
-    padding: 6px;
-    border: none;
-    border-radius: 6px;
-    box-sizing: border-box;
-    text-align: center;
-}
-
 .filter-button {
     width: 100%;
     margin-top: 16px;
@@ -314,82 +280,6 @@
     .marketplace-grid {
         grid-template-columns: 1fr;
     }
-}
-
-/* stylelint-disable selector-class-pattern -- noUiSlider uses these external class names. */
-.noUi-connect {
-    background: white;
-}
-
-.noUi-horizontal {
-    height: 6px;
-    border: none;
-    background: rgb(255 255 255 / 30%);
-    box-shadow: none;
-}
-
-.noUi-handle {
-    width: 20px !important;
-    height: 20px !important;
-    top: -8px !important;
-    border: none;
-    border-radius: 50%;
-    background: white;
-    box-shadow: none;
-    cursor: pointer;
-}
-
-.noUi-handle::before,
-.noUi-handle::after {
-    display: none;
-}
-
-.noUi-tooltip {
-    padding: 2px 6px;
-    border: none;
-    border-radius: 4px;
-    background: #6b0000;
-    color: white;
-    font-size: 11px;
-}
-
-.filter-toggle {
-    width: 100%;
-    padding: 0;
-    border: 0;
-    background: transparent;
-    color: inherit;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-    font: inherit;
-    font-weight: 700;
-    line-height: 1.35;
-    margin: 0 0 10px;
-    text-align: left;
-    user-select: none;
-    user-select: none;
-}
-
-.filter-toggle-icon {
-    flex: 0 0 auto;
-    font-size: 13px;
-    line-height: 1;
-    transition: transform 0.16s ease;
-}
-
-.filter-toggle.is-open .filter-toggle-icon {
-    transform: rotate(180deg);
-}
-
-.filter-dropdown {
-    display: none;
-}
-
-.filter-dropdown.is-open {
-    display: block;
 }
 
 @media (width <= 900px) {

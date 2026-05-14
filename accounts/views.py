@@ -1,3 +1,5 @@
+from typing import cast
+
 from django.shortcuts import render, redirect
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import login
@@ -27,6 +29,7 @@ def login_view(request):
 
 
 def csrf_failure_view(request, reason=""):
+    del reason
     messages.error(request, "Your login session expired. Please try again.")
     return redirect('login')
 
@@ -72,10 +75,11 @@ def check_email_view(request):
 @login_required
 @never_cache
 def profile_view(request):
-    profile = get_or_create_profile(request.user)
+    user = cast(User, request.user)
+    profile = get_or_create_profile(user)
     seller = None
     artworks = Artwork.objects.none()
-    user_bids = Bid.objects.filter(user=request.user).select_related("artwork", "artwork__seller")
+    user_bids = Bid.objects.filter(user=user).select_related("artwork", "artwork__seller")
     my_bids = user_bids.exclude(status__in=[Bid.Status.FINALIZED, Bid.Status.CANCELED])
     my_purchases = user_bids.filter(status=Bid.Status.FINALIZED)
     accepted_bid_notifications = list(
@@ -102,11 +106,11 @@ def profile_view(request):
             id__in=[bid.id for bid in rejected_bid_notifications]
         ).update(buyer_reject_notification_seen=True)
 
-    if hasattr(request.user, 'seller'):
-        seller = request.user.seller
+    if hasattr(user, 'seller'):
+        seller = user.seller
         finalized_bids = Bid.objects.filter(
             artwork=OuterRef("pk"),
-            status=Bid.Status.FINALIZED,
+            status__in=[Bid.Status.ACCEPTED, Bid.Status.FINALIZED],
         )
         artworks = Artwork.objects.filter(seller=seller).annotate(
             has_finalized_bid=Exists(finalized_bids)
@@ -168,8 +172,9 @@ def seller_profile_view(request, seller_id):
 
 @login_required
 def edit_profile_view(request):
-    profile = get_or_create_profile(request.user)
-    seller = getattr(request.user, 'seller', None)
+    user = cast(User, request.user)
+    profile = get_or_create_profile(user)
+    seller = getattr(user, 'seller', None)
 
     if request.method == 'POST':
         if seller:
@@ -206,9 +211,10 @@ def edit_profile_view(request):
 
 @login_required
 def become_seller_view(request):
-    profile = get_or_create_profile(request.user)
+    user = cast(User, request.user)
+    profile = get_or_create_profile(user)
 
-    if hasattr(request.user, 'seller'):
+    if hasattr(user, 'seller'):
         return redirect('profile')
 
     if request.method == 'POST':
@@ -216,7 +222,7 @@ def become_seller_view(request):
 
         if form.is_valid():
             seller = form.save(commit=False)
-            seller.user = request.user
+            seller.user = user
             seller.save()
 
             profile.is_seller = True

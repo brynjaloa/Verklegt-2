@@ -76,40 +76,6 @@
     display: block;
 }
 
-.year-filter-box {
-    padding: 0 8px;
-    margin: 4px 0 12px;
-}
-
-.see-all-year-slider {
-    margin: 8px 0 10px;
-}
-
-.year-input-row {
-    display: flex;
-    gap: 12px;
-    margin-top: 6px;
-}
-
-.year-input-column {
-    flex: 1;
-}
-
-.year-input-column label {
-    font-size: 12px;
-    display: block;
-    margin-bottom: 4px;
-}
-
-.year-input-column input {
-    width: 100%;
-    padding: 6px;
-    border-radius: 6px;
-    border: none;
-    text-align: center;
-    box-sizing: border-box;
-}
-
 .see-all-filter-button {
     margin-top: 16px;
     width: 100%;
@@ -155,7 +121,7 @@
     margin: 0;
 }
 
-.see-all-sort-select {
+.sort-select {
     padding: 6px 12px;
     border-radius: 8px;
     border: 1px solid #ccc;
@@ -362,7 +328,7 @@
         gap: 12px;
     }
 
-    .see-all-sort-select {
+    .sort-select {
         width: 100%;
     }
 
@@ -379,79 +345,4 @@
     .see-all-filter-group {
         grid-template-columns: 1fr;
     }
-}
-
-.noUi-connect {
-    background: white;
-}
-
-.noUi-horizontal {
-    background: rgb(255 255 255 / 30%);
-    border: none;
-    box-shadow: none;
-    height: 6px;
-}
-
-.noUi-handle {
-    background: white;
-    border: none;
-    box-shadow: none;
-    border-radius: 50%;
-    width: 20px !important;
-    height: 20px !important;
-    top: -8px !important;
-    cursor: pointer;
-}
-
-.noUi-handle::before,
-.noUi-handle::after {
-    display: none;
-}
-
-.noUi-tooltip {
-    background: #6b0000;
-    color: white;
-    border: none;
-    font-size: 11px;
-    padding: 2px 6px;
-    border-radius: 4px;
-}
-
-.filter-toggle {
-    width: 100%;
-    padding: 0;
-    border: 0;
-    background: transparent;
-    color: inherit;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-    font: inherit;
-    font-weight: 700;
-    line-height: 1.35;
-    margin: 0 0 10px;
-    text-align: left;
-    user-select: none;
-    -webkit-user-select: none;
-}
-
-.filter-toggle-icon {
-    flex: 0 0 auto;
-    font-size: 13px;
-    line-height: 1;
-    transition: transform 0.16s ease;
-}
-
-.filter-toggle.is-open .filter-toggle-icon {
-    transform: rotate(180deg);
-}
-
-.filter-dropdown {
-    display: none;
-}
-
-.filter-dropdown.is-open {
-    display: block;
 }

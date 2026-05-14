@@ -2,8 +2,7 @@
 <html lang="en">
 <head>
     {% load static %}
-    <link rel="stylesheet" href="{% static 'css/front_page.css' %}?v=3">
-    <link rel="stylesheet" href="{% static 'css/front_page.css' %}?v=4">
+    <link rel="stylesheet" href="{% static 'css/front_page.css' %}?v=5">
     <link rel="stylesheet" href="{% static 'css/categories.css' %}">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -11,11 +10,11 @@
     {% block extra_css %}
     {% endblock %}
 </head>
-<body style="min-height: 100vh; display: flex; flex-direction: column;">
+<body>
 
     {% include "partials/navbar.html" %}
 
-    <main style="flex: 1;">
+    <main class="site-main">
         {% block content %}
         {% endblock %}
     </main>

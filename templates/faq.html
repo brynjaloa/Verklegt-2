@@ -8,7 +8,7 @@
 {% block content %}
 <div class="faq-page">
     <div class="faq-header">
-        <a href="/" class="faq-back-link">‹</a>
+        <a href="{{ previous_page_url }}" class="faq-back-link">‹</a>
         <h1 class="faq-title">Frequently asked</h1>
     </div>
 
@@ -21,12 +21,14 @@
                     <strong>How to sell?</strong>
                     <span class="faq-icon">+</span>
                 </button>
+
                 <div class="faq-answer" hidden>
                     <p>Register as a seller on ArtVault.</p>
                     <p>Upload your artwork with images and details.</p>
                     <p>Set your starting bid price.</p>
                     <p>Wait for buyers to place bids.</p>
                 </div>
+
                 <hr>
             </div>
 
@@ -36,12 +38,14 @@
                     <strong>How to buy?</strong>
                     <span class="faq-icon">+</span>
                 </button>
+
                 <div class="faq-answer" hidden>
                     <p>Browse artworks in the catalogue.</p>
                     <p>Click on an artwork to see details.</p>
                     <p>Submit a bid with your price and expiration date.</p>
                     <p>If accepted, finalize the purchase.</p>
                 </div>
+
                 <hr>
             </div>
 
@@ -51,11 +55,13 @@
                     <strong>How to sign up?</strong>
                     <span class="faq-icon">+</span>
                 </button>
+
                 <div class="faq-answer" hidden>
                     <p>Click the Login button in the top right.</p>
                     <p>Select Sign up and fill in your details.</p>
                     <p>You're ready to start browsing!</p>
                 </div>
+
                 <hr>
             </div>
 
@@ -71,6 +77,7 @@
             </div>
 
             <div id="video-buy" class="video-panel" hidden>
+
                 <video controls>
                     <source src="{% static 'videos/how_to_buy.mp4' %}" type="video/mp4">
                 </video>
@@ -78,10 +85,12 @@
             </div>
 
             <div id="video-signup" class="video-panel" hidden>
+
                 <video controls>
                     <source src="{% static 'videos/how_to_signup.mp4' %}" type="video/mp4">
                 </video>
-                <p style="margin-top: 8px; color: #666;">How to sign up</p>
+                <p>How to sign up</p>
+
             </div>
 
         </div>

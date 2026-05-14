@@ -22,7 +22,7 @@
 
 .login-error {
     color: white;
-    background: rgba(0, 0, 0, 0.2);
+    background: rgb(0 0 0 / 20%);
     border-radius: 8px;
     padding: 10px;
     margin: 0 0 18px;
