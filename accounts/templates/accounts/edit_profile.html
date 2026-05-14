@@ -6,7 +6,14 @@
 {% endblock %}
 
 {% block content %}
-<div class="signup-container seller-signup-container">
+<div class="edit-profile-top">
+    <a class="edit-profile-back-link" href="{% url 'profile' %}" aria-label="Back to profile">‹</a>
+    <div class="edit-profile-title">
+        {% if seller %}Edit seller profile{% else %}Edit profile{% endif %}
+    </div>
+</div>
+
+<div class="signup-container seller-signup-container edit-profile-form">
     <h1>{% if seller %}Edit seller profile{% else %}Edit profile{% endif %}</h1>
 
     <form method="POST" enctype="multipart/form-data">

@@ -1,7 +1,9 @@
+import unicodedata
+
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.http import HttpResponseForbidden
-from django.db.models import Q
+from django.db.models import Count, Exists, OuterRef, Q
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.http import require_POST
 from django.utils.http import url_has_allowed_host_and_scheme
@@ -14,6 +16,8 @@ from .models import Artwork, ArtworkImage
 
 from bids.models import Bid
 from bids.forms import BidForm
+
+SOLD_BID_STATUSES = (Bid.Status.ACCEPTED, Bid.Status.FINALIZED)
 
 CATEGORY_FILTER_FIELDS = {
     Artwork.Category.PAINTINGS: {
@@ -70,6 +74,35 @@ FEATURED_CATEGORY_STYLES = {
 }
 
 
+def search_variants(query):
+    normalized_query = unicodedata.normalize("NFKD", query)
+    without_accents = "".join(
+        character
+        for character in normalized_query
+        if not unicodedata.combining(character)
+    )
+
+    return {
+        query,
+        unicodedata.normalize("NFC", query),
+        unicodedata.normalize("NFD", query),
+        without_accents,
+    }
+
+
+def apply_title_search(artworks, query):
+    if not query:
+        return artworks
+
+    title_query = Q()
+
+    for variant in search_variants(query):
+        if variant:
+            title_query |= Q(title__icontains=variant)
+
+    return artworks.filter(title_query)
+
+
 BUILT_IN_STYLE_IMAGES = {
     Artwork.Category.PAINTINGS: {
         Artwork.PaintingStyle.MODERNISM.value: "built-in_artworks/Modernism_art.jpeg",
@@ -116,6 +149,15 @@ def styles_with_builtin_images(category, styles):
 
 
 def get_artwork_detail_back_url(request):
+    requested_back_url = request.GET.get("back")
+
+    if requested_back_url and url_has_allowed_host_and_scheme(
+        requested_back_url,
+        allowed_hosts={request.get_host()},
+        require_https=request.is_secure(),
+    ):
+        return requested_back_url
+
     referer = request.META.get("HTTP_REFERER")
 
     if referer and url_has_allowed_host_and_scheme(
@@ -144,45 +186,125 @@ def sort_artworks(artworks, sort):
     return artworks.order_by('-listing_date', '-id')
 
 
+def annotate_sold_by_bid(artworks):
+    return artworks.annotate(
+        sold_by_bid=Exists(
+            Bid.objects.filter(
+                artwork=OuterRef("pk"),
+                status__in=SOLD_BID_STATUSES,
+            )
+        )
+    )
+
+
+def apply_status_filter(artworks, statuses_selected):
+    if not statuses_selected or {"available", "sold"}.issubset(statuses_selected):
+        return artworks
+
+    if "available" in statuses_selected:
+        return artworks.filter(is_sold=False, sold_by_bid=False)
+
+    if "sold" in statuses_selected:
+        return artworks.filter(Q(is_sold=True) | Q(sold_by_bid=True))
+
+    return artworks
+
+
+def expand_filter_values(field_name, values):
+    expanded_values = set(values)
+
+    if field_name == "painting_medium":
+        for value in values:
+            cleaned_value = Artwork._clean_medium_label(value)
+            expanded_values.add(cleaned_value)
+
+            if cleaned_value == value and value not in {"Gouache", "Encaustic", "Tempera", "Fresco", "Ink", "Charcoal", "Chalk", "Graphite", "Other"}:
+                expanded_values.add(f"{value} painting")
+                expanded_values.add(f"{value} Painting")
+
+    return [value for value in expanded_values if value]
+
+
+def apply_any_field_filter(artworks, field_values):
+    field_query = Q()
+
+    for field_name, values in field_values:
+        selected_values = expand_filter_values(
+            field_name,
+            [value for value in values if value],
+        )
+
+        if selected_values:
+            field_query |= Q(**{f"{field_name}__in": selected_values})
+
+    if not field_query:
+        return artworks
+
+    return artworks.filter(field_query)
+
+
+def range_filter_value(value, default_value):
+    if value in (None, "", default_value):
+        return None
+
+    return value
+
+
 def artwork_list(request):
     query = request.GET.get('q', '').strip()
     category = request.GET.get('category')
+    categories_selected = request.GET.getlist('category')
     styles_selected = request.GET.getlist('style')
     mediums_selected = request.GET.getlist('medium')
+    editions_selected = request.GET.getlist('edition')
+    statuses_selected = request.GET.getlist('status')
     year_from = request.GET.get('year_from')
     year_to = request.GET.get('year_to')
-    price_from = request.GET.get('price_from')
-    price_to = request.GET.get('price_to')
 
-    artworks = Artwork.objects.all()
+    artworks = annotate_sold_by_bid(Artwork.objects.all())
 
 
     for artwork in artworks:
         highest_bid = Bid.objects.filter(artwork=artwork).order_by("-bid_price").first()
         artwork.highest_bid = highest_bid
 
-    if query:
-        artworks = artworks.filter(title__icontains=query)
+    artworks = apply_title_search(artworks, query)
 
-    if category:
-        artworks = artworks.filter(category=category)
+    if categories_selected:
+        artworks = artworks.filter(category__in=categories_selected)
 
-    category_fields = CATEGORY_FILTER_FIELDS.get(category, {})
+    category_fields = CATEGORY_FILTER_FIELDS.get(category, {}) if len(categories_selected) <= 1 else {}
     style_field = category_fields.get("style")
     medium_field = category_fields.get("medium")
 
-    if styles_selected and style_field:
-        artworks = artworks.filter(**{f"{style_field}__in": styles_selected})
     if mediums_selected and medium_field:
-        artworks = artworks.filter(**{f"{medium_field}__in": mediums_selected})
+        artworks = apply_any_field_filter(artworks, ((medium_field, mediums_selected),))
+    elif mediums_selected:
+        artworks = apply_any_field_filter(artworks, (
+            ("painting_medium", mediums_selected),
+            ("sculpture_material", mediums_selected),
+            ("furniture_material", mediums_selected),
+            ("photo_technique", mediums_selected),
+        ))
+    if styles_selected and style_field:
+        artworks = apply_any_field_filter(artworks, ((style_field, styles_selected),))
+    elif styles_selected:
+        artworks = apply_any_field_filter(artworks, (
+            ("painting_style", styles_selected),
+            ("sculpture_style", styles_selected),
+            ("furniture_style", styles_selected),
+            ("photo_style", styles_selected),
+        ))
+    if editions_selected:
+        artworks = artworks.filter(edition__in=editions_selected)
+    artworks = apply_status_filter(artworks, statuses_selected)
+    year_from = range_filter_value(year_from, "1300")
+    year_to = range_filter_value(year_to, "2026")
+
     if year_from:
         artworks = artworks.filter(year__gte=year_from)
     if year_to:
         artworks = artworks.filter(year__lte=year_to)
-    if price_from:
-        artworks = artworks.filter(starting_bid__gte=price_from)
-    if price_to:
-        artworks = artworks.filter(starting_bid__lte=price_to)
 
     styles = category_fields.get("styles", [])
     featured_styles = styles_with_builtin_images(
@@ -190,6 +312,15 @@ def artwork_list(request):
         FEATURED_CATEGORY_STYLES.get(category, styles),
     )
     mediums = category_fields.get("mediums", [])
+    show_style_shortcuts = not (
+        query
+        or styles_selected
+        or mediums_selected
+        or editions_selected
+        or statuses_selected
+        or year_from
+        or year_to
+    )
 
     sort = request.GET.get('sort', 'relevance')
     artworks = sort_artworks(artworks, sort)
@@ -206,10 +337,18 @@ def artwork_list(request):
         'query': query,
         'category': category,
         'styles': featured_styles,
+        'show_style_shortcuts': show_style_shortcuts,
         'filter_styles': styles,
         'mediums': mediums,
+        'selected_categories': categories_selected,
         'selected_styles': styles_selected,
         'selected_mediums': mediums_selected,
+        'selected_editions': editions_selected,
+        'selected_statuses': statuses_selected,
+        'status_choices': (
+            ("available", "Available"),
+            ("sold", "Sold"),
+        ),
         'page_obj': page_obj,
         'pagination_query': pagination_query.urlencode(),
         'sort': sort,
@@ -217,20 +356,30 @@ def artwork_list(request):
 
 
 def home_view(request):
-    recent_artworks = Artwork.objects.filter(is_sold=False).order_by("-listing_date", "-id")[:10]
+    recent_artworks = Artwork.objects.all().order_by("-listing_date", "-id")[:8]
+    popular_artworks = (
+        Artwork.objects.annotate(bid_count=Count("bid"))
+        .filter(bid_count__gt=0)
+        .order_by("-bid_count", "-listing_date", "-id")[:8]
+    )
+    recent_artworks = Artwork.objects.all().order_by("-listing_date", "-id")[:8]
 
     return render(request, "home.html", {
         "recent_artworks": recent_artworks,
+        "popular_artworks": popular_artworks,
     })
 
 
 def artwork_detail(request, pk):
     artwork = get_object_or_404(Artwork, pk=pk)
     back_url = get_artwork_detail_back_url(request)
-    show_finalize_invalid_popup = request.GET.get("popup") == "finalize_invalid"
-    highest_bids = Bid.objects.filter(artwork=artwork).exclude(
-        status=Bid.Status.CANCELED
-    ).order_by("-bid_price")[:3]
+    highest_bids = list(
+        Bid.objects.filter(artwork=artwork)
+        .exclude(status=Bid.Status.CANCELED)
+        .select_related("user")
+        .order_by("-bid_price", "-id")[:3]
+    )
+    highest_bid = highest_bids[0] if highest_bids else None
     has_accepted_bid = Bid.objects.filter(
         artwork=artwork,
         status__in=[Bid.Status.ACCEPTED, Bid.Status.FINALIZED],
@@ -290,6 +439,13 @@ def artwork_detail(request, pk):
             bid.status = Bid.Status.PENDING
             bid.save()
             existing_bid = bid
+            highest_bids = list(
+                Bid.objects.filter(artwork=artwork)
+                .exclude(status=Bid.Status.CANCELED)
+                .select_related("user")
+                .order_by("-bid_price", "-id")[:3]
+            )
+            highest_bid = highest_bids[0] if highest_bids else None
 
             return render(request, "artworks/artwork_detail.html", {
 
@@ -306,6 +462,7 @@ def artwork_detail(request, pk):
                 "show_popup": True,
                 "bid_popup_message": "success",
                 "highest_bids": highest_bids,
+                "highest_bid": highest_bid,
                 "back_url": back_url,
             })
 
@@ -320,6 +477,7 @@ def artwork_detail(request, pk):
             "show_popup": True,
             "bid_popup_message": "minimum_bid_error",
             "highest_bids": highest_bids,
+            "highest_bid": highest_bid,
             "back_url": back_url,
         })
 
@@ -339,9 +497,8 @@ def artwork_detail(request, pk):
         "show_description_toggle": show_description_toggle,
         "form": form,
         "existing_bid": existing_bid,
-        "show_popup": show_finalize_invalid_popup,
-        "bid_popup_message": "finalize_invalid" if show_finalize_invalid_popup else "",
         "highest_bids": highest_bids,
+        "highest_bid": highest_bid,
         "back_url": back_url,
     })
 
@@ -428,39 +585,51 @@ def category_list(request):
     return render(request, 'Category/categories.html', {'categories': categories})
 
 def artwork_see_all(request):
-    mediums_selected = request.GET.getlist('medium')
+    query = request.GET.get('q', '').strip()
+    painting_mediums_selected = request.GET.getlist('painting_medium')
+    sculpture_materials_selected = request.GET.getlist('sculpture_material')
+    furniture_materials_selected = request.GET.getlist('furniture_material')
+    photo_techniques_selected = request.GET.getlist('photo_technique')
+    legacy_mediums_selected = request.GET.getlist('medium')
     year_from = request.GET.get('year_from')
     year_to = request.GET.get('year_to')
+    categories_selected = request.GET.getlist('category')
+    painting_styles_selected = request.GET.getlist('painting_style')
+    sculpture_styles_selected = request.GET.getlist('sculpture_style')
+    furniture_styles_selected = request.GET.getlist('furniture_style')
+    photo_styles_selected = request.GET.getlist('photo_style')
+    legacy_styles_selected = request.GET.getlist('style')
+    editions_selected = request.GET.getlist('edition')
+    statuses_selected = request.GET.getlist('status')
     price_from = request.GET.get('price_from')
     price_to = request.GET.get('price_to')
-    categories_selected = request.GET.getlist('category')
-    styles_selected = request.GET.getlist('style')
-    editions_selected = request.GET.getlist('edition')
-    category = request.GET.get('category')
-    style = request.GET.get('style')
-    edition = request.GET.get('edition')
     sort = request.GET.get('sort', 'relevance')
 
-    artworks = Artwork.objects.all()
+    artworks = annotate_sold_by_bid(Artwork.objects.all())
 
+    artworks = apply_title_search(artworks, query)
     if categories_selected:
         artworks = artworks.filter(category__in=categories_selected)
-    if mediums_selected:
-        artworks = artworks.filter(
-            Q(painting_medium__in=mediums_selected)
-            | Q(sculpture_material__in=mediums_selected)
-            | Q(furniture_material__in=mediums_selected)
-            | Q(photo_technique__in=mediums_selected)
-        )
-    if styles_selected:
-        artworks = artworks.filter(
-            Q(painting_style__in=styles_selected)
-            | Q(sculpture_style__in=styles_selected)
-            | Q(furniture_style__in=styles_selected)
-            | Q(photo_style__in=styles_selected)
-        )
+    artworks = apply_any_field_filter(artworks, (
+        ("painting_medium", legacy_mediums_selected + painting_mediums_selected),
+        ("sculpture_material", legacy_mediums_selected + sculpture_materials_selected),
+        ("furniture_material", legacy_mediums_selected + furniture_materials_selected),
+        ("photo_technique", legacy_mediums_selected + photo_techniques_selected),
+    ))
+    artworks = apply_any_field_filter(artworks, (
+        ("painting_style", legacy_styles_selected + painting_styles_selected),
+        ("sculpture_style", legacy_styles_selected + sculpture_styles_selected),
+        ("furniture_style", legacy_styles_selected + furniture_styles_selected),
+        ("photo_style", legacy_styles_selected + photo_styles_selected),
+    ))
     if editions_selected:
         artworks = artworks.filter(edition__in=editions_selected)
+    artworks = apply_status_filter(artworks, statuses_selected)
+    year_from = range_filter_value(year_from, "1300")
+    year_to = range_filter_value(year_to, "2026")
+    price_from = range_filter_value(price_from, "0")
+    price_to = range_filter_value(price_to, "100000")
+
     if year_from:
         artworks = artworks.filter(year__gte=year_from)
     if year_to:
@@ -471,21 +640,10 @@ def artwork_see_all(request):
         artworks = artworks.filter(starting_bid__lte=price_to)
 
     artworks = sort_artworks(artworks, sort)
-    paginator = Paginator(artworks, 20)
+    paginator = Paginator(artworks, 24)
     page_obj = paginator.get_page(request.GET.get("page"))
     pagination_query = request.GET.copy()
     pagination_query.pop("page", None)
-
-    all_styles = list({label: value for value, label in (
-            list(Artwork.PaintingStyle.choices) +
-            list(Artwork.SculptureStyle.choices) +
-            list(Artwork.FurnitureStyle.choices) +
-            list(Artwork.PhotoStyle.choices)
-    )}.items())
-
-    paginator = Paginator(artworks, 20)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
 
     return render(request, 'artworks/see_all.html', {
         'artworks': page_obj,
@@ -498,12 +656,28 @@ def artwork_see_all(request):
         'sculpture_materials': Artwork.SculptureMaterial.choices,
         'furniture_materials': Artwork.FurnitureMaterial.choices,
         'photo_techniques': Artwork.PhotoTechnique.choices,
-        'all_styles': all_styles,
-        'page_obj': page_obj,
+        'painting_styles': Artwork.PaintingStyle.choices,
+        'sculpture_styles': Artwork.SculptureStyle.choices,
+        'furniture_styles': Artwork.FurnitureStyle.choices,
+        'photo_styles': Artwork.PhotoStyle.choices,
         'selected_categories': categories_selected,
-        'selected_mediums': mediums_selected,
-        'selected_styles': styles_selected,
+        'selected_painting_mediums': painting_mediums_selected,
+        'selected_sculpture_materials': sculpture_materials_selected,
+        'selected_furniture_materials': furniture_materials_selected,
+        'selected_photo_techniques': photo_techniques_selected,
+        'selected_painting_styles': painting_styles_selected,
+        'selected_sculpture_styles': sculpture_styles_selected,
+        'selected_furniture_styles': furniture_styles_selected,
+        'selected_photo_styles': photo_styles_selected,
         'selected_editions': editions_selected,
+        'selected_statuses': statuses_selected,
+        'status_choices': (
+            ("available", "Available"),
+            ("sold", "Sold"),
+        ),
+        'query': query,
+        'price_from': price_from,
+        'price_to': price_to,
         'sort': sort,
     })
 
@@ -514,11 +688,20 @@ def accept_bid(request, bid_id):
     if bid.artwork.seller != request.user.seller:
         return HttpResponseForbidden()
 
-    Bid.objects.filter(
-        artwork=bid.artwork).exclude(id=bid.id).update(status="Rejected")
+    if Bid.objects.filter(
+        artwork=bid.artwork,
+        status__in=SOLD_BID_STATUSES,
+    ).exclude(id=bid.id).exists():
+        return redirect("artwork_detail", pk=bid.artwork.id)
 
-    bid.status = "Accepted"
-    bid.save()
+    Bid.objects.filter(artwork=bid.artwork).exclude(id=bid.id).update(
+        status=Bid.Status.REJECTED
+    )
+
+    bid.status = Bid.Status.ACCEPTED
+    bid.save(update_fields=["status"])
+    bid.artwork.is_sold = True
+    bid.artwork.save(update_fields=["is_sold"])
 
     return redirect(
         "artwork_detail",

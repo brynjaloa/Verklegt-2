@@ -3,13 +3,15 @@
 {% load humanize %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/artwork_detail.css' %}?v=5">
+<link rel="stylesheet" href="{% static 'css/artwork_detail.css' %}?v=8">
 {% endblock %}
 
 {% block content %}
 <article class="artwork-detail-page">
-    <a class="artwork-detail-back-link" href="{{ back_url }}" aria-label="Back">‹</a>
-
+    <header class="artwork-detail-header">
+        <a class="artwork-detail-back-link" href="{{ back_url }}" aria-label="Back to previous listings">‹</a>
+        <h1 class="artwork-detail-heading">Artwork details</h1>
+    </header>
     <div class="artwork-detail-layout">
         <div class="artwork-detail-media">
             {% if primary_image %}
@@ -41,6 +43,12 @@
         <div class="artwork-detail-info">
             <h1>{{ artwork.title }}</h1>
             <p class="artwork-listing-date">Listed: {{ artwork.listing_date|date:"M j, Y" }}</p>
+            <p class="artwork-detail-seller">
+                Seller:
+                <a href="{% url 'seller_profile' artwork.seller.id %}?back={{ request.get_full_path|urlencode }}">
+                    {{ artwork.seller.name }}
+                </a>
+            </p>
 
             <p class="artwork-short-description">
                 {% if artwork.description %}
@@ -60,6 +68,14 @@
                 </div>
             {% else %}
                 <p class="artwork-minimum-bid">Minimum bid: ${{ artwork.starting_bid|intcomma }}</p>
+                <p class="artwork-highest-bid">
+                    Highest bid:
+                    {% if highest_bid %}
+                        ${{ highest_bid.bid_price|intcomma }}
+                    {% else %}
+                        No bids yet
+                    {% endif %}
+                </p>
             {% endif %}
 
             {% if can_edit_artwork and not is_artwork_sold %}
@@ -137,48 +153,54 @@
                 </div>
 	                {% endif %}
 
-	                {% if not can_edit_artwork and not is_artwork_sold %}
-	                <form method="POST" class="bid-form">
-                    {% csrf_token %}
+                {% if not can_edit_artwork and not is_artwork_sold %}
+                    {% if user.is_authenticated %}
+                        <form method="POST" class="bid-form">
+                            {% csrf_token %}
 
-                    {% if form.errors %}
-                        <div class="bid-form-errors">
-                            {{ form.non_field_errors }}
-                            {{ form.bid_price.errors }}
-                            {{ form.expiration_date.errors }}
-                        </div>
+                            {% if form.errors %}
+                                <div class="bid-form-errors">
+                                    {{ form.non_field_errors }}
+                                    {{ form.bid_price.errors }}
+                                    {{ form.expiration_date.errors }}
+                                </div>
+                            {% endif %}
+
+                            <div class="bid-inputs">
+                                <div class="bid-field">
+                                    {{ form.bid_price }}
+                                </div>
+                                {{ form.expiration_date }}
+                            </div>
+
+                            {% if existing_bid %}
+                                <div class="bid-buttons">
+                                    <button class="bid-now-button" type="submit">
+                                        Resubmit a bid
+                                    </button>
+
+                                    <span class="bid-status {{ existing_bid.status|lower }}">
+                                        {{ existing_bid.status }}
+                                    </span>
+
+                                    <a href="{% url 'cancel_bid' existing_bid.id %}"
+                                       class="cancel-bid-button">
+                                        Cancel bid
+                                    </a>
+                                </div>
+
+                            {% else %}
+                                <button class="bid-now-button" type="submit">
+                                    Submit a bid
+                                </button>
+
+                            {% endif %}
+                        </form>
+                    {% else %}
+                        <a class="bid-now-button login-to-bid-button" href="{% url 'login' %}?next={{ request.get_full_path|urlencode }}">
+                            Login to submit a bid
+                        </a>
                     {% endif %}
-
-                <div class="bid-inputs">
-                    <div class="bid-field">
-                        {{ form.bid_price }}
-                    </div>
-                    {{ form.expiration_date }}
-                </div>
-
-	                    {% if existing_bid %}
-	                        <div class="bid-buttons">
-	                            <button class="bid-now-button" type="submit">
-	                                Resubmit a bid
-	                            </button>
-
-                                <span class="bid-status {{ existing_bid.status|lower }}">
-                                    {{ existing_bid.status }}
-                                </span>
-
-	                            <a href="{% url 'cancel_bid' existing_bid.id %}"
-	                               class="cancel-bid-button">
-                                Cancel bid
-                            </a>
-                        </div>
-
-	                    {% else %}
-	                        <button class="bid-now-button" type="submit">
-	                            Submit a bid
-	                        </button>
-
-                    {% endif %}
-                </form>
 
                 {% endif %}
 
@@ -292,7 +314,7 @@
             <details class="artwork-detail-panel">
                 <summary>Seller information</summary>
                 <div class="artwork-panel-content seller-panel">
-                    <a class="seller-logo-link" href="{% url 'seller_profile' artwork.seller.id %}">
+                    <a class="seller-logo-link" href="{% url 'seller_profile' artwork.seller.id %}?back={{ request.get_full_path|urlencode }}">
                         {% if artwork.seller.logo %}
                             <img class="seller-logo" src="{{ artwork.seller.logo.url }}" alt="{{ artwork.seller.name }}">
                         {% else %}
@@ -302,7 +324,7 @@
 
                     <div>
                         <h2>
-                            <a class="seller-name-link" href="{% url 'seller_profile' artwork.seller.id %}">
+                            <a class="seller-name-link" href="{% url 'seller_profile' artwork.seller.id %}?back={{ request.get_full_path|urlencode }}">
                                 {{ artwork.seller.name }}
                             </a>
                         </h2>
@@ -339,19 +361,13 @@
 
             {% if bid_popup_message == "minimum_bid_error" %}
                 <h2>Bid may not be lower than minimum bid, please bid again using a higher bid</h2>
-            {% elif bid_popup_message == "finalize_invalid" %}
-                <h2>Only accepted or contingent bids can be finalized.</h2>
-            {% elif is_resubmission %}
-                <h2>Thank you for re-submitting a bid.</h2>
             {% else %}
-                <h2>Thank you for submitting a bid.</h2>
-            {% endif %}
+                {% if is_resubmission or existing_bid %}
+                    <h2>Thank you for re-submitting a bid.</h2>
+                {% else %}
+                 <h2>Thank you for submitting a bid.</h2>
+                {% endif %}
 
-            {% if bid_popup_message == "finalize_invalid" %}
-                <p>
-                    Wait until the seller accepts or marks your bid as contingent before finalizing.
-                </p>
-            {% else %}
                 <p>
                     You will get a notification if it is accepted.
                 </p>
@@ -364,5 +380,5 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="{% static 'js/artworks/artwork_detail.js' %}?v=5"></script>
+<script src="{% static 'js/artworks/artwork_detail.js' %}?v=4"></script>
 {% endblock %}

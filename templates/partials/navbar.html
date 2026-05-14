@@ -4,7 +4,7 @@
     </div>
 
     <div class="nav-center">
-        <form class="search-box" method="GET" action="{% url 'artwork_list' %}">
+        <form class="search-box" method="GET" action="{% url 'artwork_list' %}" data-preserve-query>
             <input type="text" name="q" value="{{ request.GET.q }}" placeholder="Search...">
             <button class="search-icon" type="submit" aria-label="Search">🔍</button>
         </form>
@@ -14,7 +14,7 @@
             <a href="{% url 'category_list' %}">Category</a>
             <a href="{% url 'faq' %}">How to?</a>
             <a href="{% url 'info' %}">Info</a>
-            {% if user.is_authenticated and user.profile.is_seller %}
+            {% if user.is_authenticated and user.seller %}
                 <a href="{% url 'add_artwork' %}">Sell</a>
             {% endif %}
         </div>

@@ -78,17 +78,17 @@
 
 .year-filter-box {
     padding: 0 8px;
-    margin-bottom: 12px;
+    margin: 4px 0 12px;
 }
 
 .see-all-year-slider {
-    margin: 16px 0;
+    margin: 8px 0 10px;
 }
 
 .year-input-row {
     display: flex;
     gap: 12px;
-    margin-top: 12px;
+    margin-top: 6px;
 }
 
 .year-input-column {
@@ -120,6 +120,24 @@
     border-radius: 8px;
     cursor: pointer;
     font-weight: bold;
+}
+
+.see-all-clear-filters {
+    display: block;
+    width: 100%;
+    margin-top: 10px;
+    padding: 8px;
+    border: 1px solid rgb(255 255 255 / 70%);
+    border-radius: 8px;
+    box-sizing: border-box;
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+}
+
+.see-all-clear-filters:hover {
+    background: rgb(255 255 255 / 12%);
 }
 
 .see-all-listings {
@@ -400,11 +418,40 @@
 }
 
 .filter-toggle {
+    width: 100%;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    font: inherit;
+    font-weight: 700;
+    line-height: 1.35;
+    margin: 0 0 10px;
+    text-align: left;
     user-select: none;
     -webkit-user-select: none;
 }
 
+.filter-toggle-icon {
+    flex: 0 0 auto;
+    font-size: 13px;
+    line-height: 1;
+    transition: transform 0.16s ease;
+}
+
+.filter-toggle.is-open .filter-toggle-icon {
+    transform: rotate(180deg);
+}
+
 .filter-dropdown {
     display: none;
+}
+
+.filter-dropdown.is-open {
+    display: block;
 }

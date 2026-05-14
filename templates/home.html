@@ -35,7 +35,7 @@
         <div class="artworks recent-carousel-track">
             {% for artwork in recent_artworks %}
             <div class="art-card">
-                <a href="{% url 'artwork_detail' artwork.pk %}" class="art-image-link" aria-label="{{ artwork.title }}">
+                <a href="{% url 'artwork_detail' artwork.pk %}?back={{ request.get_full_path|urlencode }}" class="art-image-link" aria-label="{{ artwork.title }}">
                     {% if artwork.primary_image %}
                         <img class="art-box" src="{{ artwork.primary_image.url }}" alt="{{ artwork.title }}">
                     {% else %}
@@ -54,23 +54,24 @@
     <button class="carousel-arrow carousel-arrow-right" type="button" aria-label="Next recently added listings">›</button>
 </div>
 
-<h2 class="section-title">Popular</h2>
+<h2 class="section-title">People have bidded on:</h2>
 
-<div class="artworks">
-    {% for i in "1234" %}
+<div class="most-bidded-grid">
+    {% for artwork in popular_artworks %}
     <div class="art-card">
-        <div class="art-box"></div>
-        <p class="price">$$</p>
+        <a href="{% url 'artwork_detail' artwork.pk %}?back={{ request.get_full_path|urlencode }}" class="art-image-link" aria-label="{{ artwork.title }}">
+            {% if artwork.primary_image %}
+                <img class="art-box" src="{{ artwork.primary_image.url }}" alt="{{ artwork.title }}">
+            {% else %}
+                <div class="art-box"></div>
+            {% endif %}
+        </a>
+        <p class="art-title">{{ artwork.title }}</p>
+        <p class="price">Starting bid is: ${{ artwork.starting_bid }}</p>
     </div>
+    {% empty %}
+    <p class="empty-section">No artworks have bids yet.</p>
     {% endfor %}
 </div>
-<div class="artworks">
-    {% for i in "1234" %}
-    <div class="art-card">
-        <div class="art-box"></div>
-        <p class="price">$$</p>
-    </div>
-    {% endfor %}
-</div>
-<script src="{% static 'js/home.js' %}"></script>
+<script src="{% static 'js/home.js' %}?v=4"></script>
 {% endblock %}
