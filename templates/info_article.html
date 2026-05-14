@@ -8,11 +8,18 @@
 {% block content %}
 <article class="info-page">
     <header class="info-header">
-        <a href="{% url 'info' %}" class="info-back-link" aria-label="Back to info">‹</a>
+        <a href="{{ previous_page_url }}"
+           class="info-back-link"
+           aria-label="Back to previous page"
+        >‹</a>
+
         <h1>{{ article.title }}</h1>
     </header>
 
-    <img src="{{ article.image_url }}" alt="{{ article.title }}" class="info-hero-image">
+    <img src="{{ article.image_url }}"
+         alt="{{ article.title }}"
+         class="info-hero-image"
+    >
 
     <section class="info-article">
         <p class="info-article-intro">{{ article.intro }}</p>

@@ -9,7 +9,7 @@
 <div class="about-page">
 
     <div class="about-header">
-        <a href="/" class="about-back-link">‹</a>
+        <a href="{{ previous_page_url }}" class="about-back-link">‹</a>
         <h1 class="about-heading">About us</h1>
     </div>
 
@@ -17,14 +17,17 @@
 
         <div class="about-media">
             <div class="founders-frame">
-                <img class="founders-img" src="{% get_media_prefix %}about/3_founders.jpeg" alt="Picture of the Founders">
+                <img class="founders-img"
+                     src="{% get_media_prefix %}about/3_founders.jpeg"
+                     alt="Picture of the Founders"
+                >
             </div>
             <p>Picture of the Founders</p>
         </div>
 
         <div class="about-copy">
             <h2>Our story</h2>
-            <p>ArtVault was founded in 2026 by a group of 3 students who wanted to create a seamless digital marketplace for art. We believe that great art should be accessible to everyone, and our platform connects artists directly with buyers around the world.</p>
+            <p>ArtVault was founded in 2026 by a group of three students who wanted to create a seamless digital marketplace for art. We believe that great art should be accessible to everyone, and our platform connects artists directly with buyers around the world.</p>
             <p>Our mission is to provide a transparent, secure, and intuitive platform where artists can list their work and buyers can bid with confidence.</p>
 
             <h2>Trustworthy team</h2>

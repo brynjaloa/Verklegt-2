@@ -307,13 +307,20 @@
 .bid-inputs{
     display:flex;
     gap:20px;
-    margin-bottom:20px;
+    margin-bottom:5px;
     flex-wrap:wrap;
 }
 
 .bid-field {
     display: flex;
     flex-direction: column;
+}
+
+.bid-field-help {
+    margin: 8px 0 0;
+    color: #777;
+    font-size: 14px;
+    line-height: 1.35;
 }
 
 .bid-form-errors {
@@ -432,6 +439,12 @@
     gap:15px;
 }
 
+.bid-actions {
+    display: flex;
+    justify-content: flex-end;
+    min-width: 140px;
+}
+
 .mini-profile{
     width:45px;
     height:45px;
@@ -450,6 +463,19 @@
 .accepted-text{
     color:green;
     font-weight:bold;
+}
+
+.rejected-text,
+.contingent-text {
+    font-weight: bold;
+}
+
+.rejected-text {
+    color: #9b3a35;
+}
+
+.contingent-text {
+    color: #6b5b00;
 }
 
 .artwork-owner-actions {

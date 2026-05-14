@@ -68,7 +68,7 @@ def promote_next_bid_after_cancel(artwork, excluded_bid_ids=None):
     next_bid.buyer_accept_notification_seen = False
     next_bid.save(update_fields=["status", "buyer_accept_notification_seen"])
     set_bid_queue_after_accepted(next_bid)
-    artwork.is_sold = False
+    artwork.is_sold = True
     artwork.save(update_fields=["is_sold"])
     return next_bid
 
@@ -142,7 +142,7 @@ def accept_bid(request, bid_id):
         bid.status = Bid.Status.ACCEPTED
         bid.buyer_accept_notification_seen = False
         bid.save(update_fields=["status", "buyer_accept_notification_seen"])
-        bid.artwork.is_sold = False
+        bid.artwork.is_sold = True
         bid.artwork.save(update_fields=["is_sold"])
         set_bid_queue_after_accepted(bid)
 
@@ -159,16 +159,6 @@ def reject_bid(request, bid_id):
     bid.status = Bid.Status.REJECTED
     bid.buyer_reject_notification_seen = False
     bid.save(update_fields=["status", "buyer_reject_notification_seen"])
-
-    return redirect('artwork_detail', pk=bid.artwork.id)
-
-
-@login_required
-def contingent_bid(request, bid_id):
-    bid = get_object_or_404(Bid, id=bid_id)
-
-    if bid.artwork.seller != request.user.seller:
-        return HttpResponseForbidden()
 
     return redirect('artwork_detail', pk=bid.artwork.id)
 

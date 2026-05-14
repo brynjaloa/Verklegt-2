@@ -3,14 +3,15 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.css">
-<link rel="stylesheet" href="{% static 'css/see_all.css' %}?v=3">
+<link rel="stylesheet" href="{% static 'css/shared_filters.css' %}?v=1">
+<link rel="stylesheet" href="{% static 'css/see_all.css' %}?v=5">
 {% endblock %}
 
 {% block content %}
 <div class="see-all-page">
 
     <div class="see-all-header">
-        <a class="see-all-back-link" href="{% url 'home' %}">‹</a>
+        <a class="see-all-back-link" href="{{ previous_page_url }}">‹</a>
         <h1 class="see-all-heading">All Artworks</h1>
     </div>
 
@@ -25,15 +26,10 @@
 
                 <div class="see-all-filter-groups">
                     <div class="see-all-filter-group">
-                        <button class="filter-toggle" type="button" onclick="toggleFilter('filter-availability')">
-                            <span>Availability</span>
-                            <span class="filter-toggle-icon">▾</span>
-                        </button>
-                        <div id="filter-availability" class="filter-dropdown">
-                            {% for value, label in status_choices %}
-                            <label><input type="checkbox" name="status" value="{{ value }}" {% if value in selected_statuses %}checked{% endif %}> {{ label }}</label>
-                            {% endfor %}
-                        </div>
+                        <p class="filter-static-heading">Availability</p>
+                        {% for value, label in status_choices %}
+                        <label><input type="checkbox" name="status" value="{{ value }}" {% if value in selected_statuses %}checked{% endif %}> {{ label }}</label>
+                        {% endfor %}
                     </div>
 
                     <div class="see-all-filter-group">
@@ -246,5 +242,6 @@
 
 {% block extra_js %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.js"></script>
-<script src="{% static 'js/artworks/see_all.js' %}?v=2"></script>
+<script src="{% static 'js/artworks/shared_filters.js' %}?v=1"></script>
+<script src="{% static 'js/artworks/see_all.js' %}?v=3"></script>
 {% endblock %}

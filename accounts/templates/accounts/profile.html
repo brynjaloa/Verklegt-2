@@ -9,7 +9,7 @@
 
     <div class="profile-top">
 
-        <a class="profile-back-link" href="/">‹</a>
+        <a class="profile-back-link" href="{{ previous_page_url }}">‹</a>
 
         <div class="profile-title">
             My profile
@@ -174,7 +174,7 @@
                                         {% elif bid.status == "Contingent" %}
 
                                             <div class="bid-status contingent">
-                                                Contingent
+                                                Contingent / Next in line
                                             </div>
 
                                         {% elif bid.status == "Canceled" %}
@@ -341,7 +341,7 @@
 	                                            {% elif bid.status == "Contingent" %}
 
 				                                                <div class="bid-status contingent">
-				                                                    Contingent
+				                                                    Contingent / Next in line
 				                                                </div>
 
                                             {% elif bid.status == "Canceled" %}

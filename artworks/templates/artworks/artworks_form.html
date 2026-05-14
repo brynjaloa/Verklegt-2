@@ -8,10 +8,14 @@
 {% block content %}
 <section class="artwork-form-page">
     <div class="artwork-form-container">
-        <h1>{{ form_title|default:"List artwork for sale" }}</h1>
+        <header class="artwork-form-header">
+            <a class="artwork-form-back-link" href="{{ back_url }}" aria-label="Back to previous page">‹</a>
+            <h1>{{ form_title|default:"List artwork for sale" }}</h1>
+        </header>
 
         <form method="POST" enctype="multipart/form-data" class="artwork-form">
             {% csrf_token %}
+            <input type="hidden" name="back_url" value="{{ back_url }}">
 
             {% if form.non_field_errors %}
                 <div class="form-errors">
@@ -157,29 +161,81 @@
             <div class="artwork-form-section">
                 <h2>Pictures</h2>
 
-                <div class="form-row file-row">
-                    <label for="{{ form.main_image.id_for_label }}">Main picture:</label>
-                    {{ form.main_image }}
-                    {{ form.main_image.errors }}
-                </div>
+                {% if artwork %}
+                    <p class="field-help artwork-photo-requirement">A listing must have at least 2 photos.</p>
 
-                <div class="form-row file-row">
-                    <label for="{{ form.second_image.id_for_label }}">Second picture:</label>
-                    {{ form.second_image }}
-                    {% if form.second_image.help_text %}
-                        <p class="field-help">{{ form.second_image.help_text }}</p>
-                    {% endif %}
-                    {{ form.second_image.errors }}
-                </div>
+                    <div class="current-artwork-images">
+                        {% if artwork.main_image %}
+                            <div class="current-artwork-image-card">
+                                <img class="current-artwork-image-preview" src="{{ artwork.main_image.url }}" alt="{{ artwork.title }} main picture">
+                                <div class="current-artwork-image-controls">
+                                    <p>Main picture</p>
+                                    <label for="{{ form.main_image.id_for_label }}">Change photo</label>
+                                    {{ form.main_image }}
+                                    {{ form.main_image.errors }}
+                                    <label class="remove-artwork-image-option">
+                                        <input type="checkbox" name="remove_main_image" value="1">
+                                        Remove photo
+                                    </label>
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="form-row file-row">
+                                <label for="{{ form.main_image.id_for_label }}">Add main picture:</label>
+                                {{ form.main_image }}
+                                {{ form.main_image.errors }}
+                            </div>
+                        {% endif %}
 
-                <div class="form-row file-row">
-                    <label for="{{ form.additional_images.id_for_label }}">More pictures:</label>
-                    {{ form.additional_images }}
-                    {% if form.additional_images.help_text %}
-                        <p class="field-help">{{ form.additional_images.help_text }}</p>
-                    {% endif %}
-                    {{ form.additional_images.errors }}
-                </div>
+                        {% for image in existing_images %}
+                            <div class="current-artwork-image-card">
+                                <img class="current-artwork-image-preview" src="{{ image.image.url }}" alt="{{ artwork.title }} picture {{ forloop.counter|add:'1' }}">
+                                <div class="current-artwork-image-controls">
+                                    <p>Picture {{ forloop.counter|add:"1" }}</p>
+                                    <label for="replace-image-{{ image.id }}">Change photo</label>
+                                    <input type="file" id="replace-image-{{ image.id }}" name="replace_image_{{ image.id }}" accept="image/*">
+                                    <label class="remove-artwork-image-option">
+                                        <input type="checkbox" name="remove_image" value="{{ image.id }}">
+                                        Remove photo
+                                    </label>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="form-row file-row">
+                        <label for="{{ form.additional_images.id_for_label }}">Add more pictures:</label>
+                        {{ form.additional_images }}
+                        {% if form.additional_images.help_text %}
+                            <p class="field-help">{{ form.additional_images.help_text }}</p>
+                        {% endif %}
+                        {{ form.additional_images.errors }}
+                    </div>
+                {% else %}
+                    <div class="form-row file-row">
+                        <label for="{{ form.main_image.id_for_label }}">Main picture:</label>
+                        {{ form.main_image }}
+                        {{ form.main_image.errors }}
+                    </div>
+
+                    <div class="form-row file-row">
+                        <label for="{{ form.second_image.id_for_label }}">Second picture:</label>
+                        {{ form.second_image }}
+                        {% if form.second_image.help_text %}
+                            <p class="field-help">{{ form.second_image.help_text }}</p>
+                        {% endif %}
+                        {{ form.second_image.errors }}
+                    </div>
+
+                    <div class="form-row file-row">
+                        <label for="{{ form.additional_images.id_for_label }}">More pictures:</label>
+                        {{ form.additional_images }}
+                        {% if form.additional_images.help_text %}
+                            <p class="field-help">{{ form.additional_images.help_text }}</p>
+                        {% endif %}
+                        {{ form.additional_images.errors }}
+                    </div>
+                {% endif %}
             </div>
 
             <button type="submit" class="artwork-submit-btn">
