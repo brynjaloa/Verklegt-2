@@ -169,12 +169,11 @@ def get_safe_back_url(request, fallback_url_name):
     ):
         parsed_referer = urlparse(referer)
         referer_path = parsed_referer.path
-        referer_full_path = referer_path
 
         if parsed_referer.query:
-            referer_full_path = f"{referer_full_path}?{parsed_referer.query}"
+            referer_path = f"{referer_path}?{parsed_referer.query}"
 
-        if referer_full_path != request.get_full_path():
+        if referer_path != request.get_full_path():
             return referer
 
     return reverse(fallback_url_name)
@@ -280,8 +279,29 @@ def apply_status_filter(artworks, statuses_selected):
     return artworks
 
 
-def get_marketplace_back_url(request, category):
-    return get_safe_back_url(request, "category_list")
+def get_marketplace_back_url(request, category, query=""):
+    filter_params = {
+        "style",
+        "medium",
+        "edition",
+        "status",
+        "year_from",
+        "year_to",
+        "price_from",
+        "price_to",
+    }
+    has_active_filter = any(request.GET.getlist(param) for param in filter_params)
+
+    if query:
+        return get_safe_back_url(request, "home")
+
+    if category and has_active_filter:
+        query = request.GET.copy()
+        query.clear()
+        query["category"] = category
+        return f"{reverse('artwork_list')}?{query.urlencode()}"
+
+    return reverse("category_list")
 
 
 def get_page_url(page_number, pagination_query):
@@ -414,11 +434,7 @@ def artwork_list(request):
     year_from = request.GET.get('year_from')
     year_to = request.GET.get('year_to')
 
-    artworks = annotate_sold_by_bid(Artwork.objects.all())
-
-    for artwork in artworks:
-        highest_bid = Bid.objects.filter(artwork=artwork).order_by("-bid_price").first()
-        artwork.highest_bid = highest_bid
+    artworks = annotate_sold_by_bid(Artwork.objects.prefetch_related("images"))
 
     artworks = apply_title_search(artworks, query)
 
@@ -543,7 +559,7 @@ def artwork_list(request):
         'category': category,
         'clear_filters_url': clear_filters_url,
         'heading': heading,
-        'marketplace_back_url': get_marketplace_back_url(request, category),
+        'marketplace_back_url': get_marketplace_back_url(request, category, query),
         'styles': featured_styles,
         'show_style_shortcuts': show_style_shortcuts,
         'filter_styles': style_filter_options,
@@ -564,9 +580,10 @@ def artwork_list(request):
 
 
 def home_view(request):
-    recent_artworks = Artwork.objects.all().order_by("-listing_date", "-id")[:8]
+    recent_artworks = Artwork.objects.prefetch_related("images").order_by("-listing_date", "-id")[:8]
     popular_artworks = (
-        Artwork.objects.annotate(bid_count=Count("bid"))
+        Artwork.objects.prefetch_related("images")
+        .annotate(bid_count=Count("bid"))
         .filter(bid_count__gt=0)
         .order_by("-bid_count", "-listing_date", "-id")[:8]
     )
@@ -852,7 +869,7 @@ def artwork_see_all(request):
     price_to = request.GET.get('price_to')
     sort = request.GET.get('sort', 'relevance')
 
-    artworks = annotate_sold_by_bid(Artwork.objects.all())
+    artworks = annotate_sold_by_bid(Artwork.objects.prefetch_related("images"))
 
     artworks = apply_title_search(artworks, query)
     if categories_selected:

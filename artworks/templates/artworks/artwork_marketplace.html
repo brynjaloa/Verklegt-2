@@ -220,7 +220,8 @@
                             <div class="marketplace-card">
 
                                 {% if artwork.primary_image %}
-                                    <img class="marketplace-card-image" src="{{ artwork.primary_image.url }}"
+                                    <img class="marketplace-card-image"
+                                         src="{{ artwork.primary_image.url }}"
                                          alt="{{ artwork.title }}">
                                 {% else %}
                                     <div class="marketplace-card-placeholder"></div>

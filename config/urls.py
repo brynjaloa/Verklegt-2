@@ -22,7 +22,6 @@ from django.views.generic import TemplateView
 from artworks.views import home_view
 from .views import info_article_view, info_view
 
-
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", home_view, name="home"),
@@ -34,12 +33,8 @@ urlpatterns = [
     path("info/", info_view, name="info"),
     path("info/<slug:slug>/", info_article_view, name="info_article"),
     path('bids/', include('bids.urls')),
-
 ]
 
 if settings.DEBUG:
-    urlpatterns += static(
-        settings.MEDIA_URL,
-        document_root=settings.MEDIA_ROOT
-    )
+    urlpatterns += static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
 

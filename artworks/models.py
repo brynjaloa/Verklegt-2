@@ -173,6 +173,11 @@ class Artwork(models.Model):
         if not self.pk:
             return None
 
+        if hasattr(self, "_prefetched_objects_cache") and "images" in self._prefetched_objects_cache:
+            prefetched_images = self._prefetched_objects_cache["images"]
+            if prefetched_images:
+                return prefetched_images[0].image
+
         first_image = self.images.first()
         if first_image:
             return first_image.image
