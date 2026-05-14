@@ -42,12 +42,6 @@
                     </div>
 
                     <div class="see-all-filter-group">
-                        <p><strong>Medium / Material</strong></p>
-                        <label class="filter-group-label">Painting</label>
-                        {% for value, label in painting_mediums %}
-                        <label><input type="checkbox" name="painting_medium" value="{{ value }}" {% if value in selected_painting_mediums %}checked{% endif %}> {{ label }}</label>
-                        {% endfor %}
-
                         <p class="filter-toggle" onclick="toggleFilter('filter-medium')"><strong class="filter-toggle">Medium / Material ▾</strong></p>
                         <div id="filter-medium" class="filter-dropdown">
                             <label class="filter-group-label">Painting</label>
@@ -55,30 +49,15 @@
                             <label><input type="checkbox" name="medium" value="{{ value }}" {% if value in selected_mediums %}checked{% endif %}> {{ label }}</label>
                             {% endfor %}
 
-                        <label class="filter-group-label filter-group-label-spaced">Sculpture</label>
-                        {% for value, label in sculpture_materials %}
-                        <label><input type="checkbox" name="sculpture_material" value="{{ value }}" {% if value in selected_sculpture_materials %}checked{% endif %}> {{ label }}</label>
-                        {% endfor %}
-
                             <label class="filter-group-label filter-group-label-spaced">Sculpture</label>
                             {% for value, label in sculpture_materials %}
                             <label><input type="checkbox" name="medium" value="{{ value }}" {% if value in selected_mediums %}checked{% endif %}> {{ label }}</label>
                             {% endfor %}
 
-                        <label class="filter-group-label filter-group-label-spaced">Furniture</label>
-                        {% for value, label in furniture_materials %}
-                        <label><input type="checkbox" name="furniture_material" value="{{ value }}" {% if value in selected_furniture_materials %}checked{% endif %}> {{ label }}</label>
-                        {% endfor %}
-
                             <label class="filter-group-label filter-group-label-spaced">Furniture</label>
                             {% for value, label in furniture_materials %}
                             <label><input type="checkbox" name="medium" value="{{ value }}" {% if value in selected_mediums %}checked{% endif %}> {{ label }}</label>
                             {% endfor %}
-
-                        <label class="filter-group-label filter-group-label-spaced">Photo</label>
-                        {% for value, label in photo_techniques %}
-                        <label><input type="checkbox" name="photo_technique" value="{{ value }}" {% if value in selected_photo_techniques %}checked{% endif %}> {{ label }}</label>
-                        {% endfor %}
 
                             <label class="filter-group-label filter-group-label-spaced">Photo</label>
                             {% for value, label in photo_techniques %}
@@ -86,28 +65,7 @@
                             {% endfor %}
                         </div>
                     </div>
-
-                    <div class="see-all-filter-group">
-                        <p><strong>Style</strong></p>
-                        <label class="filter-group-label">Painting</label>
-                        {% for value, label in painting_styles %}
-                        <label><input type="checkbox" name="painting_style" value="{{ value }}" {% if value in selected_painting_styles %}checked{% endif %}> {{ label }}</label>
-                        {% endfor %}
-
-                        <label class="filter-group-label filter-group-label-spaced">Sculpture</label>
-                        {% for value, label in sculpture_styles %}
-                        <label><input type="checkbox" name="sculpture_style" value="{{ value }}" {% if value in selected_sculpture_styles %}checked{% endif %}> {{ label }}</label>
-                        {% endfor %}
-
-                        <label class="filter-group-label filter-group-label-spaced">Furniture</label>
-                        {% for value, label in furniture_styles %}
-                        <label><input type="checkbox" name="furniture_style" value="{{ value }}" {% if value in selected_furniture_styles %}checked{% endif %}> {{ label }}</label>
-                        {% endfor %}
-
-                        <label class="filter-group-label filter-group-label-spaced">Photo</label>
-                        {% for value, label in photo_styles %}
-                        <label><input type="checkbox" name="photo_style" value="{{ value }}" {% if value in selected_photo_styles %}checked{% endif %}> {{ label }}</label>
-                        {% endfor %}
+                     <div class="see-all-filter-group">
                         <p class="filter-toggle" onclick="toggleFilter('filter-style')"><strong class="filter-toggle">Style ▾</strong></p>
                         <div id="filter-style" class="filter-dropdown">
                             {% for label, value in all_styles %}
@@ -160,6 +118,8 @@
                     <option value="relevance" {% if not sort or sort == 'relevance' %}selected{% endif %}>Sort by: Relevance</option>
                     <option value="price_low" {% if sort == 'price_low' %}selected{% endif %}>Sort by: Price (low to high)</option>
                     <option value="price_high" {% if sort == 'price_high' %}selected{% endif %}>Sort by: Price (high to low)</option>
+                    <option value="title_az" {% if sort == 'title_az' %}selected{% endif %}>Sort by: A-Z</option>
+                    <option value="title_za" {% if sort == 'title_za' %}selected{% endif %}>Sort by: Z-A</option>
                 </select>
             </div>
 

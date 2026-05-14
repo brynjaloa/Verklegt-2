@@ -113,18 +113,18 @@
 }
 
 .marketplace-filter-groups {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
+    display: grid;
+    gap: 16px;
 }
 
 .marketplace-filter-group p {
-    margin: 0;
+    margin: 0 0 10px;
 }
 
 .marketplace-filter-group label {
     display: block;
-    margin-top: 8px;
+    line-height: 1.35;
+    margin-bottom: 6px;
 }
 
 .year-filter {

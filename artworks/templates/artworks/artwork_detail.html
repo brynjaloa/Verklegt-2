@@ -63,6 +63,10 @@
                 <div class="artwork-sold-badge">
                     Sold
                 </div>
+            {% elif is_bidding_locked and not can_edit_artwork %}
+                <div class="artwork-bidding-locked-badge">
+                    In bidding process - not available
+                </div>
             {% else %}
                 <p class="artwork-minimum-bid">Minimum bid: ${{ artwork.starting_bid|intcomma }}</p>
                 <p class="artwork-highest-bid">
@@ -109,33 +113,12 @@
                                     Contingent
                                 </span>
 
-                                {% if not has_accepted_bid %}
-                                    <a href="{% url 'accept_bid' bid.id %}" class="accept-bid-button">
-                                        Accept bid
-                                    </a>
-
-                                    <a href="{% url 'reject_bid' bid.id %}"
-                                       class="reject-bid-button">
-                                        Reject
-                                    </a>
-                                {% endif %}
-
                             {% else %}
 
-                                {% if not has_accepted_bid %}
+                                {% if not has_accepted_bid and forloop.first %}
                                     <a href="{% url 'accept_bid' bid.id %}"
                                        class="accept-bid-button">
                                         Accept bid
-                                    </a>
-
-                                    <a href="{% url 'reject_bid' bid.id %}"
-                                       class="reject-bid-button">
-                                        Reject
-                                    </a>
-
-                                    <a href="{% url 'contingent_bid' bid.id %}"
-                                       class="contingent-bid-button">
-                                        Contingent
                                     </a>
                                 {% endif %}
 
@@ -150,7 +133,7 @@
                 </div>
 	                {% endif %}
 
-                {% if not can_edit_artwork and not is_artwork_sold %}
+                {% if not can_edit_artwork and not is_artwork_sold and not is_bidding_locked %}
                     {% if user.is_authenticated %}
                         <form method="POST" class="bid-form">
                             {% csrf_token %}
@@ -201,7 +184,7 @@
 
                 {% endif %}
 
-            {% if can_edit_artwork and not is_artwork_sold %}
+            {% if can_edit_artwork and not is_artwork_sold and not is_bidding_locked %}
                 <div class="artwork-owner-actions">
                     <a class="artwork-edit-button" href="{% url 'edit_artwork' artwork.pk %}">Edit artwork</a>
 
@@ -352,7 +335,7 @@
 
         <div class="bid-popup-content">
 
-            <button id="close-popup" type="button">
+            <button id="close-popup" type="button" data-close-popup>
                 X
             </button>
 
@@ -374,5 +357,5 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="{% static 'js/artworks/artwork_detail.js' %}?v=5"></script>
+<script src="{% static 'js/artworks/artwork_detail.js' %}?v=6"></script>
 {% endblock %}
