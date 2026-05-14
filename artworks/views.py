@@ -429,7 +429,6 @@ def artwork_list(request):
 
     artworks = annotate_sold_by_bid(Artwork.objects.all())
 
-
     for artwork in artworks:
         highest_bid = Bid.objects.filter(artwork=artwork).order_by("-bid_price").first()
         artwork.highest_bid = highest_bid
