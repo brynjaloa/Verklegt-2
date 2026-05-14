@@ -22,19 +22,11 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        if (
-            control.name === "year_from"
-            && control.min
-            && control.value === control.min
-        ) {
+        if (control.min && control.value === control.min) {
             return;
         }
 
-        if (
-            control.name === "year_to"
-            && control.max
-            && control.value === control.max
-        ) {
+        if (control.max && control.value === control.max) {
             return;
         }
 

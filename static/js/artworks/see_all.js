@@ -1,22 +1,44 @@
-document.addEventListener("DOMContentLoaded", function () {
-    const slider = document.getElementById("year-slider");
-    const fromInput = document.getElementById("year-from-input");
-    const toInput = document.getElementById("year-to-input");
+function toggleFilter(id) {
+    const dropdown = document.getElementById(id);
+
+    if (!dropdown) {
+        return;
+    }
+
+    dropdown.classList.toggle("is-open");
+    const toggle = document.querySelector(`[onclick="toggleFilter('${id}')"]`);
+
+    if (toggle) {
+        toggle.classList.toggle("is-open", dropdown.classList.contains("is-open"));
+    }
+}
+
+function handleSort(select) {
+    const url = new URL(window.location.href);
+    url.searchParams.set("sort", select.value);
+    url.searchParams.delete("page");
+    window.location.href = url.toString();
+}
+
+function createRangeSlider(sliderId, fromInputId, toInputId) {
+    const slider = document.getElementById(sliderId);
+    const fromInput = document.getElementById(fromInputId);
+    const toInput = document.getElementById(toInputId);
 
     if (!slider || !fromInput || !toInput || typeof noUiSlider === "undefined") {
         return;
     }
 
-    const minYear = parseInt(fromInput.min, 10) || 1300;
-    const maxYear = parseInt(toInput.max, 10) || 2026;
+    const minValue = parseInt(fromInput.min, 10) || 0;
+    const maxValue = parseInt(toInput.max, 10) || 100;
 
     noUiSlider.create(slider, {
         start: [
-            parseInt(fromInput.value, 10) || minYear,
-            parseInt(toInput.value, 10) || maxYear,
+            parseInt(fromInput.value, 10) || minValue,
+            parseInt(toInput.value, 10) || maxValue,
         ],
         connect: true,
-        range: { min: minYear, max: maxYear },
+        range: { min: minValue, max: maxValue },
         step: 1,
         tooltips: true,
         format: {
@@ -36,5 +58,34 @@ document.addEventListener("DOMContentLoaded", function () {
 
     toInput.addEventListener("change", () => {
         slider.noUiSlider.set([null, toInput.value]);
+    });
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    createRangeSlider("year-slider", "year-from-input", "year-to-input");
+    createRangeSlider("price-slider", "price-from-input", "price-to-input");
+
+    document.querySelectorAll(".filter-dropdown").forEach(dropdown => {
+        const hasCheckedInput = dropdown.querySelector("input[type='checkbox']:checked");
+        const hasChangedNumberInput = Array.from(dropdown.querySelectorAll("input[type='number']")).some(input => {
+            if (input.min && input.value === input.min) {
+                return false;
+            }
+
+            if (input.max && input.value === input.max) {
+                return false;
+            }
+
+            return Boolean(input.value);
+        });
+
+        if (hasCheckedInput || hasChangedNumberInput) {
+            dropdown.classList.add("is-open");
+            const toggle = document.querySelector(`[onclick="toggleFilter('${dropdown.id}')"]`);
+
+            if (toggle) {
+                toggle.classList.add("is-open");
+            }
+        }
     });
 });

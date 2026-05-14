@@ -17,8 +17,14 @@
     <section class="info-article">
         <p class="info-article-intro">{{ article.intro }}</p>
 
-        {% for paragraph in article.paragraphs %}
-            <p>{{ paragraph }}</p>
+        {% for heading, text in article.formatted_paragraphs %}
+            <p>
+                {% if heading %}
+                    <strong>{{ heading }}:</strong>{{ text }}
+                {% else %}
+                    {{ text }}
+                {% endif %}
+            </p>
         {% endfor %}
     </section>
 </article>

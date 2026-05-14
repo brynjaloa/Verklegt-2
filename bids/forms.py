@@ -1,6 +1,8 @@
+
 from django import forms
 from django.utils import timezone
 from .models import Bid
+
 
 class FormattedDecimalField(forms.DecimalField):
     def to_python(self, value):

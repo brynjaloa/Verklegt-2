@@ -8,7 +8,10 @@
 
 {% block content %}
 <article class="artwork-detail-page">
-    <a class="artwork-detail-back-link" href="{{ back_url }}" aria-label="Back to previous listings">‹</a>
+    <header class="artwork-detail-header">
+        <a class="artwork-detail-back-link" href="{{ back_url }}" aria-label="Back to previous listings">‹</a>
+        <h1 class="artwork-detail-heading">Artwork details</h1>
+    </header>
     <div class="artwork-detail-layout">
         <div class="artwork-detail-media">
             {% if primary_image %}
@@ -71,8 +74,8 @@
                 <p class="artwork-minimum-bid">Minimum bid: ${{ artwork.starting_bid|intcomma }}</p>
                 <p class="artwork-highest-bid">
                     Highest bid:
-                    {% if highest_bids %}
-                        ${{ highest_bids.0.bid_price|intcomma }}
+                    {% if highest_bid %}
+                        ${{ highest_bid.bid_price|intcomma }}
                     {% else %}
                         No bids yet
                     {% endif %}
@@ -344,7 +347,7 @@
             {% elif is_resubmission %}
                 <h2>Thank you for re-submitting a bid.</h2>
                 {% else %}
-                <h2>Thank you for submitting a bid.</h2>
+                 <h2>Thank you for submitting a bid.</h2>
                 {% endif %}
                 <p>
                     You will get a notification if it is accepted.
