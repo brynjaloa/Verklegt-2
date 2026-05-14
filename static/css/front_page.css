@@ -122,6 +122,11 @@ nav {
     text-decoration: none;
 }
 
+.login-btn:hover {
+    background: #84302f;
+    color: white;
+}
+
 /* .nav a {
     color: yellow;
     margin-right: 10px;

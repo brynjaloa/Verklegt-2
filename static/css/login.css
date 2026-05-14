@@ -55,6 +55,11 @@
     cursor: pointer;
 }
 
+.login-container button:hover {
+    background-color: #84302f;
+    color: white;
+}
+
 .login-container .signup-link {
     text-align: center;
     margin-top: 20px;

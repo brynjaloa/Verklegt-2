@@ -22,25 +22,25 @@ from bids.forms import BidForm
 SOLD_BID_STATUSES = (Bid.Status.ACCEPTED, Bid.Status.FINALIZED)
 
 CATEGORY_FILTER_FIELDS = {
-    Artwork.Category.PAINTINGS: {
+    Artwork.Category.PAINTINGS.value: {
         "style": "painting_style",
         "medium": "painting_medium",
         "styles": Artwork.PaintingStyle.choices,
         "mediums": Artwork.PaintingMedium.choices,
     },
-    Artwork.Category.SCULPTURES: {
+    Artwork.Category.SCULPTURES.value: {
         "style": "sculpture_style",
         "medium": "sculpture_material",
         "styles": Artwork.SculptureStyle.choices,
         "mediums": Artwork.SculptureMaterial.choices,
     },
-    Artwork.Category.FURNITURE: {
+    Artwork.Category.FURNITURE.value: {
         "style": "furniture_style",
         "medium": "furniture_material",
         "styles": Artwork.FurnitureStyle.choices,
         "mediums": Artwork.FurnitureMaterial.choices,
     },
-    Artwork.Category.PHOTOS: {
+    Artwork.Category.PHOTOS.value: {
         "style": "photo_style",
         "medium": "photo_technique",
         "styles": Artwork.PhotoStyle.choices,
@@ -49,25 +49,25 @@ CATEGORY_FILTER_FIELDS = {
 }
 
 FEATURED_CATEGORY_STYLES = {
-    Artwork.Category.PAINTINGS: (
+    Artwork.Category.PAINTINGS.value: (
         (Artwork.PaintingStyle.MODERNISM.value, "Modernism"),
         (Artwork.PaintingStyle.SURREALISM.value, "Surrealism"),
         (Artwork.PaintingStyle.REALISM.value, "Realism"),
         (Artwork.PaintingStyle.ABSTRACT_ART.value, "Abstract art"),
     ),
-    Artwork.Category.SCULPTURES: (
+    Artwork.Category.SCULPTURES.value: (
         (Artwork.SculptureStyle.SURREALISM.value, Artwork.SculptureStyle.SURREALISM.label),
         (Artwork.SculptureStyle.CONTEMPORARY.value, "Contemporary"),
         (Artwork.SculptureStyle.MODERN_ART.value, "Modern art"),
         (Artwork.SculptureStyle.KINETIC_ART.value, "Kinetic art"),
     ),
-    Artwork.Category.PHOTOS: (
+    Artwork.Category.PHOTOS.value: (
         (Artwork.PhotoStyle.LANDSCAPE.value, Artwork.PhotoStyle.LANDSCAPE.label),
         (Artwork.PhotoStyle.PORTRAIT.value, Artwork.PhotoStyle.PORTRAIT.label),
         (Artwork.PhotoStyle.ARCHITECTURAL.value, "Architectural"),
         (Artwork.PhotoStyle.ABSTRACT.value, "Abstract"),
     ),
-    Artwork.Category.FURNITURE: (
+    Artwork.Category.FURNITURE.value: (
         (Artwork.FurnitureStyle.MINIMALISM.value, Artwork.FurnitureStyle.MINIMALISM.label),
         (Artwork.FurnitureStyle.ART_DECO.value, Artwork.FurnitureStyle.ART_DECO.label),
         (Artwork.FurnitureStyle.MODERNISM.value, "Modern"),
@@ -309,7 +309,7 @@ def expand_filter_values(field_name, values):
 
     if field_name == "painting_medium":
         for value in values:
-            cleaned_value = Artwork._clean_medium_label(value)
+            cleaned_value = Artwork.clean_medium_label(value)
             expanded_values.add(cleaned_value)
 
             if cleaned_value == value and value not in {"Gouache", "Encaustic", "Tempera", "Fresco", "Ink", "Charcoal", "Chalk", "Graphite", "Other"}:
@@ -584,7 +584,6 @@ def home_view(request):
         .filter(bid_count__gt=0)
         .order_by("-bid_count", "-listing_date", "-id")[:8]
     )
-    recent_artworks = Artwork.objects.all().order_by("-listing_date", "-id")[:8]
 
     return render(request, "home.html", {
         "recent_artworks": recent_artworks,
@@ -841,8 +840,8 @@ def delete_artwork(request, pk):
 
 def category_list(request):
     categories = [
-        (value, label, BUILT_IN_CATEGORY_IMAGES.get(value))
-        for value, label in Artwork.Category.choices
+        (category.value, category.label, BUILT_IN_CATEGORY_IMAGES.get(category.value))
+        for category in Artwork.Category
     ]
     return render(request, 'Category/categories.html', {'categories': categories})
 
@@ -912,7 +911,7 @@ def artwork_see_all(request):
         'page_obj': page_obj,
         'pagination_pages': paginator.get_elided_page_range(page_obj.number),
         'pagination_query': pagination_query.urlencode(),
-        'categories': Artwork.Category.choices,
+        'categories': [(category.value, category.label) for category in Artwork.Category],
         'editions': Artwork.Edition.choices,
         'painting_mediums': Artwork.PaintingMedium.choices,
         'sculpture_materials': Artwork.SculptureMaterial.choices,
@@ -942,26 +941,3 @@ def artwork_see_all(request):
         'price_to': price_to,
         'sort': sort,
     })
-
-@login_required
-def accept_bid(request, bid_id):
-    bid = get_object_or_404(Bid, id=bid_id)
-
-    if bid.artwork.seller != request.user.seller:
-        return HttpResponseForbidden()
-
-    if Bid.objects.filter(
-        artwork=bid.artwork,
-        status__in=SOLD_BID_STATUSES,
-    ).exclude(id=bid.id).exists():
-        return redirect("artwork_detail", pk=bid.artwork.id)
-
-    bid.status = Bid.Status.ACCEPTED
-    bid.save(update_fields=["status"])
-    bid.artwork.is_sold = True
-    bid.artwork.save(update_fields=["is_sold"])
-
-    return redirect(
-        "artwork_detail",
-        pk=bid.artwork.id
-    )

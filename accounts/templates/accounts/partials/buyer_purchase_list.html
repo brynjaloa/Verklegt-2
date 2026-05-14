@@ -1,0 +1,30 @@
+<div class="inner-box">
+    <h1>My buys</h1>
+    <div class="section-line"></div>
+
+    <div class="listing-scroll">
+        {% for purchase in my_purchases %}
+            <div class="profile-bid">
+                <div class="profile-bid-main">
+                    <a href="{% url 'artwork_detail' purchase.artwork.id %}?back={{ request.get_full_path|urlencode }}"
+                       class="bid-artwork-link"
+                    >
+                        {{ purchase.artwork.title }}
+                    </a>
+
+                    <div class="bid-info">
+                        <p>Date of bid: {{ purchase.date_of_bid }}</p>
+                        <p>Seller: {{ purchase.artwork.seller.name }}</p>
+                        <p>Final price: ${{ purchase.bid_price }}</p>
+                    </div>
+                </div>
+
+                <div class="bid-status finalized">
+                    Finalized
+                </div>
+            </div>
+            {% empty %}
+            <p>No purchases yet.</p>
+        {% endfor %}
+    </div>
+</div>

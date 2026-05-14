@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", function () {
         Paintings: ["painting_medium", "painting_style"],
         Sculptures: ["sculpture_material", "sculpture_style"],
         Furniture: ["furniture_material", "furniture_style"],
-        Photos: ["photo_technique", "photo_style"],
+        Photos: ["photo_technique", "photo_style"]
     };
     const allFieldNames = Object.values(categoryFields).flat();
 

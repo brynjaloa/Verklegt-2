@@ -2,37 +2,37 @@
 {% load static %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/info.css' %}">
+    <link rel="stylesheet" href="{% static 'css/info.css' %}">
 {% endblock %}
 
 {% block content %}
-<article class="info-page">
-    <header class="info-header">
-        <a href="{{ previous_page_url }}"
-           class="info-back-link"
-           aria-label="Back to previous page"
-        >‹</a>
+    <article class="info-page">
+        <header class="info-header">
+            <a href="{{ previous_page_url }}"
+               class="info-back-link"
+               aria-label="Back to previous page"
+            >‹</a>
 
-        <h1>{{ article.title }}</h1>
-    </header>
+            <h1>{{ article.title }}</h1>
+        </header>
 
-    <img src="{{ article.image_url }}"
-         alt="{{ article.title }}"
-         class="info-hero-image"
-    >
+        <img src="{{ article.image_url }}"
+             alt="{{ article.title }}"
+             class="info-hero-image"
+        >
 
-    <section class="info-article">
-        <p class="info-article-intro">{{ article.intro }}</p>
+        <section class="info-article">
+            <p class="info-article-intro">{{ article.intro }}</p>
 
-        {% for heading, text in article.formatted_paragraphs %}
-            <p>
-                {% if heading %}
-                    <strong>{{ heading }}:</strong>{{ text }}
-                {% else %}
-                    {{ text }}
-                {% endif %}
-            </p>
-        {% endfor %}
-    </section>
-</article>
+            {% for heading, text in article.formatted_paragraphs %}
+                <p>
+                    {% if heading %}
+                        <strong>{{ heading }}:</strong>{{ text }}
+                    {% else %}
+                        {{ text }}
+                    {% endif %}
+                </p>
+            {% endfor %}
+        </section>
+    </article>
 {% endblock %}

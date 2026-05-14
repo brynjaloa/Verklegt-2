@@ -136,6 +136,11 @@ body {
     white-space: nowrap;
 }
 
+.profile-btn:hover {
+    background: #84302f;
+    color: white;
+}
+
 .logout-btn {
     border: none;
     cursor: pointer;
@@ -217,7 +222,7 @@ body {
 }
 
 .artwork-link {
-    display: block;
+    display: flex;
     align-items: center;
     justify-content: space-between;
     margin-top: 15px;
@@ -226,19 +231,6 @@ body {
     font-size: 24px;
     font-weight: bold;
 }
-
-/*
-.artwork-link {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-top: 18px;
-    color: black;
-    text-decoration: none;
-    font-size: 24px;
-    font-weight: bold;
-    gap: 16px;
-} */
 
 .artwork-link:hover {
     text-decoration: underline;

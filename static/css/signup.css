@@ -194,6 +194,11 @@
     cursor:pointer;
 }
 
+.signup-container button:hover{
+    background:#84302f;
+    color:white;
+}
+
 .seller-signup-container{
     width:min(92%, 620px);
 }

@@ -256,6 +256,11 @@
     cursor: pointer;
 }
 
+.artwork-submit-btn:hover {
+    background: #84302f;
+    color: white;
+}
+
 @media (width <= 700px) {
     .artwork-form-container {
         width: min(94%, 420px);

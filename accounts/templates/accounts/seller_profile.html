@@ -3,85 +3,103 @@
 {% load humanize %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/seller_profile.css' %}?v=3">
+    <link rel="stylesheet" href="{% static 'css/seller_profile.css' %}?v=3">
 {% endblock %}
 
 {% block content %}
-<article class="seller-profile-page">
-    <header class="seller-profile-header">
-        <a class="seller-profile-back-link" href="{{ back_url }}" aria-label="Back to previous page">‹</a>
-        <h1>Seller profile</h1>
-    </header>
+    <article class="seller-profile-page">
+        <header class="seller-profile-header">
+            <a class="seller-profile-back-link"
+               href="{{ back_url }}"
+               aria-label="Back to previous page"
+            >‹</a>
 
-    {% if seller.cover_image %}
-        <img class="seller-cover-image" src="{{ seller.cover_image.url }}" alt="{{ seller.name }} cover photo">
-    {% endif %}
+            <h1>Seller profile</h1>
+        </header>
 
-    <section class="seller-profile-summary">
-        {% if seller.logo %}
-            <img class="seller-profile-logo" src="{{ seller.logo.url }}" alt="{{ seller.name }}">
-        {% else %}
-            <div class="seller-profile-placeholder" aria-hidden="true">
-                <div class="seller-placeholder-head"></div>
-                <div class="seller-placeholder-body"></div>
-            </div>
+        {% if seller.cover_image %}
+            <img class="seller-cover-image"
+                 src="{{ seller.cover_image.url }}"
+                 alt="{{ seller.name }} cover photo"
+            >
         {% endif %}
 
-        <div class="seller-profile-text">
-            <h2>{{ seller.name }}</h2>
-            <p class="seller-profile-type">Seller type: {{ seller.seller_type }}</p>
-            {% if seller.seller_type == "Gallery" and seller.street_name or seller.seller_type == "Gallery" and seller.city or seller.seller_type == "Gallery" and seller.postal_code %}
-                <address class="seller-profile-address">
-                    {% if seller.street_name %}
-                        {{ seller.street_name }}<br>
-                    {% endif %}
-                    {% if seller.city or seller.postal_code %}
-                        {{ seller.city }}{% if seller.city and seller.postal_code %}, {% endif %}{{ seller.postal_code }}
-                    {% endif %}
-                </address>
-            {% endif %}
-            {% if seller.bio %}
-                <p class="seller-profile-bio">{{ seller.bio }}</p>
+        <section class="seller-profile-summary">
+            {% if seller.logo %}
+                <img class="seller-profile-logo"
+                     src="{{ seller.logo.url }}"
+                     alt="{{ seller.name }}"
+                >
             {% else %}
-                <p class="seller-profile-bio">No bio added yet.</p>
+                <div class="seller-profile-placeholder" aria-hidden="true">
+                    <div class="seller-placeholder-head"></div>
+                    <div class="seller-placeholder-body"></div>
+                </div>
             {% endif %}
-        </div>
-    </section>
 
-    <section class="seller-listings-section">
-        <h2>{{ seller.name }} is also selling</h2>
+            <div class="seller-profile-text">
+                <h2>{{ seller.name }}</h2>
+                <p class="seller-profile-type">Seller type: {{ seller.seller_type }}</p>
+                {% if seller.seller_type == "Gallery"
+                    and seller.street_name or seller.seller_type == "Gallery"
+                    and seller.city or seller.seller_type == "Gallery" and seller.postal_code %}
 
-        {% if artworks %}
-            <div class="seller-listings-grid">
-                {% for artwork in artworks %}
-                    <a class="seller-listing-card-link" href="{% url 'artwork_detail' artwork.pk %}?back={{ request.get_full_path|urlencode }}">
-                        <div class="seller-listing-card">
-                        {% if artwork.primary_image %}
-                            <img class="seller-listing-card-image" src="{{ artwork.primary_image.url }}" alt="{{ artwork.title }}">
-                        {% else %}
-                            <div class="seller-listing-card-placeholder"></div>
+                    <address class="seller-profile-address">
+                        {% if seller.street_name %}
+                            {{ seller.street_name }}<br>
                         {% endif %}
-                            <p class="seller-listing-card-title">{{ artwork.title }}</p>
-                            <p class="seller-listing-card-price">Starting bid: ${{ artwork.starting_bid }}</p>
-                            <div class="seller-listing-card-meta">
-                                <p>{{ artwork.category }}</p>
-                                <p>Medium: {{ artwork.display_medium }}</p>
-                                <p>Dimensions: {{ artwork.dimensions_display }}</p>
-                                <p>
-                                    Status:
-                                    <span class="seller-listing-card-status {% if artwork.is_sold or artwork.sold_by_bid %}is-sold{% else %}is-available{% endif %}">
-                                        {% if artwork.is_sold or artwork.sold_by_bid %}Sold{% else %}Available{% endif %}
-                                    </span>
-                                </p>
-                            </div>
-                            <p class="seller-listing-card-date">Listed: {{ artwork.listing_date|date:"M j, Y" }}</p>
-                        </div>
-                    </a>
-                {% endfor %}
+
+                        {% if seller.city or seller.postal_code %}
+                            {{ seller.city }}{% if seller.city and seller.postal_code %}
+                                , {% endif %}{{ seller.postal_code }}
+                        {% endif %}
+                    </address>
+                {% endif %}
+                {% if seller.bio %}
+                    <p class="seller-profile-bio">{{ seller.bio }}</p>
+                {% else %}
+                    <p class="seller-profile-bio">No bio added yet.</p>
+                {% endif %}
             </div>
-        {% else %}
-            <p class="seller-empty-listings">This seller has no listings yet.</p>
-        {% endif %}
-    </section>
-</article>
+        </section>
+
+        <section class="seller-listings-section">
+            <h2>{{ seller.name }} is also selling</h2>
+
+            {% if artworks %}
+                <div class="seller-listings-grid">
+                    {% for artwork in artworks %}
+                        <a class="seller-listing-card-link"
+                           href="{% url 'artwork_detail' artwork.pk %}?back={{ request.get_full_path|urlencode }}">
+                            <div class="seller-listing-card">
+                                {% if artwork.primary_image %}
+                                    <img class="seller-listing-card-image" src="{{ artwork.primary_image.url }}"
+                                         alt="{{ artwork.title }}">
+                                {% else %}
+                                    <div class="seller-listing-card-placeholder"></div>
+                                {% endif %}
+                                <p class="seller-listing-card-title">{{ artwork.title }}</p>
+                                <p class="seller-listing-card-price">Starting bid: ${{ artwork.starting_bid }}</p>
+                                <div class="seller-listing-card-meta">
+                                    <p>{{ artwork.category }}</p>
+                                    <p>Medium: {{ artwork.display_medium }}</p>
+                                    <p>Dimensions: {{ artwork.dimensions_display }}</p>
+                                    <p>
+                                        Status:
+                                        <span class="seller-listing-card-status {% if artwork.is_sold or artwork.sold_by_bid %}is-sold{% else %}is-available{% endif %}">
+                                        {% if artwork.is_sold or artwork.sold_by_bid %}Sold{% else %}
+                                                                                       Available{% endif %}
+                                    </span>
+                                    </p>
+                                </div>
+                                <p class="seller-listing-card-date">Listed: {{ artwork.listing_date|date:"M j, Y" }}</p>
+                            </div>
+                        </a>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="seller-empty-listings">This seller has no listings yet.</p>
+            {% endif %}
+        </section>
+    </article>
 {% endblock %}

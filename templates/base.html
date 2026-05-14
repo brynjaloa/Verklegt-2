@@ -12,17 +12,17 @@
 </head>
 <body>
 
-    {% include "partials/navbar.html" %}
+{% include "partials/navbar.html" %}
 
-    <main class="site-main">
-        {% block content %}
-        {% endblock %}
-    </main>
-
-    {% include "partials/footer.html" %}
-
-    <script src="{% static 'js/main.js' %}?v=6"></script>
-    {% block extra_js %}
+<main class="site-main">
+    {% block content %}
     {% endblock %}
+</main>
+
+{% include "partials/footer.html" %}
+
+<script src="{% static 'js/main.js' %}?v=6"></script>
+{% block extra_js %}
+{% endblock %}
 </body>
 </html>

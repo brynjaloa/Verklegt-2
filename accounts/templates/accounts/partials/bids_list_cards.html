@@ -1,0 +1,22 @@
+<div class="inner-box">
+    <h1>My bids</h1>
+
+    <div class="bids-scroll">
+        {% for bid in my_bids %}
+            <div class="bid-card">
+                <div class="bid-top">
+                    <a href="{% url 'artwork_detail' bid.artwork.id %}?back={{ request.get_full_path|urlencode }}"
+                       class="bid-artwork-title">
+                        {{ bid.artwork.title }}
+                    </a>
+
+                    {% include "accounts/partials/bid_status.html" %}
+                </div>
+
+                {% include "accounts/partials/bid_info.html" %}
+            </div>
+        {% empty %}
+            <p>No bids yet.</p>
+        {% endfor %}
+    </div>
+</div>

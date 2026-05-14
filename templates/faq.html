@@ -2,103 +2,103 @@
 {% load static %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/faq.css' %}">
+    <link rel="stylesheet" href="{% static 'css/faq.css' %}">
 {% endblock %}
 
 {% block content %}
-<div class="faq-page">
-    <div class="faq-header">
-        <a href="{{ previous_page_url }}" class="faq-back-link">‹</a>
-        <h1 class="faq-title">Frequently asked</h1>
-    </div>
-
-    <div class="faq-layout">
-        <div class="faq-list">
-
-            <div class="faq-item">
-                <button class="faq-question" type="button" data-video-id="video-sell">
-                    <span class="faq-dot">●</span>
-                    <strong>How to sell?</strong>
-                    <span class="faq-icon">+</span>
-                </button>
-
-                <div class="faq-answer" hidden>
-                    <p>Register as a seller on ArtVault.</p>
-                    <p>Upload your artwork with images and details.</p>
-                    <p>Set your starting bid price.</p>
-                    <p>Wait for buyers to place bids.</p>
-                </div>
-
-                <hr>
-            </div>
-
-            <div class="faq-item">
-                <button class="faq-question" type="button" data-video-id="video-buy">
-                    <span class="faq-dot">●</span>
-                    <strong>How to buy?</strong>
-                    <span class="faq-icon">+</span>
-                </button>
-
-                <div class="faq-answer" hidden>
-                    <p>Browse artworks in the catalogue.</p>
-                    <p>Click on an artwork to see details.</p>
-                    <p>Submit a bid with your price and expiration date.</p>
-                    <p>If accepted, finalize the purchase.</p>
-                </div>
-
-                <hr>
-            </div>
-
-            <div class="faq-item">
-                <button class="faq-question" type="button" data-video-id="video-signup">
-                    <span class="faq-dot">●</span>
-                    <strong>How to sign up?</strong>
-                    <span class="faq-icon">+</span>
-                </button>
-
-                <div class="faq-answer" hidden>
-                    <p>Click the Login button in the top right.</p>
-                    <p>Select Sign up and fill in your details.</p>
-                    <p>You're ready to start browsing!</p>
-                </div>
-
-                <hr>
-            </div>
-
+    <div class="faq-page">
+        <div class="faq-header">
+            <a href="{{ previous_page_url }}" class="faq-back-link">‹</a>
+            <h1 class="faq-title">Frequently asked</h1>
         </div>
 
-        <div class="faq-video-area">
+        <div class="faq-layout">
+            <div class="faq-list">
 
-            <div id="video-sell" class="video-panel" hidden>
-                <video controls>
-                    <source src="{% static 'videos/how_to_sell.mp4' %}" type="video/mp4">
-                </video>
-                <p>How to sell</p>
+                <div class="faq-item">
+                    <button class="faq-question" type="button" data-video-id="video-sell">
+                        <span class="faq-dot">●</span>
+                        <strong>How to sell?</strong>
+                        <span class="faq-icon">+</span>
+                    </button>
+
+                    <div class="faq-answer" hidden>
+                        <p>Register as a seller on ArtVault.</p>
+                        <p>Upload your artwork with images and details.</p>
+                        <p>Set your starting bid price.</p>
+                        <p>Wait for buyers to place bids.</p>
+                    </div>
+
+                    <hr>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" type="button" data-video-id="video-buy">
+                        <span class="faq-dot">●</span>
+                        <strong>How to buy?</strong>
+                        <span class="faq-icon">+</span>
+                    </button>
+
+                    <div class="faq-answer" hidden>
+                        <p>Browse artworks in the catalogue.</p>
+                        <p>Click on an artwork to see details.</p>
+                        <p>Submit a bid with your price and expiration date.</p>
+                        <p>If accepted, finalize the purchase.</p>
+                    </div>
+
+                    <hr>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" type="button" data-video-id="video-signup">
+                        <span class="faq-dot">●</span>
+                        <strong>How to sign up?</strong>
+                        <span class="faq-icon">+</span>
+                    </button>
+
+                    <div class="faq-answer" hidden>
+                        <p>Click the Login button in the top right.</p>
+                        <p>Select Sign up and fill in your details.</p>
+                        <p>You're ready to start browsing!</p>
+                    </div>
+
+                    <hr>
+                </div>
+
             </div>
 
-            <div id="video-buy" class="video-panel" hidden>
+            <div class="faq-video-area">
 
-                <video controls>
-                    <source src="{% static 'videos/how_to_buy.mp4' %}" type="video/mp4">
-                </video>
-                <p>How to buy</p>
+                <div id="video-sell" class="video-panel" hidden>
+                    <video controls>
+                        <source src="{% static 'videos/how_to_sell.mp4' %}" type="video/mp4">
+                    </video>
+                    <p>How to sell</p>
+                </div>
+
+                <div id="video-buy" class="video-panel" hidden>
+
+                    <video controls>
+                        <source src="{% static 'videos/how_to_buy.mp4' %}" type="video/mp4">
+                    </video>
+                    <p>How to buy</p>
+                </div>
+
+                <div id="video-signup" class="video-panel" hidden>
+
+                    <video controls>
+                        <source src="{% static 'videos/how_to_signup.mp4' %}" type="video/mp4">
+                    </video>
+                    <p>How to sign up</p>
+
+                </div>
+
             </div>
-
-            <div id="video-signup" class="video-panel" hidden>
-
-                <video controls>
-                    <source src="{% static 'videos/how_to_signup.mp4' %}" type="video/mp4">
-                </video>
-                <p>How to sign up</p>
-
-            </div>
-
         </div>
     </div>
-</div>
 
 {% endblock %}
 
 {% block extra_js %}
-<script src="{% static 'js/faq.js' %}"></script>
+    <script src="{% static 'js/faq.js' %}"></script>
 {% endblock %}

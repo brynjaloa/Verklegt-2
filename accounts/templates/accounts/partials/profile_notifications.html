@@ -1,0 +1,19 @@
+{% if accepted_bid_notifications or rejected_bid_notifications or canceled_bid_notifications %}
+    <div id="profile-notification-popup" class="profile-notification-popup">
+        <div class="profile-notification-content">
+            <button id="close-profile-notification" type="button">X</button>
+
+            {% for bid in accepted_bid_notifications %}
+                <p>Your bid on "{{ bid.artwork.title }}" has been accepted!</p>
+            {% endfor %}
+
+            {% for bid in rejected_bid_notifications %}
+                <p>Your bid on "{{ bid.artwork.title }}" has been rejected.</p>
+            {% endfor %}
+
+            {% for bid in canceled_bid_notifications %}
+                <p>The bid you accepted for "{{ bid.artwork.title }}" has been canceled.</p>
+            {% endfor %}
+        </div>
+    </div>
+{% endif %}

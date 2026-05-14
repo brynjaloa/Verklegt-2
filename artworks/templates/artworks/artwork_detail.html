@@ -3,140 +3,144 @@
 {% load humanize %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/artwork_detail.css' %}?v=6">
+    <link rel="stylesheet" href="{% static 'css/artwork_detail.css' %}?v=6">
 {% endblock %}
 
 {% block content %}
-<article class="artwork-detail-page">
+    <article class="artwork-detail-page">
 
-    <header class="artwork-detail-header">
-        <a class="artwork-detail-back-link" href="{{ back_url }}" aria-label="Back to previous listings">‹</a>
-        <h1 class="artwork-detail-heading">Artwork details</h1>
-    </header>
+        <header class="artwork-detail-header">
+            <a class="artwork-detail-back-link" href="{{ back_url }}" aria-label="Back to previous listings">‹</a>
+            <h1 class="artwork-detail-heading">Artwork details</h1>
+        </header>
 
-    <div class="artwork-detail-layout">
-        <div class="artwork-detail-media">
-            {% if primary_image %}
-                <img id="artwork-main-image" class="artwork-detail-main-image" src="{{ primary_image.url }}" alt="{{ artwork.title }}">
-            {% else %}
-                <div class="artwork-detail-placeholder"></div>
-            {% endif %}
-
-            {% if primary_image or extra_images %}
-                <div class="artwork-extra-images">
-                    {% if primary_image %}
-                        <button class="artwork-thumbnail is-active" type="button" data-image-url="{{ primary_image.url }}" data-image-alt="{{ artwork.title }}">
-                            <img src="{{ primary_image.url }}" alt="{{ artwork.title }}">
-                        </button>
-                    {% endif %}
-
-                    {% for image in extra_images %}
-                        <button class="artwork-thumbnail" type="button" data-image-url="{{ image.image.url }}" data-image-alt="{{ artwork.title }} picture {{ forloop.counter }}">
-                            <img src="{{ image.image.url }}" alt="{{ artwork.title }} picture {{ forloop.counter }}">
-                        </button>
-                    {% endfor %}
-
-                </div>
-            {% endif %}
-        </div>
-
-        <div class="artwork-detail-info">
-            <h1>{{ artwork.title }}</h1>
-            <p class="artwork-listing-date">Listed: {{ listing_date_display }}</p>
-            <p class="artwork-detail-seller">
-                Seller:
-                <a href="{% url 'seller_profile' artwork.seller.id %}?back={{ request.get_full_path|urlencode }}">
-                    {{ artwork.seller.name }}
-                </a>
-            </p>
-
-            <p class="artwork-short-description">
-                {% if artwork.description %}
-                    <span class="description-short">{{ short_description }}</span>
-                    <span class="description-full" hidden>{{ artwork.description }}</span>
-
-                    {% if show_description_toggle %}
-                        <button class="description-toggle" type="button" data-expanded="false">See more</button>
-                    {% endif %}
-
+        <div class="artwork-detail-layout">
+            <div class="artwork-detail-media">
+                {% if primary_image %}
+                    <img id="artwork-main-image" class="artwork-detail-main-image" src="{{ primary_image.url }}"
+                         alt="{{ artwork.title }}">
                 {% else %}
-                    No short description available.
+                    <div class="artwork-detail-placeholder"></div>
                 {% endif %}
-            </p>
 
-            {% if is_artwork_sold %}
-                <div class="artwork-sold-badge">
-                    Sold
-                </div>
+                {% if primary_image or extra_images %}
+                    <div class="artwork-extra-images">
+                        {% if primary_image %}
+                            <button class="artwork-thumbnail is-active" type="button"
+                                    data-image-url="{{ primary_image.url }}" data-image-alt="{{ artwork.title }}">
+                                <img src="{{ primary_image.url }}" alt="{{ artwork.title }}">
+                            </button>
+                        {% endif %}
 
-            {% elif is_bidding_locked and not can_edit_artwork %}
-                <div class="artwork-bidding-locked-badge">
-                    In bidding process - not available
-                </div>
+                        {% for image in extra_images %}
+                            <button class="artwork-thumbnail" type="button" data-image-url="{{ image.image.url }}"
+                                    data-image-alt="{{ artwork.title }} picture {{ forloop.counter }}">
+                                <img src="{{ image.image.url }}"
+                                     alt="{{ artwork.title }} picture {{ forloop.counter }}">
+                            </button>
+                        {% endfor %}
 
-            {% else %}
-                <p class="artwork-minimum-bid">Minimum bid: ${{ artwork.starting_bid|intcomma }}</p>
-                <p class="artwork-highest-bid">
-                    Highest bid:
-                    {% if highest_bid %}
-                        ${{ highest_bid.bid_price|intcomma }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="artwork-detail-info">
+                <h1>{{ artwork.title }}</h1>
+                <p class="artwork-listing-date">Listed: {{ listing_date_display }}</p>
+                <p class="artwork-detail-seller">
+                    Seller:
+                    <a href="{% url 'seller_profile' artwork.seller.id %}?back={{ request.get_full_path|urlencode }}">
+                        {{ artwork.seller.name }}
+                    </a>
+                </p>
+
+                <p class="artwork-short-description">
+                    {% if artwork.description %}
+                        <span class="description-short">{{ short_description }}</span>
+                        <span class="description-full" hidden>{{ artwork.description }}</span>
+
+                        {% if show_description_toggle %}
+                            <button class="description-toggle" type="button" data-expanded="false">See more</button>
+                        {% endif %}
+
                     {% else %}
-                        No bids yet
+                        No short description available.
                     {% endif %}
                 </p>
-            {% endif %}
 
-            {% if can_edit_artwork %}
-            <div class="highest-bids-box">
-                <h2>Highest bids:</h2>
+                {% if is_artwork_sold %}
+                    <div class="artwork-sold-badge">
+                        Sold
+                    </div>
 
-                {% for bid in highest_bids %}
-                    <div class="highest-bid-row">
-                        <div class="highest-bid-left">
-                            <div class="mini-profile"></div>
+                {% elif is_bidding_locked and not can_edit_artwork %}
+                    <div class="artwork-bidding-locked-badge">
+                        In bidding process - not available
+                    </div>
 
-                            <span>
+                {% else %}
+                    <p class="artwork-minimum-bid">Minimum bid: ${{ artwork.starting_bid|intcomma }}</p>
+                    <p class="artwork-highest-bid">
+                        Highest bid:
+                        {% if highest_bid %}
+                        ${{ highest_bid.bid_price|intcomma }}
+                        {% else %}
+                        No bids yet
+                        {% endif %}
+                    </p>
+                {% endif %}
+
+                {% if can_edit_artwork %}
+                    <div class="highest-bids-box">
+                        <h2>Highest bids:</h2>
+
+                        {% for bid in highest_bids %}
+                            <div class="highest-bid-row">
+                                <div class="highest-bid-left">
+                                    <div class="mini-profile"></div>
+
+                                    <span>
                                 {{ bid.user.username }}
                                 :
                                 ${{ bid.bid_price }}
                             </span>
 
-                        </div>
+                                </div>
 
-                        <div class="bid-actions">
-                            {% if bid.status == "Accepted" %}
-                                <span class="accepted-text">
+                                <div class="bid-actions">
+                                    {% if bid.status == "Accepted" %}
+                                        <span class="accepted-text">
                                     Accepted
                                 </span>
 
-                            {% elif bid.status == "Rejected" %}
-                                <span class="rejected-text">
+                                    {% elif bid.status == "Rejected" %}
+                                        <span class="rejected-text">
                                     Rejected
                                 </span>
 
-                            {% elif bid.status == "Contingent" %}
-                                <span class="contingent-text">
+                                    {% elif bid.status == "Contingent" %}
+                                        <span class="contingent-text">
                                     Contingent / Next in line
                                 </span>
 
-                            {% else %}
-                                {% if not has_accepted_bid and forloop.first %}
-                                    <a href="{% url 'accept_bid' bid.id %}"
-                                       class="accept-bid-button">
-                                        Accept bid
-                                    </a>
-                                {% endif %}
+                                    {% else %}
+                                        {% if not has_accepted_bid and forloop.first %}
+                                            <a href="{% url 'accept_bid' bid.id %}"
+                                               class="accept-bid-button">
+                                                Accept bid
+                                            </a>
+                                        {% endif %}
 
-                            {% endif %}
+                                    {% endif %}
 
-                        </div>
+                                </div>
+                            </div>
+                            {% empty %}
+                            <p>No bids yet.</p>
+
+                        {% endfor %}
                     </div>
-                    {% empty %}
-                        <p>No bids yet.</p>
-
-                {% endfor %}
-            </div>
-            {% endif %}
+                {% endif %}
 
                 {% if not can_edit_artwork and not is_artwork_sold and not is_bidding_locked %}
                     {% if user.is_authenticated %}
@@ -177,25 +181,26 @@
                             {% endif %}
                         </form>
                     {% else %}
-                        <a class="bid-now-button login-to-bid-button" href="{% url 'login' %}?next={{ request.get_full_path|urlencode }}">
+                        <a class="bid-now-button login-to-bid-button"
+                           href="{% url 'login' %}?next={{ request.get_full_path|urlencode }}">
                             Login to submit a bid
                         </a>
                     {% endif %}
 
                 {% endif %}
 
-            {% if can_edit_artwork and not is_artwork_sold and not is_bidding_locked %}
-                <div class="artwork-owner-actions">
-                    <a class="artwork-edit-button" href="{% url 'edit_artwork' artwork.pk %}">Edit artwork</a>
+                {% if can_edit_artwork and not is_artwork_sold and not is_bidding_locked %}
+                    <div class="artwork-owner-actions">
+                        <a class="artwork-edit-button" href="{% url 'edit_artwork' artwork.pk %}">Edit artwork</a>
 
-                    <form method="POST" action="{% url 'delete_artwork' artwork.pk %}">
-                        {% csrf_token %}
-                        <button class="artwork-delete-button" type="submit">
-                            Remove listing
-                        </button>
-                    </form>
-                </div>
-            {% endif %}
+                        <form method="POST" action="{% url 'delete_artwork' artwork.pk %}">
+                            {% csrf_token %}
+                            <button class="artwork-delete-button" type="submit">
+                                Remove listing
+                            </button>
+                        </form>
+                    </div>
+                {% endif %}
 
                 <details class="artwork-detail-panel">
                     <summary>Information</summary>
@@ -208,67 +213,76 @@
                             </div>
 
                             {% if artwork.category == "Paintings" %}
-                            <div>
-                                <dt>Painting Style</dt>
-                                <dd>{% if artwork.painting_style %}{{ artwork.painting_style }}{% else %}None{% endif %}</dd>
-                            </div>
+                                <div>
+                                    <dt>Painting Style</dt>
+                                    <dd>{% if artwork.painting_style %}{{ artwork.painting_style }}{% else %}
+                                        None{% endif %}</dd>
+                                </div>
 
-                            <div>
-                                <dt>Painting Medium</dt>
-                                <dd>{% if artwork.painting_medium %}{{ artwork.painting_medium }}{% else %}None{% endif %}</dd>
-                            </div>
+                                <div>
+                                    <dt>Painting Medium</dt>
+                                    <dd>{% if artwork.painting_medium %}{{ artwork.painting_medium }}{% else %}
+                                        None{% endif %}</dd>
+                                </div>
                             {% elif artwork.category == "Sculptures" %}
-                            <div>
-                                <dt>Sculpture Style</dt>
-                                <dd>{% if artwork.sculpture_style %}{{ artwork.sculpture_style }}{% else %}None{% endif %}</dd>
-                            </div>
+                                <div>
+                                    <dt>Sculpture Style</dt>
+                                    <dd>{% if artwork.sculpture_style %}{{ artwork.sculpture_style }}{% else %}
+                                        None{% endif %}</dd>
+                                </div>
 
-                            <div>
-                                <dt>Sculpture Material</dt>
-                                <dd>{% if artwork.sculpture_material %}{{ artwork.sculpture_material }}{% else %}None{% endif %}</dd>
-                            </div>
+                                <div>
+                                    <dt>Sculpture Material</dt>
+                                    <dd>{% if artwork.sculpture_material %}{{ artwork.sculpture_material }}{% else %}
+                                        None{% endif %}</dd>
+                                </div>
                             {% elif artwork.category == "Furniture" %}
-                            <div>
-                                <dt>Furniture Style</dt>
-                                <dd>{% if artwork.furniture_style %}{{ artwork.furniture_style }}{% else %}None{% endif %}</dd>
-                            </div>
+                                <div>
+                                    <dt>Furniture Style</dt>
+                                    <dd>{% if artwork.furniture_style %}{{ artwork.furniture_style }}{% else %}
+                                        None{% endif %}</dd>
+                                </div>
 
-                            <div>
-                                <dt>Furniture Material</dt>
-                                <dd>{% if artwork.furniture_material %}{{ artwork.furniture_material }}{% else %}None{% endif %}</dd>
-                            </div>
+                                <div>
+                                    <dt>Furniture Material</dt>
+                                    <dd>{% if artwork.furniture_material %}{{ artwork.furniture_material }}{% else %}
+                                        None{% endif %}</dd>
+                                </div>
                             {% elif artwork.category == "Photos" %}
-                            <div>
-                                <dt>Photo Style</dt>
-                                <dd>{% if artwork.photo_style %}{{ artwork.photo_style }}{% else %}None{% endif %}</dd>
-                            </div>
+                                <div>
+                                    <dt>Photo Style</dt>
+                                    <dd>{% if artwork.photo_style %}{{ artwork.photo_style }}{% else %}
+                                        None{% endif %}</dd>
+                                </div>
 
-                            <div>
-                                <dt>Photo Technique</dt>
-                                <dd>{% if artwork.photo_technique %}{{ artwork.photo_technique }}{% else %}None{% endif %}</dd>
-                            </div>
+                                <div>
+                                    <dt>Photo Technique</dt>
+                                    <dd>{% if artwork.photo_technique %}{{ artwork.photo_technique }}{% else %}
+                                        None{% endif %}</dd>
+                                </div>
                             {% endif %}
 
-                        {% if artwork.width or artwork.height or artwork.depth %}
-                            <div>
-                                <dt>Size</dt>
-                                {% if artwork.category == "Furniture" %}
-                                    <dd>
-                                        {% if artwork.width %}{{ artwork.width }}cm width{% endif %}
-                                        {% if artwork.width and artwork.depth %} x {% endif %}
-                                        {% if artwork.depth %}{{ artwork.depth }}cm depth{% endif %}
-                                        {% if artwork.height and artwork.width or artwork.height and artwork.depth %} x {% endif %}
-                                        {% if artwork.height %}{{ artwork.height }}cm height{% endif %}
-                                    </dd>
-                                {% else %}
-                                    <dd>
-                                        {% if artwork.width %}{{ artwork.width }}cm width{% endif %}
-                                        {% if artwork.width and artwork.height %} x {% endif %}
-                                        {% if artwork.height %}{{ artwork.height }}cm height{% endif %}
-                                    </dd>
-                                {% endif %}
-                            </div>
-                        {% endif %}
+                            {% if artwork.width or artwork.height or artwork.depth %}
+                                <div>
+                                    <dt>Size</dt>
+                                    {% if artwork.category == "Furniture" %}
+                                        <dd>
+                                            {% if artwork.width %}{{ artwork.width }}cm width{% endif %}
+                                            {% if artwork.width and artwork.depth %} x {% endif %}
+                                            {% if artwork.depth %}{{ artwork.depth }}cm depth{% endif %}
+                                            {% if artwork.height and artwork.width or artwork.height and artwork.depth %}
+                                                                                     x {% endif %}
+                                            {% if artwork.height %}{{ artwork.height }}cm height{% endif %}
+                                        </dd>
+                                    {% else %}
+                                        <dd>
+                                            {% if artwork.width %}{{ artwork.width }}cm width{% endif %}
+                                            {% if artwork.width and artwork.height %} x {% endif %}
+                                            {% if artwork.height %}{{ artwork.height }}cm height{% endif %}
+                                        </dd>
+                                    {% endif %}
+                                </div>
+                            {% endif %}
 
                             <div>
                                 <dt>Year created</dt>
@@ -281,37 +295,40 @@
                             </div>
 
                             {% if artwork.provenance %}
-                            <div>
-                                <dt>Provenance</dt>
-                                <dd>{{ artwork.provenance }}</dd>
-                            </div>
+                                <div>
+                                    <dt>Provenance</dt>
+                                    <dd>{{ artwork.provenance }}</dd>
+                                </div>
                             {% endif %}
 
                         </dl>
                     </div>
                 </details>
 
-            <details class="artwork-detail-panel">
-                <summary>Seller information</summary>
-                <div class="artwork-panel-content seller-panel">
-                    <a class="seller-logo-link" href="{% url 'seller_profile' artwork.seller.id %}?back={{ request.get_full_path|urlencode }}">
-                        {% if artwork.seller.logo %}
-                            <img class="seller-logo" src="{{ artwork.seller.logo.url }}" alt="{{ artwork.seller.name }}">
-                        {% else %}
-                            <span class="seller-logo-placeholder" aria-hidden="true"></span>
-                        {% endif %}
-                    </a>
+                <details class="artwork-detail-panel">
+                    <summary>Seller information</summary>
+                    <div class="artwork-panel-content seller-panel">
+                        <a class="seller-logo-link"
+                           href="{% url 'seller_profile' artwork.seller.id %}?back={{ request.get_full_path|urlencode }}">
+                            {% if artwork.seller.logo %}
+                                <img class="seller-logo" src="{{ artwork.seller.logo.url }}"
+                                     alt="{{ artwork.seller.name }}">
+                            {% else %}
+                                <span class="seller-logo-placeholder" aria-hidden="true"></span>
+                            {% endif %}
+                        </a>
 
-                    <div>
-                        <h2>
-                            <a class="seller-name-link" href="{% url 'seller_profile' artwork.seller.id %}?back={{ request.get_full_path|urlencode }}">
-                                {{ artwork.seller.name }}
-                            </a>
-                        </h2>
-                        <p>{{ artwork.seller.seller_type }}</p>
-                        {% if artwork.seller.bio %}
-                            <p>{{ artwork.seller.bio }}</p>
-                        {% endif %}
+                        <div>
+                            <h2>
+                                <a class="seller-name-link"
+                                   href="{% url 'seller_profile' artwork.seller.id %}?back={{ request.get_full_path|urlencode }}">
+                                    {{ artwork.seller.name }}
+                                </a>
+                            </h2>
+                            <p>{{ artwork.seller.seller_type }}</p>
+                            {% if artwork.seller.bio %}
+                                <p>{{ artwork.seller.bio }}</p>
+                            {% endif %}
 
                             {% if artwork.seller.seller_type == "Gallery" %}
                                 {% if artwork.seller.street_name or artwork.seller.city or artwork.seller.postal_code %}
@@ -319,7 +336,9 @@
                                         {% if artwork.seller.street_name %}
                                             {{ artwork.seller.street_name }}<br>
                                         {% endif %}
-                                        {{ artwork.seller.city }}{% if artwork.seller.city and artwork.seller.postal_code %}, {% endif %}{{ artwork.seller.postal_code }}
+                                        {{ artwork.seller.city }}
+                                                {% if artwork.seller.city and artwork.seller.postal_code %}
+                                                    , {% endif %}{{ artwork.seller.postal_code }}
                                     </p>
                                 {% endif %}
                             {% endif %}
@@ -357,5 +376,5 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="{% static 'js/artworks/artwork_detail.js' %}?v=6"></script>
+    <script src="{% static 'js/artworks/artwork_detail.js' %}?v=6"></script>
 {% endblock %}

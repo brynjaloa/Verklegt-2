@@ -3,269 +3,271 @@
 
 {% block content %}
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.css">
-<link rel="stylesheet" href="{% static 'css/shared_filters.css' %}?v=1">
-<link rel="stylesheet" href="{% static 'css/artwork_marketplace.css' %}?v=5">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.css">
+    <link rel="stylesheet" href="{% static 'css/shared_filters.css' %}?v=1">
+    <link rel="stylesheet" href="{% static 'css/artwork_marketplace.css' %}?v=5">
 
-<div class="marketplace-page">
+    <div class="marketplace-page">
 
 
-    <div class="marketplace-header">
-        <a class="marketplace-back-link" href="{{ marketplace_back_url }}">‹</a>
-        <h1 class="marketplace-heading">{{ heading }}</h1>
-    </div>
+        <div class="marketplace-header">
+            <a class="marketplace-back-link" href="{{ marketplace_back_url }}">‹</a>
+            <h1 class="marketplace-heading">{{ heading }}</h1>
+        </div>
 
-    {% if show_style_shortcuts and styles %}
-    <div class="style-list">
-        {% for value, label, image_path in styles %}
-        <a class="style-link" href="?category={{ category }}&style={{ value }}">
+        {% if show_style_shortcuts and styles %}
+            <div class="style-list">
+                {% for value, label, image_path in styles %}
+                    <a class="style-link" href="?category={{ category }}&style={{ value }}">
 
-            <div class="style-tile">
-                {% if image_path %}
-                    <img class="style-tile-image"
-                         src="{% get_media_prefix %}{{ image_path }}"
-                         alt="{{ label }}"
-                    >
-                {% endif %}
-
-                <span class="style-label">{{ label }}</span>
-            </div>
-
-            <div class="style-underline"></div>
-        </a>
-        {% endfor %}
-    </div>
-    {% endif %}
-
-    <div class="marketplace-layout">
-
-        <div class="filter-sidebar">
-            <h2>Filters</h2>
-            <form method="GET">
-                {% if query %}
-                    <input type="hidden" name="q" value="{{ query }}">
-                {% endif %}
-
-                {% if category %}
-                    <input type="hidden" name="category" value="{{ category }}">
-                {% endif %}
-
-                {% if sort %}
-                    <input type="hidden" name="sort" value="{{ sort }}">
-                {% endif %}
-
-                <div class="filter-group">
-                    <p class="filter-static-heading">Availability</p>
-                    {% for value, label, is_selected in status_choices %}
-                        <label>
-                            {% if is_selected %}
-                                <input type="checkbox" name="status" value="{{ value }}" checked>
-                            {% else %}
-                                <input type="checkbox" name="status" value="{{ value }}">
+                        <div class="style-tile">
+                            {% if image_path %}
+                                <img class="style-tile-image"
+                                     src="{% get_media_prefix %}{{ image_path }}"
+                                     alt="{{ label }}"
+                                >
                             {% endif %}
 
-                            {{ label }}
-                        </label>
-                    {% endfor %}
-                </div>
+                            <span class="style-label">{{ label }}</span>
+                        </div>
 
-                {% if mediums %}
-                    <button class="filter-toggle" type="button" onclick="toggleFilter('market-filter-medium')">
-                        <span>Medium</span>
-                        <span class="filter-toggle-icon">▾</span>
-                    </button>
+                        <div class="style-underline"></div>
+                    </a>
+                {% endfor %}
+            </div>
+        {% endif %}
 
-                    <div id="market-filter-medium" class="filter-dropdown">
-                        {% for value, label, is_selected in mediums %}
+        <div class="marketplace-layout">
+
+            <div class="filter-sidebar">
+                <h2>Filters</h2>
+                <form method="GET">
+                    {% if query %}
+                        <input type="hidden" name="q" value="{{ query }}">
+                    {% endif %}
+
+                    {% if category %}
+                        <input type="hidden" name="category" value="{{ category }}">
+                    {% endif %}
+
+                    {% if sort %}
+                        <input type="hidden" name="sort" value="{{ sort }}">
+                    {% endif %}
+
+                    <div class="filter-group">
+                        <p class="filter-static-heading">Availability</p>
+                        {% for value, label, is_selected in status_choices %}
                             <label>
                                 {% if is_selected %}
-                                    <input type="checkbox" name="medium" value="{{ value }}" checked>
+                                    <input type="checkbox" name="status" value="{{ value }}" checked>
                                 {% else %}
-                                    <input type="checkbox" name="medium" value="{{ value }}">
+                                    <input type="checkbox" name="status" value="{{ value }}">
                                 {% endif %}
+
                                 {{ label }}
                             </label>
                         {% endfor %}
                     </div>
-                {% endif %}
 
-                {% if filter_styles %}
-                    <div class="filter-group">
-
-                        <button class="filter-toggle" type="button" onclick="toggleFilter('market-filter-style')">
-                            <span>Style</span>
+                    {% if mediums %}
+                        <button class="filter-toggle" type="button" onclick="toggleFilter('market-filter-medium')">
+                            <span>Medium</span>
                             <span class="filter-toggle-icon">▾</span>
                         </button>
 
-                        <div id="market-filter-style" class="filter-dropdown">
-                            {% for value, label, is_selected in filter_styles %}
+                        <div id="market-filter-medium" class="filter-dropdown">
+                            {% for value, label, is_selected in mediums %}
                                 <label>
                                     {% if is_selected %}
-                                        <input type="checkbox" name="style" value="{{ value }}" checked>
+                                        <input type="checkbox" name="medium" value="{{ value }}" checked>
                                     {% else %}
-                                        <input type="checkbox" name="style" value="{{ value }}">
+                                        <input type="checkbox" name="medium" value="{{ value }}">
                                     {% endif %}
-
                                     {{ label }}
                                 </label>
                             {% endfor %}
                         </div>
-                    </div>
-                {% endif %}
-                <div class="filter-group">
-                    <button class="filter-toggle" type="button" onclick="toggleFilter('market-filter-year')">
-                        <span>Year</span>
-                        <span class="filter-toggle-icon">▾</span>
-                    </button>
+                    {% endif %}
 
-                    <div id="market-filter-year" class="filter-dropdown">
-                        <div class="year-filter">
-                            <div id="year-slider" class="year-slider"></div>
+                    {% if filter_styles %}
+                        <div class="filter-group">
 
-                            <div class="year-inputs">
+                            <button class="filter-toggle" type="button" onclick="toggleFilter('market-filter-style')">
+                                <span>Style</span>
+                                <span class="filter-toggle-icon">▾</span>
+                            </button>
 
-                                <div class="year-input-group">
-                                    <label for="year-from-input">From</label>
-                                    <input type="number"
-                                           id="year-from-input"
-                                           name="year_from"
-                                           min="1300"
-                                           max="2026"
-                                           value="{{ request.GET.year_from }}">
-                                </div>
-                                <div class="year-input-group">
-                                    <label for="year-to-input">To</label>
-                                    <input type="number"
-                                           id="year-to-input"
-                                           name="year_to"
-                                           min="1300"
-                                           max="2026"
-                                           value="{{ request.GET.year_to }}">
+                            <div id="market-filter-style" class="filter-dropdown">
+                                {% for value, label, is_selected in filter_styles %}
+                                    <label>
+                                        {% if is_selected %}
+                                            <input type="checkbox" name="style" value="{{ value }}" checked>
+                                        {% else %}
+                                            <input type="checkbox" name="style" value="{{ value }}">
+                                        {% endif %}
+
+                                        {{ label }}
+                                    </label>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endif %}
+                    <div class="filter-group">
+                        <button class="filter-toggle" type="button" onclick="toggleFilter('market-filter-year')">
+                            <span>Year</span>
+                            <span class="filter-toggle-icon">▾</span>
+                        </button>
+
+                        <div id="market-filter-year" class="filter-dropdown">
+                            <div class="year-filter">
+                                <div id="year-slider" class="year-slider"></div>
+
+                                <div class="year-inputs">
+
+                                    <div class="year-input-group">
+                                        <label for="year-from-input">From</label>
+                                        <input type="number"
+                                               id="year-from-input"
+                                               name="year_from"
+                                               min="1300"
+                                               max="2026"
+                                               value="{{ request.GET.year_from }}">
+                                    </div>
+                                    <div class="year-input-group">
+                                        <label for="year-to-input">To</label>
+                                        <input type="number"
+                                               id="year-to-input"
+                                               name="year_to"
+                                               min="1300"
+                                               max="2026"
+                                               value="{{ request.GET.year_to }}">
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="filter-group">
-                    <button
-                            class="filter-toggle"
-                            type="button"
-                            onclick="toggleFilter('filter-price')"
-                    >
-                        <span>Price</span>
-                        <span class="filter-toggle-icon">▾</span>
-                    </button>
+                    <div class="filter-group">
+                        <button
+                                class="filter-toggle"
+                                type="button"
+                                onclick="toggleFilter('filter-price')"
+                        >
+                            <span>Price</span>
+                            <span class="filter-toggle-icon">▾</span>
+                        </button>
 
 
-                    <div id="filter-price" class="filter-dropdown">
-                        <div class="year-filter">
-                            <div id="price-slider" class="year-slider"></div>
+                        <div id="filter-price" class="filter-dropdown">
+                            <div class="year-filter">
+                                <div id="price-slider" class="year-slider"></div>
 
-                            <div class="year-inputs">
+                                <div class="year-inputs">
 
-                                <div class="year-input-group">
-                                    <label for="price-from-input">From</label>
-                                    <input type="number"
-                                           id="price-from-input"
-                                           name="price_from"
-                                           min="0"
-                                           max="100000"
-                                           value="{{ request.GET.price_from }}"
-                                    >
-                                </div>
-                                <div class="year-input-group">
-                                    <label for="price-to-input">To</label>
-                                    <input type="number"
-                                           id="price-to-input"
-                                           name="price_to"
-                                           min="0"
-                                           max="100000"
-                                           value="{{ request.GET.price_to }}"
-                                    >
+                                    <div class="year-input-group">
+                                        <label for="price-from-input">From</label>
+                                        <input type="number"
+                                               id="price-from-input"
+                                               name="price_from"
+                                               min="0"
+                                               max="100000"
+                                               value="{{ request.GET.price_from }}"
+                                        >
+                                    </div>
+                                    <div class="year-input-group">
+                                        <label for="price-to-input">To</label>
+                                        <input type="number"
+                                               id="price-to-input"
+                                               name="price_to"
+                                               min="0"
+                                               max="100000"
+                                               value="{{ request.GET.price_to }}"
+                                        >
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <button class="filter-button" type="submit">Apply</button>
-                <a class="clear-filters-link" href="{{ clear_filters_url }}">
-                    Clear all filters
-                </a>
-            </form>
-        </div>
-
-        <!-- Artwork grid -->
-        <div class="listings-area">
-            <div class="listings-toolbar">
-
-                <h2>All Artworks</h2>
-                <label class="visually-hidden" for="marketplace-sort">Sort listings</label>
-                <select id="marketplace-sort" class="sort-select" onchange="handleSort(this)">
-                    {% for value, label, is_selected in sort_options %}
-                        {% if is_selected %}
-                            <option value="{{ value }}" selected>{{ label }}</option>
-                        {% else %}
-                            <option value="{{ value }}">{{ label }}</option>
-                        {% endif %}
-                    {% endfor %}
-                </select>
+                    <button class="filter-button" type="submit">Apply</button>
+                    <a class="clear-filters-link" href="{{ clear_filters_url }}">
+                        Clear all filters
+                    </a>
+                </form>
             </div>
 
-            <div class="marketplace-grid">
-                {% for artwork in page_obj %}
-                <a class="marketplace-card-link" href="{% url 'artwork_detail' artwork.pk %}?back={{ request.get_full_path|urlencode }}">
-                    <div class="marketplace-card">
+            <!-- Artwork grid -->
+            <div class="listings-area">
+                <div class="listings-toolbar">
 
-                        {% if artwork.primary_image %}
-                            <img class="marketplace-card-image" src="{{ artwork.primary_image.url }}" alt="{{ artwork.title }}">
-                        {% else %}
-                            <div class="marketplace-card-placeholder"></div>
-                        {% endif %}
+                    <h2>All Artworks</h2>
+                    <label class="visually-hidden" for="marketplace-sort">Sort listings</label>
+                    <select id="marketplace-sort" class="sort-select" onchange="handleSort(this)">
+                        {% for value, label, is_selected in sort_options %}
+                            {% if is_selected %}
+                                <option value="{{ value }}" selected>{{ label }}</option>
+                            {% else %}
+                                <option value="{{ value }}">{{ label }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
 
-                        <p class="marketplace-card-title">{{ artwork.title }}</p>
-                        <p class="marketplace-card-price">Starting bid: ${{ artwork.starting_bid }}</p>
-                        <div class="marketplace-card-meta">
-                            <p>{{ artwork.category }}</p>
-                            <p>Medium: {{ artwork.display_medium }}</p>
-                            <p>Dimensions: {{ artwork.dimensions_display }}</p>
-                            <p>
-                                Status:
-                                <span class="marketplace-card-status {{ artwork.status_class }}">
+                <div class="marketplace-grid">
+                    {% for artwork in page_obj %}
+                        <a class="marketplace-card-link"
+                           href="{% url 'artwork_detail' artwork.pk %}?back={{ request.get_full_path|urlencode }}">
+                            <div class="marketplace-card">
+
+                                {% if artwork.primary_image %}
+                                    <img class="marketplace-card-image" src="{{ artwork.primary_image.url }}"
+                                         alt="{{ artwork.title }}">
+                                {% else %}
+                                    <div class="marketplace-card-placeholder"></div>
+                                {% endif %}
+
+                                <p class="marketplace-card-title">{{ artwork.title }}</p>
+                                <p class="marketplace-card-price">Starting bid: ${{ artwork.starting_bid }}</p>
+                                <div class="marketplace-card-meta">
+                                    <p>{{ artwork.category }}</p>
+                                    <p>Medium: {{ artwork.display_medium }}</p>
+                                    <p>Dimensions: {{ artwork.dimensions_display }}</p>
+                                    <p>
+                                        Status:
+                                        <span class="marketplace-card-status {{ artwork.status_class }}">
                                     {{ artwork.status_label }}
                                 </span>
-                            </p>
-                        </div>
-                        <p class="marketplace-card-date">Listed: {{ artwork.listing_date_display }}</p>
-                    </div>
-                </a>
-                {% empty %}
-                    <p class="empty-listings">No artworks found.</p>
-                {% endfor %}
-            </div>
+                                    </p>
+                                </div>
+                                <p class="marketplace-card-date">Listed: {{ artwork.listing_date_display }}</p>
+                            </div>
+                        </a>
+                        {% empty %}
+                        <p class="empty-listings">No artworks found.</p>
+                    {% endfor %}
+                </div>
 
-            {% if page_obj.has_other_pages %}
-            <div class="pagination">
-                {% if previous_page_url %}
-                    <a href="{{ previous_page_url }}"
-                       class="pagination-btn">Previous</a>
+                {% if page_obj.has_other_pages %}
+                    <div class="pagination">
+                        {% if previous_page_url %}
+                            <a href="{{ previous_page_url }}"
+                               class="pagination-btn">Previous</a>
+                        {% endif %}
+                        <span class="pagination-info">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+                        {% if next_page_url %}
+                            <a href="{{ next_page_url }}"
+                               class="pagination-btn">Next</a>
+                        {% endif %}
+                    </div>
                 {% endif %}
-                <span class="pagination-info">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
-                {% if next_page_url %}
-                    <a href="{{ next_page_url }}"
-                       class="pagination-btn">Next</a>
-                {% endif %}
-            </div>
-            {% endif %}
             </div>
         </div>
 
     </div>
-</div>
+    </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.js"></script>
-<script src="{% static 'js/artworks/shared_filters.js' %}?v=1"></script>
-<script src="{% static 'js/artworks/artwork_marketplace.js' %}?v=4"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.js"></script>
+    <script src="{% static 'js/artworks/shared_filters.js' %}?v=1"></script>
+    <script src="{% static 'js/artworks/artwork_marketplace.js' %}?v=4"></script>
 
 {% endblock %}

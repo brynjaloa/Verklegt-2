@@ -2,51 +2,51 @@
 {% load static %}
 
 {% block content %}
-<link rel="stylesheet" href="{% static 'css/location.css' %}">
+    <link rel="stylesheet" href="{% static 'css/location.css' %}">
 
-<div class="location-page">
+    <div class="location-page">
 
-    <div class="location-header">
-        <a href="{{ previous_page_url }}"
-           class="location-back-link"
-        >‹</a>
+        <div class="location-header">
+            <a href="{{ previous_page_url }}"
+               class="location-back-link"
+            >‹</a>
 
-        <h1 class="location-heading">Location - Contact us</h1>
-    </div>
-
-    <div class="location-body">
-
-        <div class="location-info">
-            <h2>Visit us</h2>
-
-            <p>ArtVault Headquarters</p>
-            <p>Menntavegur 1</p>
-            <p>101 Reykjavík</p>
-            <p>Iceland</p>
-
-            <h2>Opening hours</h2>
-
-            <p><strong>Monday – Friday:</strong> 8:00 – 18:00</p>
-            <p><strong>Saturday:</strong> 12:00 – 16:00</p>
-            <p><strong>Sunday:</strong> Closed</p>
-
-            <h2>Contact</h2>
-
-            <p><strong>Email:</strong> Customersupport@artvault.is</p>
-            <p><strong>Phone:</strong> +354 823 0833</p>
+            <h1 class="location-heading">Location - Contact us</h1>
         </div>
 
-        <div class="location-map">
-            <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d5597.344668638078!2d-21.92800749973026!3d64.12527397990212!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x48d60b4e184b7e19%3A0xb87126c26f3d3420!2sReykjavik%20University!5e1!3m2!1sen!2sis!4v1778512219679!5m2!1sen!2sis"
-                width="1200"
-                height="550"
-                class="location-iframe"
-                allowfullscreen=""
-                loading="lazy">
-            </iframe>
-        </div>
+        <div class="location-body">
 
+            <div class="location-info">
+                <h2>Visit us</h2>
+
+                <p>ArtVault Headquarters</p>
+                <p>Menntavegur 1</p>
+                <p>101 Reykjavík</p>
+                <p>Iceland</p>
+
+                <h2>Opening hours</h2>
+
+                <p><strong>Monday – Friday:</strong> 8:00 – 18:00</p>
+                <p><strong>Saturday:</strong> 12:00 – 16:00</p>
+                <p><strong>Sunday:</strong> Closed</p>
+
+                <h2>Contact</h2>
+
+                <p><strong>Email:</strong> Customersupport@artvault.is</p>
+                <p><strong>Phone:</strong> +354 823 0833</p>
+            </div>
+
+            <div class="location-map">
+                <iframe
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d5597.344668638078!2d-21.92800749973026!3d64.12527397990212!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x48d60b4e184b7e19%3A0xb87126c26f3d3420!2sReykjavik%20University!5e1!3m2!1sen!2sis!4v1778512219679!5m2!1sen!2sis"
+                        width="1200"
+                        height="550"
+                        class="location-iframe"
+                        allowfullscreen=""
+                        loading="lazy">
+                </iframe>
+            </div>
+
+        </div>
     </div>
-</div>
 {% endblock %}

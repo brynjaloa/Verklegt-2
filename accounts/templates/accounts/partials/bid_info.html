@@ -1,0 +1,30 @@
+<div class="bid-info">
+
+    <p>Date of bid: {{ bid.date_of_bid }}</p>
+
+    <p>
+        Expiration date:
+        {{ bid.expiration_date }}
+    </p>
+
+    <p>
+        Seller:
+        {{ bid.artwork.seller.name }}
+    </p>
+
+    <p>
+        Bid price:
+        ${{ bid.bid_price }}
+    </p>
+
+    <p>
+        <a class="cancel-bid-profile-link" href="{% url 'cancel_bid' bid.id %}">
+            {% if bid.status == "Rejected" %}
+                Remove from my bids
+            {% else %}
+                Cancel bid
+            {% endif %}
+        </a>
+    </p>
+
+</div>

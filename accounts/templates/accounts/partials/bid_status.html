@@ -1,0 +1,32 @@
+{% if bid.status == "Accepted" %}
+    <a href="{% url 'finalize_bid' bid.id %}"
+       class="bid-status accepted">
+        Accepted / Finalize
+    </a>
+
+{% elif bid.status == "Rejected" %}
+    <div class="bid-status rejected">
+        Rejected
+    </div>
+
+{% elif bid.status == "Contingent" %}
+    <div class="bid-status contingent">
+        Contingent / Next in line
+    </div>
+
+{% elif bid.status == "Canceled" %}
+    <div class="bid-status canceled">
+        Canceled
+    </div>
+
+{% elif bid.status == "Finalized" %}
+    <div class="bid-status finalized">
+        Finalized
+    </div>
+
+{% else %}
+    <div class="bid-status pending">
+        Pending
+    </div>
+
+{% endif %}

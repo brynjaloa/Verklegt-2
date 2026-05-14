@@ -24,15 +24,10 @@ def get_or_create_profile(user):
     return profile
 
 
-def login_view(request):
-    return render(request, 'accounts/login.html')
-
-
 def csrf_failure_view(request, reason=""):
     del reason
     messages.error(request, "Your login session expired. Please try again.")
     return redirect('login')
-
 
 def signup_view(request):
     if request.method == 'POST':

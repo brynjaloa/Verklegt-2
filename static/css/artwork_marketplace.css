@@ -149,6 +149,10 @@
     font-weight: bold;
 }
 
+.filter-button:hover {
+    background: #f2dddd;
+}
+
 .clear-filters-link {
     display: block;
     width: 100%;

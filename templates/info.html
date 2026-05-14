@@ -2,37 +2,37 @@
 {% load static %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/info.css' %}">
+    <link rel="stylesheet" href="{% static 'css/info.css' %}">
 {% endblock %}
 
 {% block content %}
-<article class="info-page">
-    <header class="info-header">
+    <article class="info-page">
+        <header class="info-header">
 
-        <a href="{{ previous_page_url }}"
-           class="info-back-link"
-           aria-label="Back to previous page"
-        >‹</a>
+            <a href="{{ previous_page_url }}"
+               class="info-back-link"
+               aria-label="Back to previous page"
+            >‹</a>
 
-        <h1>Info</h1>
-    </header>
+            <h1>Info</h1>
+        </header>
 
-    <section class="info-articles" aria-label="Articles">
-        {% for article in articles %}
-            <a href="{% url 'info_article' article.slug %}" class="info-card">
-                <img src="{{ article.image_url }}"
-                     alt="{{ article.title }}"
-                     class="info-card-image"
-                >
+        <section class="info-articles" aria-label="Articles">
+            {% for article in articles %}
+                <a href="{% url 'info_article' article.slug %}" class="info-card">
+                    <img src="{{ article.image_url }}"
+                         alt="{{ article.title }}"
+                         class="info-card-image"
+                    >
 
-                <div class="info-card-content">
-                    <h2>{{ article.title }}</h2>
-                    <p>{{ article.intro }}</p>
-                    <span class="info-card-link">Read article</span>
-                </div>
-            </a>
+                    <div class="info-card-content">
+                        <h2>{{ article.title }}</h2>
+                        <p>{{ article.intro }}</p>
+                        <span class="info-card-link">Read article</span>
+                    </div>
+                </a>
 
-        {% endfor %}
-    </section>
-</article>
+            {% endfor %}
+        </section>
+    </article>
 {% endblock %}

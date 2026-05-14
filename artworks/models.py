@@ -193,10 +193,10 @@ class Artwork(models.Model):
         if not medium:
             return "Not specified"
 
-        return self._clean_medium_label(medium)
+        return self.clean_medium_label(medium)
 
     @staticmethod
-    def _clean_medium_label(medium):
+    def clean_medium_label(medium):
         labels_to_remove = (" painting", " Painting", " sculpture", " Sculpture")
 
         for label in labels_to_remove:
@@ -222,13 +222,6 @@ class Artwork(models.Model):
     def _format_dimension(value):
         formatted_value = f"{value.normalize():f}".rstrip("0").rstrip(".")
         return formatted_value or "0"
-
-    @property
-    def status_display(self):
-        if self.is_sold:
-            return "Sold"
-
-        return "Available"
 
     def __str__(self):
         return self.title

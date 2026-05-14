@@ -157,8 +157,19 @@
     color: white;
 }
 
+.finalize-actions button:not(.secondary-action):hover,
+.home-link:hover {
+    background: #2f7c4a;
+    color: white;
+}
+
 .secondary-action {
     background: #ddd;
+    color: black;
+}
+
+.secondary-action:hover {
+    background: #cfcfcf;
     color: black;
 }
 
@@ -170,7 +181,7 @@
     margin-top: 0;
 }
 
-@media (max-width: 700px) {
+@media (width <= 700px) {
     .finalize-page {
         padding: 18px;
     }

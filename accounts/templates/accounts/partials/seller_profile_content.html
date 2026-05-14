@@ -1,0 +1,15 @@
+<div class="seller-bio-box">
+    <h1>My bio</h1>
+    <div class="section-line"></div>
+    {% if seller.bio %}
+        <p>{{ seller.bio }}</p>
+    {% else %}
+        <p>No bio added yet.</p>
+    {% endif %}
+</div>
+
+<div class="info-box">
+    {% include "accounts/partials/selling_list.html" %}
+    {% include "accounts/partials/bids_list_cards.html" %}
+    {% include "accounts/partials/purchase_list_cards.html" %}
+</div>

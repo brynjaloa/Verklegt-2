@@ -4,45 +4,84 @@
 {% block content %}
 
 
-<div class="front-box-container">
-    <div class="front-box">
-        <div class="front-box-text">
-            <h2>ArtVault - est. 2026</h2>
-            <p>
-                ArtVault is a web-based art auction platform designed to connect artists,
-                collectors, and buyers in a seamless digital environment.
-                The system allows users to browse artworks, place bids in ongoing auctions,
-                and manage their personal profiles. Artists can list their work for sale,
-                while buyers can track auctions and participate in real time.
-                The platform focuses on intuitive navigation, clear user flows,
-                and an engaging visual design to ensure a smooth and accessible user experience
-                for both new and experienced users.
-            </p>
-        </div>
+    <div class="front-box-container">
+        <div class="front-box">
+            <div class="front-box-text">
+                <h2>ArtVault - est. 2026</h2>
+                <p>
+                    ArtVault is a web-based art auction platform designed to connect artists,
+                    collectors, and buyers in a seamless digital environment.
+                    The system allows users to browse artworks, place bids in ongoing auctions,
+                    and manage their personal profiles. Artists can list their work for sale,
+                    while buyers can track auctions and participate in real time.
+                    The platform focuses on intuitive navigation, clear user flows,
+                    and an engaging visual design to ensure a smooth and accessible user experience
+                    for both new and experienced users.
+                </p>
+            </div>
 
-        <div class="front-box-image">
-            <img src="{% get_media_prefix %}Homepage/front-box-pic.jpg"
-                 alt="Pink leaf tree"
-            >
+            <div class="front-box-image">
+                <img src="{% get_media_prefix %}Homepage/front-box-pic.jpg"
+                     alt="Pink leaf tree"
+                >
+            </div>
         </div>
     </div>
-</div>
 
-<h2 class="section-title">Newly added</h2>
+    <h2 class="section-title">Newly added</h2>
 
-<div class="recent-carousel" data-visible-count="4">
-    <button class="carousel-arrow carousel-arrow-left"
-            type="button"
-            aria-label="Previous recently added listings"
-    >‹</button>
+    <div class="recent-carousel" data-visible-count="4">
+        <button class="carousel-arrow carousel-arrow-left"
+                type="button"
+                aria-label="Previous recently added listings"
+        >‹
+        </button>
 
-    <div class="recent-carousel-window">
-        <div class="artworks recent-carousel-track">
-            {% for artwork in recent_artworks %}
+        <div class="recent-carousel-window">
+            <div class="artworks recent-carousel-track">
+                {% for artwork in recent_artworks %}
+                    <div class="art-card">
+
+                        <a href="{% url 'artwork_detail' artwork.pk %}?back={{ request.get_full_path|urlencode }}"
+                           class="art-image-link" aria-label="{{ artwork.title }}">
+
+                            {% if artwork.primary_image %}
+                                <img class="art-box"
+                                     src="{{ artwork.primary_image.url }}"
+                                     alt="{{ artwork.title }}"
+                                >
+                            {% else %}
+                                <div class="art-box"></div>
+                            {% endif %}
+
+                        </a>
+
+                        <p class="art-title">{{ artwork.title }}</p>
+                        <p class="price">Starting bid is: ${{ artwork.starting_bid }}</p>
+                    </div>
+
+                    {% empty %}
+                    <p class="empty-section">No artworks have been listed yet.</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <button class="carousel-arrow carousel-arrow-right"
+                type="button"
+                aria-label="Next recently added listings"
+        >›
+        </button>
+    </div>
+
+    <h2 class="section-title">People have bidded on:</h2>
+
+    <div class="most-bidded-grid">
+        {% for artwork in popular_artworks %}
             <div class="art-card">
 
-                <a href="{% url 'artwork_detail' artwork.pk %}?back={{ request.get_full_path|urlencode }}" class="art-image-link" aria-label="{{ artwork.title }}">
-
+                <a href="{% url 'artwork_detail' artwork.pk %}?back={{ request.get_full_path|urlencode }}"
+                   class="art-image-link" aria-label="{{ artwork.title }}"
+                >
                     {% if artwork.primary_image %}
                         <img class="art-box"
                              src="{{ artwork.primary_image.url }}"
@@ -59,46 +98,10 @@
             </div>
 
             {% empty %}
-                <p class="empty-section">No artworks have been listed yet.</p>
-            {% endfor %}
-        </div>
+            <p class="empty-section">No artworks have bids yet.</p>
+        {% endfor %}
+
     </div>
 
-    <button class="carousel-arrow carousel-arrow-right"
-            type="button"
-            aria-label="Next recently added listings"
-    >›</button>
-</div>
-
-<h2 class="section-title">People have bidded on:</h2>
-
-<div class="most-bidded-grid">
-    {% for artwork in popular_artworks %}
-    <div class="art-card">
-
-        <a href="{% url 'artwork_detail' artwork.pk %}?back={{ request.get_full_path|urlencode }}"
-           class="art-image-link" aria-label="{{ artwork.title }}"
-        >
-            {% if artwork.primary_image %}
-                <img class="art-box"
-                     src="{{ artwork.primary_image.url }}"
-                     alt="{{ artwork.title }}"
-                >
-            {% else %}
-                <div class="art-box"></div>
-            {% endif %}
-
-        </a>
-
-        <p class="art-title">{{ artwork.title }}</p>
-        <p class="price">Starting bid is: ${{ artwork.starting_bid }}</p>
-    </div>
-
-    {% empty %}
-        <p class="empty-section">No artworks have bids yet.</p>
-    {% endfor %}
-
-</div>
-
-<script src="{% static 'js/home.js' %}?v=4"></script>
+    <script src="{% static 'js/home.js' %}?v=4"></script>
 {% endblock %}

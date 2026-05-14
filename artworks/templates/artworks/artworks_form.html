@@ -2,250 +2,260 @@
 {% load static %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/artwork_form.css' %}">
+    <link rel="stylesheet" href="{% static 'css/artwork_form.css' %}">
 {% endblock %}
 
 {% block content %}
-<section class="artwork-form-page">
-    <div class="artwork-form-container">
-        <header class="artwork-form-header">
-            <a class="artwork-form-back-link" href="{{ back_url }}" aria-label="Back to previous page">‹</a>
-            <h1>{{ form_title|default:"List artwork for sale" }}</h1>
-        </header>
+    <section class="artwork-form-page">
+        <div class="artwork-form-container">
+            <header class="artwork-form-header">
+                <a class="artwork-form-back-link" href="{{ back_url }}" aria-label="Back to previous page">‹</a>
+                <h1>{{ form_title|default:"List artwork for sale" }}</h1>
+            </header>
 
-        <form method="POST" enctype="multipart/form-data" class="artwork-form">
-            {% csrf_token %}
-            <input type="hidden" name="back_url" value="{{ back_url }}">
+            <form method="POST" enctype="multipart/form-data" class="artwork-form">
+                {% csrf_token %}
+                <input type="hidden" name="back_url" value="{{ back_url }}">
 
-            {% if form.non_field_errors %}
-                <div class="form-errors">
-                    {{ form.non_field_errors }}
-                </div>
-            {% endif %}
-
-            <div class="artwork-form-section">
-                <h2>Artwork details</h2>
-
-                <div class="form-row">
-                    <label for="{{ form.title.id_for_label }}">Name of artwork:</label>
-                    {{ form.title }}
-                    {{ form.title.errors }}
-                </div>
-
-                <div class="form-row">
-                    <label for="{{ form.category.id_for_label }}">Category:</label>
-                    {{ form.category }}
-                    {{ form.category.errors }}
-                </div>
-
-                <div class="category-fields painting-field" data-category-field="Paintings">
-                    <div class="form-row">
-                        <label for="{{ form.painting_medium.id_for_label }}">Painting medium:</label>
-                        {{ form.painting_medium }}
-                        {{ form.painting_medium.errors }}
-                    </div>
-
-                    <div class="form-row">
-                        <label for="{{ form.painting_style.id_for_label }}">Painting style:</label>
-                        {{ form.painting_style }}
-                        {{ form.painting_style.errors }}
-                    </div>
-                </div>
-
-                <div class="category-fields sculpture-field" data-category-field="Sculptures">
-                    <div class="form-row">
-                        <label for="{{ form.sculpture_material.id_for_label }}">Sculpture material:</label>
-                        {{ form.sculpture_material }}
-                        {{ form.sculpture_material.errors }}
-                    </div>
-
-                    <div class="form-row">
-                        <label for="{{ form.sculpture_style.id_for_label }}">Sculpture style:</label>
-                        {{ form.sculpture_style }}
-                        {{ form.sculpture_style.errors }}
-                    </div>
-                </div>
-
-                <div class="category-fields furniture-field" data-category-field="Furniture">
-                    <div class="form-row">
-                        <label for="{{ form.furniture_material.id_for_label }}">Furniture material:</label>
-                        {{ form.furniture_material }}
-                        {{ form.furniture_material.errors }}
-                    </div>
-
-                    <div class="form-row">
-                        <label for="{{ form.furniture_style.id_for_label }}">Furniture style:</label>
-                        {{ form.furniture_style }}
-                        {{ form.furniture_style.errors }}
-                    </div>
-                </div>
-
-                <div class="category-fields photo-field" data-category-field="Photos">
-                    <div class="form-row">
-                        <label for="{{ form.photo_technique.id_for_label }}">Photo technique:</label>
-                        {{ form.photo_technique }}
-                        {{ form.photo_technique.errors }}
-                    </div>
-
-                    <div class="form-row">
-                        <label for="{{ form.photo_style.id_for_label }}">Photo style:</label>
-                        {{ form.photo_style }}
-                        {{ form.photo_style.errors }}
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <label for="{{ form.edition.id_for_label }}">Edition:</label>
-                    {{ form.edition }}
-                    {{ form.edition.errors }}
-                </div>
-
-                <div class="form-grid">
-                    <div class="form-row">
-                        <label for="{{ form.starting_bid.id_for_label }}">Starting bid:</label>
-                        {{ form.starting_bid }}
-                        {{ form.starting_bid.errors }}
-                    </div>
-                </div>
-
-                <div class="form-grid dimensions-grid">
-                    <div class="form-row">
-                        <label for="{{ form.width.id_for_label }}">Width:</label>
-                        {{ form.width }}
-                        {% if form.width.help_text %}
-                            <p class="field-help">{{ form.width.help_text }}</p>
-                        {% endif %}
-                        {{ form.width.errors }}
-                    </div>
-
-                    <div class="form-row">
-                        <label for="{{ form.height.id_for_label }}">Height:</label>
-                        {{ form.height }}
-                        {% if form.height.help_text %}
-                            <p class="field-help">{{ form.height.help_text }}</p>
-                        {% endif %}
-                        {{ form.height.errors }}
-                    </div>
-
-                    <div class="form-row furniture-depth-field" data-furniture-depth>
-                        <label for="{{ form.depth.id_for_label }}">Depth:</label>
-                        {{ form.depth }}
-                        {% if form.depth.help_text %}
-                            <p class="field-help">{{ form.depth.help_text }}</p>
-                        {% endif %}
-                        {{ form.depth.errors }}
-                    </div>
-                </div>
-
-                <div class="form-grid">
-                    <div class="form-row">
-                        <label for="{{ form.year.id_for_label }}">Year created:</label>
-                        {{ form.year }}
-                        {{ form.year.errors }}
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <label for="{{ form.description.id_for_label }}">Description:</label>
-                    {{ form.description }}
-                    {{ form.description.errors }}
-                </div>
-
-                <div class="form-row">
-                    <label for="{{ form.provenance.id_for_label }}">Provenance:</label>
-                    {{ form.provenance }}
-                    {{ form.provenance.errors }}
-                </div>
-            </div>
-
-            <div class="artwork-form-section">
-                <h2>Pictures</h2>
-
-                {% if artwork %}
-                    <p class="field-help artwork-photo-requirement">A listing must have at least 2 photos.</p>
-
-                    <div class="current-artwork-images">
-                        {% if artwork.main_image %}
-                            <div class="current-artwork-image-card">
-                                <img class="current-artwork-image-preview" src="{{ artwork.main_image.url }}" alt="{{ artwork.title }} main picture">
-                                <div class="current-artwork-image-controls">
-                                    <p>Main picture</p>
-                                    <label for="{{ form.main_image.id_for_label }}">Change photo</label>
-                                    {{ form.main_image }}
-                                    {{ form.main_image.errors }}
-                                    <label class="remove-artwork-image-option">
-                                        <input type="checkbox" name="remove_main_image" value="1">
-                                        Remove photo
-                                    </label>
-                                </div>
-                            </div>
-                        {% else %}
-                            <div class="form-row file-row">
-                                <label for="{{ form.main_image.id_for_label }}">Add main picture:</label>
-                                {{ form.main_image }}
-                                {{ form.main_image.errors }}
-                            </div>
-                        {% endif %}
-
-                        {% for image in existing_images %}
-                            <div class="current-artwork-image-card">
-                                <img class="current-artwork-image-preview" src="{{ image.image.url }}" alt="{{ artwork.title }} picture {{ forloop.counter|add:'1' }}">
-                                <div class="current-artwork-image-controls">
-                                    <p>Picture {{ forloop.counter|add:"1" }}</p>
-                                    <label for="replace-image-{{ image.id }}">Change photo</label>
-                                    <input type="file" id="replace-image-{{ image.id }}" name="replace_image_{{ image.id }}" accept="image/*">
-                                    <label class="remove-artwork-image-option">
-                                        <input type="checkbox" name="remove_image" value="{{ image.id }}">
-                                        Remove photo
-                                    </label>
-                                </div>
-                            </div>
-                        {% endfor %}
-                    </div>
-
-                    <div class="form-row file-row">
-                        <label for="{{ form.additional_images.id_for_label }}">Add more pictures:</label>
-                        {{ form.additional_images }}
-                        {% if form.additional_images.help_text %}
-                            <p class="field-help">{{ form.additional_images.help_text }}</p>
-                        {% endif %}
-                        {{ form.additional_images.errors }}
-                    </div>
-                {% else %}
-                    <div class="form-row file-row">
-                        <label for="{{ form.main_image.id_for_label }}">Main picture:</label>
-                        {{ form.main_image }}
-                        {{ form.main_image.errors }}
-                    </div>
-
-                    <div class="form-row file-row">
-                        <label for="{{ form.second_image.id_for_label }}">Second picture:</label>
-                        {{ form.second_image }}
-                        {% if form.second_image.help_text %}
-                            <p class="field-help">{{ form.second_image.help_text }}</p>
-                        {% endif %}
-                        {{ form.second_image.errors }}
-                    </div>
-
-                    <div class="form-row file-row">
-                        <label for="{{ form.additional_images.id_for_label }}">More pictures:</label>
-                        {{ form.additional_images }}
-                        {% if form.additional_images.help_text %}
-                            <p class="field-help">{{ form.additional_images.help_text }}</p>
-                        {% endif %}
-                        {{ form.additional_images.errors }}
+                {% if form.non_field_errors %}
+                    <div class="form-errors">
+                        {{ form.non_field_errors }}
                     </div>
                 {% endif %}
-            </div>
 
-            <button type="submit" class="artwork-submit-btn">
-                {{ button_text|default:"List artwork" }}
-            </button>
-        </form>
-    </div>
-</section>
+                <div class="artwork-form-section">
+                    <h2>Artwork details</h2>
+
+                    <div class="form-row">
+                        <label for="{{ form.title.id_for_label }}">Name of artwork:</label>
+                        {{ form.title }}
+                        {{ form.title.errors }}
+                    </div>
+
+                    <div class="form-row">
+                        <label for="{{ form.category.id_for_label }}">Category:</label>
+                        {{ form.category }}
+                        {{ form.category.errors }}
+                    </div>
+
+                    <div class="category-fields painting-field" data-category-field="Paintings">
+                        <div class="form-row">
+                            <label for="{{ form.painting_medium.id_for_label }}">Painting medium:</label>
+                            {{ form.painting_medium }}
+                            {{ form.painting_medium.errors }}
+                        </div>
+
+                        <div class="form-row">
+                            <label for="{{ form.painting_style.id_for_label }}">Painting style:</label>
+                            {{ form.painting_style }}
+                            {{ form.painting_style.errors }}
+                        </div>
+                    </div>
+
+                    <div class="category-fields sculpture-field" data-category-field="Sculptures">
+                        <div class="form-row">
+                            <label for="{{ form.sculpture_material.id_for_label }}">Sculpture material:</label>
+                            {{ form.sculpture_material }}
+                            {{ form.sculpture_material.errors }}
+                        </div>
+
+                        <div class="form-row">
+                            <label for="{{ form.sculpture_style.id_for_label }}">Sculpture style:</label>
+                            {{ form.sculpture_style }}
+                            {{ form.sculpture_style.errors }}
+                        </div>
+                    </div>
+
+                    <div class="category-fields furniture-field" data-category-field="Furniture">
+                        <div class="form-row">
+                            <label for="{{ form.furniture_material.id_for_label }}">Furniture material:</label>
+                            {{ form.furniture_material }}
+                            {{ form.furniture_material.errors }}
+                        </div>
+
+                        <div class="form-row">
+                            <label for="{{ form.furniture_style.id_for_label }}">Furniture style:</label>
+                            {{ form.furniture_style }}
+                            {{ form.furniture_style.errors }}
+                        </div>
+                    </div>
+
+                    <div class="category-fields photo-field" data-category-field="Photos">
+                        <div class="form-row">
+                            <label for="{{ form.photo_technique.id_for_label }}">Photo technique:</label>
+                            {{ form.photo_technique }}
+                            {{ form.photo_technique.errors }}
+                        </div>
+
+                        <div class="form-row">
+                            <label for="{{ form.photo_style.id_for_label }}">Photo style:</label>
+                            {{ form.photo_style }}
+                            {{ form.photo_style.errors }}
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <label for="{{ form.edition.id_for_label }}">Edition:</label>
+                        {{ form.edition }}
+                        {{ form.edition.errors }}
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-row">
+                            <label for="{{ form.starting_bid.id_for_label }}">Starting bid:</label>
+                            {{ form.starting_bid }}
+                            {{ form.starting_bid.errors }}
+                        </div>
+                    </div>
+
+                    <div class="form-grid dimensions-grid">
+                        <div class="form-row">
+                            <label for="{{ form.width.id_for_label }}">Width:</label>
+                            {{ form.width }}
+                            {% if form.width.help_text %}
+                                <p class="field-help">{{ form.width.help_text }}</p>
+                            {% endif %}
+                            {{ form.width.errors }}
+                        </div>
+
+                        <div class="form-row">
+                            <label for="{{ form.height.id_for_label }}">Height:</label>
+                            {{ form.height }}
+                            {% if form.height.help_text %}
+                                <p class="field-help">{{ form.height.help_text }}</p>
+                            {% endif %}
+                            {{ form.height.errors }}
+                        </div>
+
+                        <div class="form-row furniture-depth-field" data-furniture-depth>
+                            <label for="{{ form.depth.id_for_label }}">Depth:</label>
+                            {{ form.depth }}
+                            {% if form.depth.help_text %}
+                                <p class="field-help">{{ form.depth.help_text }}</p>
+                            {% endif %}
+                            {{ form.depth.errors }}
+                        </div>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-row">
+                            <label for="{{ form.year.id_for_label }}">Year created:</label>
+                            {{ form.year }}
+                            {{ form.year.errors }}
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <label for="{{ form.description.id_for_label }}">Description:</label>
+                        {{ form.description }}
+                        {{ form.description.errors }}
+                    </div>
+
+                    <div class="form-row">
+                        <label for="{{ form.provenance.id_for_label }}">Provenance:</label>
+                        {{ form.provenance }}
+                        {{ form.provenance.errors }}
+                    </div>
+                </div>
+
+                <div class="artwork-form-section">
+                    <h2>Pictures</h2>
+
+                    {% if artwork %}
+                        <p class="field-help artwork-photo-requirement">A listing must have at least 2 photos.</p>
+
+                        <div class="current-artwork-images">
+                            {% if artwork.main_image %}
+                                <div class="current-artwork-image-card">
+                                    <img class="current-artwork-image-preview" src="{{ artwork.main_image.url }}"
+                                         alt="{{ artwork.title }} main picture">
+                                    <div class="current-artwork-image-controls">
+                                        <p>Main picture</p>
+                                        <label for="{{ form.main_image.id_for_label }}">Change photo</label>
+                                        {{ form.main_image }}
+                                        {{ form.main_image.errors }}
+                                        <label class="remove-artwork-image-option">
+                                            <input type="checkbox" name="remove_main_image" value="1">
+                                            Remove photo
+                                        </label>
+                                    </div>
+                                </div>
+                            {% else %}
+                                <div class="form-row file-row">
+                                    <label for="{{ form.main_image.id_for_label }}">Add main picture:</label>
+                                    {{ form.main_image }}
+                                    {{ form.main_image.errors }}
+                                </div>
+                            {% endif %}
+
+                            {% for image in existing_images %}
+                                <div class="current-artwork-image-card">
+                                    <img class="current-artwork-image-preview"
+                                         src="{{ image.image.url }}"
+                                         alt="{{ artwork.title }} picture {{ forloop.counter|add:'1' }}"
+                                    >
+                                    <div class="current-artwork-image-controls">
+                                        <p>Picture {{ forloop.counter|add:"1" }}</p>
+                                        <label for="replace-image-{{ image.id }}">Change photo</label>
+                                        <input type="file" id="replace-image-{{ image.id }}"
+                                               name="replace_image_{{ image.id }}"
+                                               accept="image/*"
+                                        >
+                                        <label class="remove-artwork-image-option">
+                                            <input type="checkbox"
+                                                   name="remove_image"
+                                                   value="{{ image.id }}"
+                                            >
+                                            Remove photo
+                                        </label>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="form-row file-row">
+                            <label for="{{ form.additional_images.id_for_label }}">Add more pictures:</label>
+                            {{ form.additional_images }}
+                            {% if form.additional_images.help_text %}
+                                <p class="field-help">{{ form.additional_images.help_text }}</p>
+                            {% endif %}
+                            {{ form.additional_images.errors }}
+                        </div>
+                    {% else %}
+                        <div class="form-row file-row">
+                            <label for="{{ form.main_image.id_for_label }}">Main picture:</label>
+                            {{ form.main_image }}
+                            {{ form.main_image.errors }}
+                        </div>
+
+                        <div class="form-row file-row">
+                            <label for="{{ form.second_image.id_for_label }}">Second picture:</label>
+                            {{ form.second_image }}
+                            {% if form.second_image.help_text %}
+                                <p class="field-help">{{ form.second_image.help_text }}</p>
+                            {% endif %}
+                            {{ form.second_image.errors }}
+                        </div>
+
+                        <div class="form-row file-row">
+                            <label for="{{ form.additional_images.id_for_label }}">More pictures:</label>
+                            {{ form.additional_images }}
+                            {% if form.additional_images.help_text %}
+                                <p class="field-help">{{ form.additional_images.help_text }}</p>
+                            {% endif %}
+                            {{ form.additional_images.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <button type="submit" class="artwork-submit-btn">
+                    {{ button_text|default:"List artwork" }}
+                </button>
+            </form>
+        </div>
+    </section>
 {% endblock %}
 
 {% block extra_js %}
-<script src="{% static 'js/artworks/artwork_form.js' %}"></script>
+    <script src="{% static 'js/artworks/artwork_form.js' %}"></script>
 {% endblock %}

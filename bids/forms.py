@@ -25,7 +25,6 @@ class BidForm(forms.ModelForm):
     )
 
     class Meta:
-
         model = Bid
 
         fields = [
@@ -34,12 +33,12 @@ class BidForm(forms.ModelForm):
         ]
 
         widgets = {
-
             'expiration_date': forms.DateInput(attrs={
                 'type': 'date',
                 'class': 'bid-input'
             }),
         }
+
 
     def clean_bid_price(self):
         bid_price = self.cleaned_data["bid_price"]
@@ -107,6 +106,7 @@ class PaymentInformationForm(forms.Form):
         choices=PAYMENT_CHOICES,
         widget=forms.RadioSelect,
     )
+
     cardholder_name = forms.CharField(max_length=120, required=False)
     credit_card_number = forms.RegexField(
         regex=r"^\d{16}$",
@@ -118,10 +118,12 @@ class PaymentInformationForm(forms.Form):
             "placeholder": "1234123412341234",
         }),
     )
+
     expiry_month = forms.ChoiceField(
         choices=[("", "Month")] + [(f"{month:02d}", f"{month:02d}") for month in range(1, 13)],
         required=False,
     )
+
     expiry_year = forms.ChoiceField(
         choices=[("", "Year")] + [
             (str(year), str(year))
@@ -129,6 +131,7 @@ class PaymentInformationForm(forms.Form):
         ],
         required=False,
     )
+
     cvc = forms.RegexField(
         regex=r"^\d{3,4}$",
         required=False,
@@ -140,6 +143,7 @@ class PaymentInformationForm(forms.Form):
             "placeholder": "123",
         }),
     )
+
     bank_account = forms.RegexField(
         regex=r"^\d+$",
         required=False,
@@ -149,6 +153,7 @@ class PaymentInformationForm(forms.Form):
             "placeholder": "0000000000",
         }),
     )
+
     sending_bank_name = forms.CharField(max_length=120, required=False)
     routing_number = forms.RegexField(
         regex=r"^\d+$",
@@ -159,6 +164,7 @@ class PaymentInformationForm(forms.Form):
             "placeholder": "123456789",
         }),
     )
+
     account_number = forms.RegexField(
         regex=r"^\d+$",
         required=False,
@@ -168,6 +174,7 @@ class PaymentInformationForm(forms.Form):
             "placeholder": "1234567890",
         }),
     )
+
 
     def clean(self):
         cleaned_data = super().clean()
@@ -181,7 +188,9 @@ class PaymentInformationForm(forms.Form):
                 "expiry_year",
                 "cvc",
             ],
+
             "bank_transfer": ["bank_account"],
+
             "wire_transfer": [
                 "sending_bank_name",
                 "routing_number",

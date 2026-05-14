@@ -1,0 +1,23 @@
+{% if seller and seller.cover_image %}
+    <div class="cover-container">
+        <img
+                class="cover-image"
+                src="{{ seller.cover_image.url }}"
+                alt="{{ seller.name }}'s cover photo"
+        >
+
+        <div class="floating-profile">
+
+            {% if seller.logo %}
+                <img class="profile-image" src="{{ seller.logo.url }}" alt="{{ seller.name }}">
+
+            {% else %}
+                <div class="default-profile">
+                    <div class="default-head"></div>
+                    <div class="default-body"></div>
+                </div>
+            {% endif %}
+        </div>
+
+    </div>
+{% endif %}

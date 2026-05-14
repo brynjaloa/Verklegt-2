@@ -1,0 +1,29 @@
+<div class="inner-box">
+    <h1>What I'm selling</h1>
+    <div class="section-line"></div>
+    {% if artworks %}
+        <div class="listing-scroll">
+
+            {% for artwork in artworks %}
+                <a href="{% url 'artwork_detail' artwork.id %}?back={{ request.get_full_path|urlencode }}"
+                   class="artwork-link"
+                >
+                    <div class="listing-left">
+                        <span class="listing-dot"></span>
+                        <span>{{ artwork.title }}</span>
+                        {% if artwork.is_sold or artwork.has_finalized_bid %}
+                            <span class="listing-sold-badge">Sold</span>
+                        {% endif %}
+                    </div>
+
+                    <span class="listing-action">
+                        See listing
+                    </span>
+                </a>
+            {% endfor %}
+        </div>
+
+    {% else %}
+        <p>No artworks listed yet.</p>
+    {% endif %}
+</div>

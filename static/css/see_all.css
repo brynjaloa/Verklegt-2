@@ -88,6 +88,10 @@
     font-weight: bold;
 }
 
+.see-all-filter-button:hover {
+    background: #f2dddd;
+}
+
 .see-all-clear-filters {
     display: block;
     width: 100%;
