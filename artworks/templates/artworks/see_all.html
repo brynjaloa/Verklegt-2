@@ -213,22 +213,22 @@
             </div>
 
             {% if page_obj.paginator.num_pages > 1 %}
-                <nav class="see-all-pagination" aria-label="Artwork pages">
-                    {% if page_obj.has_previous %}
-                        <a class="pagination-link" href="?{% if pagination_query %}{{ pagination_query }}&{% endif %}page={{ page_obj.previous_page_number }}">Previous</a>
-                    {% else %}
-                        <span class="pagination-link pagination-disabled">Previous</span>
-                    {% endif %}
+            <nav class="see-all-pagination" aria-label="Artwork pages">
+                {% if page_obj.has_previous %}
+                    <a class="pagination-link" href="?{% if pagination_query %}{{ pagination_query }}&{% endif %}page={{ page_obj.previous_page_number }}">Previous</a>
+                {% else %}
+                    <span class="pagination-link pagination-disabled">Previous</span>
+                {% endif %}
 
-                    {% for page_number in pagination_pages %}
-                        {% if page_number == page_obj.paginator.ELLIPSIS %}
-                            <span class="pagination-ellipsis">{{ page_number }}</span>
-                        {% elif page_number == page_obj.number %}
-                            <span class="pagination-link pagination-current">{{ page_number }}</span>
-                        {% else %}
-                            <a class="pagination-link" href="?{% if pagination_query %}{{ pagination_query }}&{% endif %}page={{ page_number }}">{{ page_number }}</a>
-                        {% endif %}
-                    {% endfor %}
+                {% for page_number in pagination_pages %}
+                    {% if page_number == page_obj.paginator.ELLIPSIS %}
+                        <span class="pagination-ellipsis">{{ page_number }}</span>
+                    {% elif page_number == page_obj.number %}
+                        <span class="pagination-link pagination-current">{{ page_number }}</span>
+                    {% else %}
+                        <a class="pagination-link" href="?{% if pagination_query %}{{ pagination_query }}&{% endif %}page={{ page_number }}">{{ page_number }}</a>
+                    {% endif %}
+                {% endfor %}
 
                     {% if page_obj.has_next %}
                         <a class="pagination-link" href="?{% if pagination_query %}{{ pagination_query }}&{% endif %}page={{ page_obj.next_page_number }}">Next</a>
@@ -237,7 +237,6 @@
                     {% endif %}
                 </nav>
             {% endif %}
-
         </div>
 
     </div>
@@ -247,5 +246,5 @@
 
 {% block extra_js %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.js"></script>
-<script src="{% static 'js/artworks/see_all.js' %}?v=3"></script>
+<script src="{% static 'js/artworks/see_all.js' %}?v=2"></script>
 {% endblock %}

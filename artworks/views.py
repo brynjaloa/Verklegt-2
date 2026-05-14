@@ -2,13 +2,13 @@ import unicodedata
 
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
-from django.db.models import Count, Exists, OuterRef, Q
+from django.db.models import Count, Exists, Max, OuterRef, Q
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.http import require_POST
-from django.utils.http import url_has_allowed_host_and_scheme
 from urllib.parse import urlparse
 
 from django.urls import reverse
+from django.utils.http import url_has_allowed_host_and_scheme
 from django.core.paginator import Paginator
 from .forms import ArtworkForm
 from .models import Artwork, ArtworkImage
@@ -249,6 +249,78 @@ def range_filter_value(value, default_value):
     return value
 
 
+def latest_visible_bids_for_artwork(artwork):
+    latest_bid_ids = (
+        Bid.objects.filter(artwork=artwork)
+        .exclude(status=Bid.Status.CANCELED)
+        .values("user")
+        .annotate(latest_id=Max("id"))
+        .values("latest_id")
+    )
+
+    return Bid.objects.filter(id__in=latest_bid_ids).order_by("-bid_price", "-id")
+
+
+def repair_bid_queue_for_artwork(artwork):
+    if Bid.objects.filter(artwork=artwork, status=Bid.Status.FINALIZED).exists():
+        return
+
+    queue_statuses = [Bid.Status.PENDING, Bid.Status.CONTINGENT, Bid.Status.REJECTED]
+    accepted_bid = Bid.objects.filter(artwork=artwork, status=Bid.Status.ACCEPTED).first()
+
+    has_waiting_bids = Bid.objects.filter(
+        artwork=artwork,
+        status__in=[Bid.Status.PENDING, Bid.Status.CONTINGENT],
+    ).exists()
+    has_old_rejected_queue = Bid.objects.filter(
+        artwork=artwork,
+        status=Bid.Status.REJECTED,
+    ).exists()
+
+    if accepted_bid is None and has_old_rejected_queue and not has_waiting_bids:
+        accepted_bid = Bid.objects.filter(
+            artwork=artwork,
+            status=Bid.Status.REJECTED,
+        ).order_by("-bid_price", "date_of_bid", "id").first()
+
+        if accepted_bid:
+            accepted_bid.status = Bid.Status.ACCEPTED
+            accepted_bid.buyer_accept_notification_seen = False
+            accepted_bid.save(update_fields=["status", "buyer_accept_notification_seen"])
+
+    if accepted_bid is None:
+        Bid.objects.filter(
+            artwork=artwork,
+            status__in=[Bid.Status.CONTINGENT, Bid.Status.REJECTED],
+        ).update(status=Bid.Status.PENDING)
+
+        if artwork.is_sold:
+            artwork.is_sold = False
+            artwork.save(update_fields=["is_sold"])
+
+        return
+
+    queued_bids = list(
+        Bid.objects.filter(
+            artwork=artwork,
+            status__in=queue_statuses,
+        ).exclude(
+            id=accepted_bid.id,
+        ).order_by("-bid_price", "date_of_bid", "id")
+    )
+
+    for index, bid in enumerate(queued_bids):
+        next_status = Bid.Status.CONTINGENT if index == 0 else Bid.Status.PENDING
+
+        if bid.status != next_status:
+            bid.status = next_status
+            bid.save(update_fields=["status"])
+
+    if artwork.is_sold:
+        artwork.is_sold = False
+        artwork.save(update_fields=["is_sold"])
+
+
 def artwork_list(request):
     query = request.GET.get('q', '').strip()
     category = request.GET.get('category')
@@ -371,21 +443,21 @@ def home_view(request):
 
 def artwork_detail(request, pk):
     artwork = get_object_or_404(Artwork, pk=pk)
+    repair_bid_queue_for_artwork(artwork)
     back_url = get_artwork_detail_back_url(request)
-    highest_bids = list(
-        Bid.objects.filter(artwork=artwork)
-        .exclude(status=Bid.Status.CANCELED)
-        .select_related("user")
-        .order_by("-bid_price", "-id")[:3]
-    )
-    highest_bid = highest_bids[0] if highest_bids else None
+    highest_bids = latest_visible_bids_for_artwork(artwork)
     has_accepted_bid = Bid.objects.filter(
         artwork=artwork,
         status__in=[Bid.Status.ACCEPTED, Bid.Status.FINALIZED],
     ).exists()
-    is_artwork_sold = artwork.is_sold or has_accepted_bid
+    has_finalized_bid = Bid.objects.filter(
+        artwork=artwork,
+        status=Bid.Status.FINALIZED,
+    ).exists()
+    is_artwork_sold = artwork.is_sold or has_finalized_bid
+    is_bidding_locked = has_accepted_bid and not has_finalized_bid
 
-    if has_accepted_bid and not artwork.is_sold:
+    if has_finalized_bid and not artwork.is_sold:
         artwork.is_sold = True
         artwork.save(update_fields=["is_sold"])
 
@@ -407,9 +479,9 @@ def artwork_detail(request, pk):
         existing_bid = Bid.objects.filter(
             artwork=artwork,
             user=request.user
-        ).exclude(status=Bid.Status.CANCELED).first()
+        ).exclude(status=Bid.Status.CANCELED).order_by("-id").first()
 
-    if request.method == "POST" and is_artwork_sold:
+    if request.method == "POST" and (is_artwork_sold or is_bidding_locked):
         return redirect("artwork_detail", pk=artwork.pk)
 
     if request.method == "POST":
@@ -437,14 +509,11 @@ def artwork_detail(request, pk):
             bid.user = request.user
             bid.status = Bid.Status.PENDING
             bid.save()
+            Bid.objects.filter(
+                artwork=artwork,
+                user=request.user,
+            ).exclude(id=bid.id).delete()
             existing_bid = bid
-            highest_bids = list(
-                Bid.objects.filter(artwork=artwork)
-                .exclude(status=Bid.Status.CANCELED)
-                .select_related("user")
-                .order_by("-bid_price", "-id")[:3]
-            )
-            highest_bid = highest_bids[0] if highest_bids else None
 
             return render(request, "artworks/artwork_detail.html", {
 
@@ -453,6 +522,7 @@ def artwork_detail(request, pk):
                 "extra_images": extra_images,
                 "can_edit_artwork": can_edit_artwork,
                 "is_artwork_sold": is_artwork_sold,
+                "is_bidding_locked": is_bidding_locked,
                 "has_accepted_bid": has_accepted_bid,
                 "show_description_toggle": show_description_toggle,
                 "form": form,
@@ -461,7 +531,6 @@ def artwork_detail(request, pk):
                 "show_popup": True,
                 "bid_popup_message": "success",
                 "highest_bids": highest_bids,
-                "highest_bid": highest_bid,
                 "back_url": back_url,
             })
 
@@ -470,13 +539,13 @@ def artwork_detail(request, pk):
             "primary_image": artwork.primary_image,
             "extra_images": extra_images,
             "can_edit_artwork": can_edit_artwork,
+            "is_bidding_locked": is_bidding_locked,
             "show_description_toggle": show_description_toggle,
             "form": form,
             "existing_bid": existing_bid,
             "show_popup": True,
             "bid_popup_message": "minimum_bid_error",
             "highest_bids": highest_bids,
-            "highest_bid": highest_bid,
             "back_url": back_url,
         })
 
@@ -492,12 +561,12 @@ def artwork_detail(request, pk):
         "extra_images": extra_images,
         "can_edit_artwork": can_edit_artwork,
         "is_artwork_sold": is_artwork_sold,
+        "is_bidding_locked": is_bidding_locked,
         "has_accepted_bid": has_accepted_bid,
         "show_description_toggle": show_description_toggle,
         "form": form,
         "existing_bid": existing_bid,
         "highest_bids": highest_bids,
-        "highest_bid": highest_bid,
         "back_url": back_url,
     })
 
@@ -571,6 +640,12 @@ def delete_artwork(request, pk):
 
     if seller is None or artwork.seller != seller:
         return HttpResponseForbidden("You cannot remove this artwork.")
+
+    if artwork.is_sold or Bid.objects.filter(
+        artwork=artwork,
+        status__in=[Bid.Status.ACCEPTED, Bid.Status.FINALIZED],
+    ).exists():
+        return HttpResponseForbidden("Accepted or sold artworks cannot be removed.")
 
     artwork.delete()
     return redirect("profile")

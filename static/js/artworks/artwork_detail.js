@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const thumbnails = document.querySelectorAll(".artwork-thumbnail");
     const descriptionToggle = document.querySelector(".description-toggle");
     const bidPriceInput = document.querySelector(".bid-price-input");
-    const closePopupButton = document.querySelector("[data-close-popup]");
+    const closePopupButton = document.querySelector("[data-close-popup]") || document.getElementById("close-popup");
     const bidPopup = document.getElementById("bid-popup");
 
     if (mainImage && thumbnails.length > 0) {

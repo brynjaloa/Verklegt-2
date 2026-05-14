@@ -173,9 +173,9 @@
 
                                         {% elif bid.status == "Contingent" %}
 
-                                            <a href="{% url 'finalize_bid' bid.id %}" class="bid-status contingent">
+                                            <div class="bid-status contingent">
                                                 Contingent
-                                            </a>
+                                            </div>
 
                                         {% elif bid.status == "Canceled" %}
 
@@ -338,11 +338,11 @@
                                                 <div class="bid-status rejected">
                                                     Rejected
                                                 </div>
-		                                            {% elif bid.status == "Contingent" %}
+	                                            {% elif bid.status == "Contingent" %}
 
-			                                                <a href="{% url 'finalize_bid' bid.id %}" class="bid-status contingent">
-			                                                    Contingent
-			                                                </a>
+				                                                <div class="bid-status contingent">
+				                                                    Contingent
+				                                                </div>
 
                                             {% elif bid.status == "Canceled" %}
 
