@@ -1,57 +1,65 @@
+body {
+    font-family: serif;
+}
+
 .location-page {
+    box-sizing: border-box;
+    width: 100%;
     padding: 20px;
 }
 
 .location-header {
     display: flex;
     align-items: center;
-    gap: 12px;
-    margin-bottom: 24px;
+    gap: 14px;
+    margin-bottom: 34px;
 }
 
 .location-back-link {
     width: 40px;
     height: 40px;
-    border-radius: 50%;
     border: 1px solid #ccc;
-    display: flex;
+    border-radius: 50%;
+    color: black;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    text-decoration: none;
+    flex-shrink: 0;
     font-size: 18px;
-    color: black;
+    text-decoration: none;
 }
 
 .location-heading {
-    background-color: #c06060;
-    color: white;
+    margin: 0;
     padding: 8px 24px;
     border-radius: 24px;
-    margin: 0;
+    background-color: #c06060;
+    color: white;
     font-size: 24px;
+    line-height: 1.2;
 }
 
 .location-body {
-    display: flex;
-    gap: 60px;
+    display: grid;
+    grid-template-columns: minmax(280px, 360px) minmax(420px, 1fr);
+    gap: clamp(32px, 5vw, 72px);
     align-items: flex-start;
-    margin-top: 20px;
+    width: min(100%, 1440px);
+    margin: 0 auto;
 }
 
 .location-info {
-    flex: 1;
+    min-width: 0;
 }
 
 .location-info h2 {
+    margin: 0 0 16px 15px;
     font-size: 28px;
-    margin-bottom: 16px;
-    margin-left: 15px;
 }
 
 .location-info p {
+    margin: 0 0 8px 40px;
     font-size: 20px;
-    margin-bottom: 8px;
-    margin-left: 40px;
 }
 
 .location-info h2:not(:first-child) {
@@ -59,10 +67,47 @@
 }
 
 .location-map {
-    flex: 3;
+    min-width: 0;
 }
 
 .location-iframe {
-    border-radius: 12px;
+    width: 100%;
+    height: 550px;
     border: none;
+    border-radius: 12px;
+}
+
+@media (width <= 900px) {
+    .location-body {
+        grid-template-columns: 1fr;
+    }
+
+    .location-iframe {
+        height: 420px;
+    }
+}
+
+@media (width <= 560px) {
+    .location-page {
+        padding: 18px;
+    }
+
+    .location-heading {
+        padding: 8px 18px;
+        font-size: 22px;
+    }
+
+    .location-info h2 {
+        margin-left: 0;
+        font-size: 24px;
+    }
+
+    .location-info p {
+        margin-left: 18px;
+        font-size: 18px;
+    }
+
+    .location-iframe {
+        height: 340px;
+    }
 }
