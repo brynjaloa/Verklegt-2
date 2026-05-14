@@ -3,12 +3,15 @@
 {% load humanize %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/artwork_detail.css' %}?v=6">
+<link rel="stylesheet" href="{% static 'css/artwork_detail.css' %}?v=8">
 {% endblock %}
 
 {% block content %}
 <article class="artwork-detail-page">
-    <a class="artwork-detail-back-link" href="{{ back_url }}" aria-label="Back to previous listings">‹</a>
+    <header class="artwork-detail-header">
+        <a class="artwork-detail-back-link" href="{{ back_url }}" aria-label="Back to previous listings">‹</a>
+        <h1 class="artwork-detail-heading">Artwork details</h1>
+    </header>
     <div class="artwork-detail-layout">
         <div class="artwork-detail-media">
             {% if primary_image %}
@@ -67,8 +70,8 @@
                 <p class="artwork-minimum-bid">Minimum bid: ${{ artwork.starting_bid|intcomma }}</p>
                 <p class="artwork-highest-bid">
                     Highest bid:
-                    {% if highest_bids %}
-                        ${{ highest_bids.0.bid_price|intcomma }}
+                    {% if highest_bid %}
+                        ${{ highest_bid.bid_price|intcomma }}
                     {% else %}
                         No bids yet
                     {% endif %}

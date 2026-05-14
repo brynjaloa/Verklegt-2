@@ -1,30 +1,41 @@
 .artwork-detail-page {
-    position: relative;
     padding: 52px 72px;
     background: #fff;
     box-sizing: border-box;
 }
 
+.artwork-detail-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
 .artwork-detail-back-link {
-    position: absolute;
-    top: 24px;
-    left: 24px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid #ccc;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    border: 1px solid #ccc;
-    background: #c06060;
-    color: white;
-    font-size: 38px;
-    line-height: 1;
+    color: black;
+    font-size: 18px;
     text-decoration: none;
 }
 
 .artwork-detail-back-link:hover {
-    background: #9b3a35;
+    color: black;
+}
+
+.artwork-detail-heading {
+    background-color: #c06060;
+    color: white;
+    padding: 8px 24px;
+    border-radius: 24px;
+    margin: 0;
+    font-size: 24px;
+    line-height: 1.2;
 }
 
 .artwork-detail-layout {

@@ -4,7 +4,7 @@
 {% block content %}
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.css">
-<link rel="stylesheet" href="{% static 'css/artwork_marketplace.css' %}">
+<link rel="stylesheet" href="{% static 'css/artwork_marketplace.css' %}?v=3">
 
 <div class="marketplace-page">
 
@@ -53,42 +53,74 @@
                     <input type="hidden" name="sort" value="{{ sort }}">
                 {% endif %}
 
-                <p><strong>Availability</strong></p>
-                {% for value, label in status_choices %}
-                    <label><input type="checkbox" name="status" value="{{ value }}" {% if value in selected_statuses %}checked{% endif %}> {{ label }}</label><br>
-                {% endfor %}
+                <div class="filter-group">
+                    <button class="filter-toggle" type="button" onclick="toggleFilter('market-filter-availability')">
+                        <span>Availability</span>
+                        <span class="filter-toggle-icon">▾</span>
+                    </button>
+                    <div id="market-filter-availability" class="filter-dropdown">
+                        {% for value, label in status_choices %}
+                            <label><input type="checkbox" name="status" value="{{ value }}" {% if value in selected_statuses %}checked{% endif %}> {{ label }}</label>
+                        {% endfor %}
+                    </div>
+                </div>
 
                 {% if mediums %}
-                    <p><strong>Medium</strong></p>
-                    {% for value, label in mediums %}
-                        <label><input type="checkbox" name="medium" value="{{ value }}" {% if value in selected_mediums %}checked{% endif %}> {{ label }}</label><br>
-                    {% endfor %}
+                    <div class="filter-group">
+                        <button class="filter-toggle" type="button" onclick="toggleFilter('market-filter-medium')">
+                            <span>Medium</span>
+                            <span class="filter-toggle-icon">▾</span>
+                        </button>
+                        <div id="market-filter-medium" class="filter-dropdown">
+                            {% for value, label in mediums %}
+                                <label><input type="checkbox" name="medium" value="{{ value }}" {% if value in selected_mediums %}checked{% endif %}> {{ label }}</label>
+                            {% endfor %}
+                        </div>
+                    </div>
                 {% endif %}
 
                 {% if filter_styles %}
-                    <p><strong>Style</strong></p>
-                    {% for value, label in filter_styles %}
-                        <label><input type="checkbox" name="style" value="{{ value }}" {% if value in selected_styles %}checked{% endif %}> {{ label }}</label><br>
-                    {% endfor %}
-                {% endif %}
-                <p><strong>Year:</strong></p>
-                <div class="year-filter">
-                    <div id="year-slider" class="year-slider"></div>
-                    <div class="year-inputs">
-                        <div class="year-input-group">
-                            <label>From</label>
-                            <input type="number" id="year-from-input" name="year_from" min="1300" max="2025"
-                                value="{{ request.GET.year_from|default:'1300' }}">
+                    <div class="filter-group">
+                        <button class="filter-toggle" type="button" onclick="toggleFilter('market-filter-style')">
+                            <span>Style</span>
+                            <span class="filter-toggle-icon">▾</span>
+                        </button>
+                        <div id="market-filter-style" class="filter-dropdown">
+                            {% for value, label in filter_styles %}
+                                <label><input type="checkbox" name="style" value="{{ value }}" {% if value in selected_styles %}checked{% endif %}> {{ label }}</label>
+                            {% endfor %}
                         </div>
-                        <div class="year-input-group">
-                            <label>To</label>
-                            <input type="number" id="year-to-input" name="year_to" min="1300" max="2025"
-                                value="{{ request.GET.year_to|default:'2025' }}">
+                    </div>
+                {% endif %}
+                <div class="filter-group">
+                    <button class="filter-toggle" type="button" onclick="toggleFilter('market-filter-year')">
+                        <span>Year</span>
+                        <span class="filter-toggle-icon">▾</span>
+                    </button>
+                    <div id="market-filter-year" class="filter-dropdown">
+                        <div class="year-filter">
+                            <div id="year-slider" class="year-slider"></div>
+                            <div class="year-inputs">
+                                <div class="year-input-group">
+                                    <label>From</label>
+                                    <input type="number" id="year-from-input" name="year_from" min="1300" max="2025"
+                                        value="{{ request.GET.year_from|default:'1300' }}">
+                                </div>
+                                <div class="year-input-group">
+                                    <label>To</label>
+                                    <input type="number" id="year-to-input" name="year_to" min="1300" max="2025"
+                                        value="{{ request.GET.year_to|default:'2025' }}">
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <button class="filter-button" type="submit">Apply</button>
+                <a class="clear-filters-link"
+                   href="{% url 'artwork_list' %}{% if category or query %}?{% if category %}category={{ category|urlencode }}{% endif %}{% if category and query %}&{% endif %}{% if query %}q={{ query|urlencode }}{% endif %}{% endif %}">
+                    Clear all filters
+                </a>
             </form>
         </div>
 
@@ -152,6 +184,6 @@
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.js"></script>
-<script src="{% static 'artworks/artwork_marketplace.js' %}"></script>
+<script src="{% static 'js/artworks/artwork_marketplace.js' %}?v=2"></script>
 
 {% endblock %}
