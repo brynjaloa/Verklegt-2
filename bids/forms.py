@@ -25,7 +25,6 @@ class BidForm(forms.ModelForm):
     )
 
     class Meta:
-
         model = Bid
 
         fields = [
@@ -34,7 +33,6 @@ class BidForm(forms.ModelForm):
         ]
 
         widgets = {
-
             'expiration_date': forms.DateInput(attrs={
                 'type': 'date',
                 'class': 'bid-input'

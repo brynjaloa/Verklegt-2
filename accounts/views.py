@@ -1,5 +1,4 @@
 from typing import cast
-
 from django.shortcuts import render, redirect
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import login
@@ -22,11 +21,6 @@ def get_or_create_profile(user):
     name = user.get_full_name() or user.username
     profile, _ = Profile.objects.get_or_create(user=user, defaults={'name': name})
     return profile
-
-
-def login_view(request):
-    return render(request, 'accounts/login.html')
-
 
 def csrf_failure_view(request, reason=""):
     del reason
@@ -152,7 +146,7 @@ def seller_profile_view(request, seller_id):
             require_https=request.is_secure(),
         )
     ) else reverse("see_all")
-    artworks = Artwork.objects.filter(seller=seller).annotate(
+    artworks = Artwork.objects.filter(seller=seller).prefetch_related("images").annotate(
         sold_by_bid=Exists(
             Bid.objects.filter(
                 artwork=OuterRef("pk"),
@@ -160,9 +154,6 @@ def seller_profile_view(request, seller_id):
             )
         )
     ).order_by("-listing_date", "-id")
-
-    for artwork in artworks:
-        artwork.highest_bid = Bid.objects.filter(artwork=artwork).order_by("-bid_price").first()
 
     return render(request, "accounts/seller_profile.html", {
         "seller": seller,

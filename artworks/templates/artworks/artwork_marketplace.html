@@ -215,11 +215,14 @@
 
             <div class="marketplace-grid">
                 {% for artwork in page_obj %}
-                <a class="marketplace-card-link" href="{% url 'artwork_detail' artwork.pk %}?back={{ request.get_full_path|urlencode }}">
+                <a class="marketplace-card-link"
+                   href="{% url 'artwork_detail' artwork.pk %}?back={{ request.get_full_path|urlencode }}">
                     <div class="marketplace-card">
 
                         {% if artwork.primary_image %}
-                            <img class="marketplace-card-image" src="{{ artwork.primary_image.url }}" alt="{{ artwork.title }}">
+                            <img class="marketplace-card-image"
+                                 src="{{ artwork.primary_image.url }}"
+                                 alt="{{ artwork.title }}">
                         {% else %}
                             <div class="marketplace-card-placeholder"></div>
                         {% endif %}

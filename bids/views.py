@@ -150,20 +150,6 @@ def accept_bid(request, bid_id):
 
 
 @login_required
-def reject_bid(request, bid_id):
-    bid = get_object_or_404(Bid, id=bid_id)
-
-    if bid.artwork.seller != request.user.seller:
-        return HttpResponseForbidden()
-
-    bid.status = Bid.Status.REJECTED
-    bid.buyer_reject_notification_seen = False
-    bid.save(update_fields=["status", "buyer_reject_notification_seen"])
-
-    return redirect('artwork_detail', pk=bid.artwork.id)
-
-
-@login_required
 def finalize_bid(request, bid_id, step="contact"):
     bid = get_object_or_404(
         Bid.objects.select_related("artwork", "artwork__seller", "user"),

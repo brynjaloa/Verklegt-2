@@ -427,12 +427,7 @@ def artwork_list(request):
     year_from = request.GET.get('year_from')
     year_to = request.GET.get('year_to')
 
-    artworks = annotate_sold_by_bid(Artwork.objects.all())
-
-
-    for artwork in artworks:
-        highest_bid = Bid.objects.filter(artwork=artwork).order_by("-bid_price").first()
-        artwork.highest_bid = highest_bid
+    artworks = annotate_sold_by_bid(Artwork.objects.prefetch_related("images"))
 
     artworks = apply_title_search(artworks, query)
 
@@ -578,13 +573,13 @@ def artwork_list(request):
 
 
 def home_view(request):
-    recent_artworks = Artwork.objects.all().order_by("-listing_date", "-id")[:8]
+    recent_artworks = Artwork.objects.prefetch_related("images").order_by("-listing_date", "-id")[:8]
     popular_artworks = (
-        Artwork.objects.annotate(bid_count=Count("bid"))
+        Artwork.objects.prefetch_related("images")
+        .annotate(bid_count=Count("bid"))
         .filter(bid_count__gt=0)
         .order_by("-bid_count", "-listing_date", "-id")[:8]
     )
-    recent_artworks = Artwork.objects.all().order_by("-listing_date", "-id")[:8]
 
     return render(request, "home.html", {
         "recent_artworks": recent_artworks,
@@ -867,7 +862,7 @@ def artwork_see_all(request):
     price_to = request.GET.get('price_to')
     sort = request.GET.get('sort', 'relevance')
 
-    artworks = annotate_sold_by_bid(Artwork.objects.all())
+    artworks = annotate_sold_by_bid(Artwork.objects.prefetch_related("images"))
 
     artworks = apply_title_search(artworks, query)
     if categories_selected:
@@ -942,26 +937,3 @@ def artwork_see_all(request):
         'price_to': price_to,
         'sort': sort,
     })
-
-@login_required
-def accept_bid(request, bid_id):
-    bid = get_object_or_404(Bid, id=bid_id)
-
-    if bid.artwork.seller != request.user.seller:
-        return HttpResponseForbidden()
-
-    if Bid.objects.filter(
-        artwork=bid.artwork,
-        status__in=SOLD_BID_STATUSES,
-    ).exclude(id=bid.id).exists():
-        return redirect("artwork_detail", pk=bid.artwork.id)
-
-    bid.status = Bid.Status.ACCEPTED
-    bid.save(update_fields=["status"])
-    bid.artwork.is_sold = True
-    bid.artwork.save(update_fields=["is_sold"])
-
-    return redirect(
-        "artwork_detail",
-        pk=bid.artwork.id
-    )
