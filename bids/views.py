@@ -2,7 +2,6 @@ from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from django.http import HttpResponseForbidden
 from django.shortcuts import get_object_or_404, redirect, render
-
 from .forms import ContactInformationForm, PaymentInformationForm
 from .models import Bid
 
@@ -71,7 +70,6 @@ def promote_next_bid_after_cancel(artwork, excluded_bid_ids=None):
     set_bid_queue_after_accepted(next_bid)
     artwork.is_sold = False
     artwork.save(update_fields=["is_sold"])
-
     return next_bid
 
 
@@ -85,7 +83,6 @@ def cancel_bid(request, bid_id):
 
     if bid is None:
         return redirect("profile")
-
 
     if bid.status in {Bid.Status.ACCEPTED, Bid.Status.CONTINGENT}:
         was_accepted = bid.status == Bid.Status.ACCEPTED
@@ -200,7 +197,6 @@ def finalize_bid(request, bid_id, step="contact"):
         return render(request, "bids/finalize_bid.html", {
             "bid": bid,
             "step": step,
-            "steps": FINALIZE_STEPS,
         })
 
     contact_data = finalize_data.get("contact", {})
@@ -221,7 +217,6 @@ def finalize_bid(request, bid_id, step="contact"):
         return render(request, "bids/finalize_bid.html", {
             "bid": bid,
             "step": step,
-            "steps": FINALIZE_STEPS,
             "form": form,
         })
 
@@ -248,7 +243,6 @@ def finalize_bid(request, bid_id, step="contact"):
         return render(request, "bids/finalize_bid.html", {
             "bid": bid,
             "step": step,
-            "steps": FINALIZE_STEPS,
             "form": form,
         })
 
@@ -279,7 +273,6 @@ def finalize_bid(request, bid_id, step="contact"):
         return render(request, "bids/finalize_bid.html", {
             "bid": bid,
             "step": step,
-            "steps": FINALIZE_STEPS,
             "contact_data": contact_data,
             "payment_data": payment_data,
             "payment_label": PAYMENT_LABELS.get(payment_data.get("payment_option")),
