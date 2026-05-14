@@ -13,6 +13,7 @@ PAYMENT_LABELS = {
     "wire_transfer": "Wire transfer",
 }
 QUEUE_BID_STATUSES = [Bid.Status.PENDING, Bid.Status.CONTINGENT, Bid.Status.REJECTED]
+ACTIVE_UNFINALIZED_BID_STATUSES = [Bid.Status.PENDING, Bid.Status.CONTINGENT]
 
 
 def get_finalize_session_key(bid):
@@ -27,15 +28,32 @@ def form_data_for_session(form):
     }
 
 
-def get_next_contingent_bid(artwork, excluded_bid_ids=None):
+def get_next_queue_bid(artwork, excluded_bid_ids=None, statuses=None):
     excluded_bid_ids = excluded_bid_ids or []
+    statuses = statuses or QUEUE_BID_STATUSES
 
     return Bid.objects.filter(
         artwork=artwork,
-        status__in=QUEUE_BID_STATUSES,
+        status__in=statuses,
+        buyer_canceled=False,
     ).exclude(
         id__in=excluded_bid_ids,
     ).order_by("-bid_price", "date_of_bid", "id").first()
+
+
+def get_next_bid_after_accepted_cancel(artwork, excluded_bid_ids=None):
+    return (
+        get_next_queue_bid(
+            artwork,
+            excluded_bid_ids=excluded_bid_ids,
+            statuses=[Bid.Status.CONTINGENT],
+        )
+        or get_next_queue_bid(
+            artwork,
+            excluded_bid_ids=excluded_bid_ids,
+            statuses=[Bid.Status.PENDING, Bid.Status.REJECTED],
+        )
+    )
 
 
 def set_bid_queue_after_accepted(accepted_bid):
@@ -43,6 +61,7 @@ def set_bid_queue_after_accepted(accepted_bid):
         Bid.objects.filter(
             artwork=accepted_bid.artwork,
             status__in=QUEUE_BID_STATUSES,
+            buyer_canceled=False,
         ).exclude(
             id=accepted_bid.id,
         ).order_by("-bid_price", "date_of_bid", "id")
@@ -57,7 +76,7 @@ def set_bid_queue_after_accepted(accepted_bid):
 
 
 def promote_next_bid_after_cancel(artwork, excluded_bid_ids=None):
-    next_bid = get_next_contingent_bid(artwork, excluded_bid_ids=excluded_bid_ids)
+    next_bid = get_next_bid_after_accepted_cancel(artwork, excluded_bid_ids=excluded_bid_ids)
 
     if not next_bid:
         artwork.is_sold = False
@@ -87,8 +106,13 @@ def cancel_bid(request, bid_id):
     if bid.status in {Bid.Status.ACCEPTED, Bid.Status.CONTINGENT}:
         was_accepted = bid.status == Bid.Status.ACCEPTED
         bid.status = Bid.Status.CANCELED
+        bid.buyer_canceled = True
         bid.seller_cancel_notification_seen = False
-        bid.save(update_fields=["status", "seller_cancel_notification_seen"])
+        bid.save(update_fields=[
+            "status",
+            "buyer_canceled",
+            "seller_cancel_notification_seen"
+        ])
 
         if was_accepted:
             promote_next_bid_after_cancel(bid.artwork, excluded_bid_ids=[bid.id])
@@ -128,6 +152,7 @@ def accept_bid(request, bid_id):
         highest_bid = Bid.objects.filter(
             artwork=bid.artwork,
             status__in=QUEUE_BID_STATUSES,
+            buyer_canceled=False,
         ).order_by("-bid_price", "date_of_bid", "id").first()
 
         if highest_bid is None or highest_bid.id != bid.id:
@@ -234,7 +259,11 @@ def finalize_bid(request, bid_id, step="contact"):
 
             bid.status = Bid.Status.FINALIZED
             bid.save(update_fields=["status"])
-            Bid.objects.filter(artwork=bid.artwork).exclude(id=bid.id).update(
+            Bid.objects.filter(
+                artwork=bid.artwork,
+                status__in=ACTIVE_UNFINALIZED_BID_STATUSES,
+                buyer_canceled=False,
+            ).exclude(id=bid.id).update(
                 status=Bid.Status.REJECTED,
                 buyer_reject_notification_seen=False,
             )

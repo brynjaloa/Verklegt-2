@@ -40,21 +40,22 @@
             <div class="seller-profile-text">
                 <h2>{{ seller.name }}</h2>
                 <p class="seller-profile-type">Seller type: {{ seller.seller_type }}</p>
-                {% if seller.seller_type == "Gallery"
-                    and seller.street_name or seller.seller_type == "Gallery"
-                    and seller.city or seller.seller_type == "Gallery" and seller.postal_code %}
+                {% if seller.seller_type == "Gallery" %}
+                    {% if seller.street_name or seller.city or seller.postal_code %}
 
-                    <address class="seller-profile-address">
-                        {% if seller.street_name %}
-                            {{ seller.street_name }}<br>
-                        {% endif %}
+                        <address class="seller-profile-address">
+                            {% if seller.street_name %}
+                                {{ seller.street_name }}<br>
+                            {% endif %}
 
-                        {% if seller.city or seller.postal_code %}
-                            {{ seller.city }}{% if seller.city and seller.postal_code %}
-                                , {% endif %}{{ seller.postal_code }}
-                        {% endif %}
-                    </address>
+                            {% if seller.city or seller.postal_code %}
+                                {{ seller.city }}{% if seller.city and seller.postal_code %}
+                                    , {% endif %}{{ seller.postal_code }}
+                            {% endif %}
+                        </address>
+                    {% endif %}
                 {% endif %}
+
                 {% if seller.bio %}
                     <p class="seller-profile-bio">{{ seller.bio }}</p>
                 {% else %}
@@ -79,7 +80,7 @@
                                     <div class="seller-listing-card-placeholder"></div>
                                 {% endif %}
                                 <p class="seller-listing-card-title">{{ artwork.title }}</p>
-                                <p class="seller-listing-card-price">Starting bid: ${{ artwork.starting_bid }}</p>
+                                <p class="seller-listing-card-price">Starting bid: ${{ artwork.starting_bid|floatformat:2|intcomma }}</p>
                                 <div class="seller-listing-card-meta">
                                     <p>{{ artwork.category }}</p>
                                     <p>Medium: {{ artwork.display_medium }}</p>

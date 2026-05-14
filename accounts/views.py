@@ -85,6 +85,7 @@ def profile_view(request):
     rejected_bid_notifications = list(
         user_bids.filter(
             status=Bid.Status.REJECTED,
+            buyer_canceled=False,
             buyer_reject_notification_seen=False,
         )
     )

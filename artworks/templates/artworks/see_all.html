@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load humanize %}
 
 {% block extra_css %}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.css">
@@ -169,15 +170,19 @@
                                     <div class="year-input-row">
                                         <div class="year-input-column">
                                             <label>From</label>
-                                            <input type="number" id="price-from-input" name="price_from" min="0"
-                                                   max="100000"
+                                            <input type="text" id="price-from-input" name="price_from" inputmode="decimal" min="0"
+                                                   max="2000000"
+                                                   data-range-input
+                                                   data-format="price"
                                                    value="{{ request.GET.price_from|default:'0' }}">
                                         </div>
                                         <div class="year-input-column">
                                             <label>To</label>
-                                            <input type="number" id="price-to-input" name="price_to" min="0"
-                                                   max="100000"
-                                                   value="{{ request.GET.price_to|default:'100000' }}">
+                                            <input type="text" id="price-to-input" name="price_to" inputmode="decimal" min="0"
+                                                   max="2000000"
+                                                   data-range-input
+                                                   data-format="price"
+                                                   value="{{ request.GET.price_to|default:'2000000' }}">
                                         </div>
                                     </div>
                                 </div>
@@ -220,7 +225,7 @@
                                     <div class="see-all-card-placeholder"></div>
                                 {% endif %}
                                 <p class="see-all-card-title">{{ artwork.title }}</p>
-                                <p class="see-all-card-price">Starting bid: ${{ artwork.starting_bid }}</p>
+                                <p class="see-all-card-price">Starting bid: ${{ artwork.starting_bid|floatformat:2|intcomma }}</p>
                                 <div class="see-all-card-meta">
                                     <p>{{ artwork.category }}</p>
                                     <p>Medium: {{ artwork.display_medium }}</p>

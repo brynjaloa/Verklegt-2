@@ -1,3 +1,5 @@
+{% load humanize %}
+
 <div class="bid-info">
 
     <p>Date of bid: {{ bid.date_of_bid }}</p>
@@ -14,7 +16,7 @@
 
     <p>
         Bid price:
-        ${{ bid.bid_price }}
+        ${{ bid.bid_price|floatformat:2|intcomma }}
     </p>
 
     <p>

@@ -355,6 +355,7 @@ def latest_visible_bids_for_artwork(artwork):
     latest_bid_ids = (
         Bid.objects.filter(artwork=artwork)
         .exclude(status=Bid.Status.CANCELED)
+        .exclude(buyer_canceled=True)
         .values("user")
         .annotate(latest_id=Max("id"))
         .values("latest_id")
@@ -377,12 +378,14 @@ def repair_bid_queue_for_artwork(artwork):
     has_old_rejected_queue = Bid.objects.filter(
         artwork=artwork,
         status=Bid.Status.REJECTED,
+        buyer_canceled=False,
     ).exists()
 
     if accepted_bid is None and has_old_rejected_queue and not has_waiting_bids:
         accepted_bid = Bid.objects.filter(
             artwork=artwork,
             status=Bid.Status.REJECTED,
+            buyer_canceled=False,
         ).order_by("-bid_price", "date_of_bid", "id").first()
 
         if accepted_bid:
@@ -394,6 +397,7 @@ def repair_bid_queue_for_artwork(artwork):
         Bid.objects.filter(
             artwork=artwork,
             status__in=[Bid.Status.CONTINGENT, Bid.Status.REJECTED],
+            buyer_canceled=False,
         ).update(status=Bid.Status.PENDING)
 
         if artwork.is_sold:
@@ -406,6 +410,7 @@ def repair_bid_queue_for_artwork(artwork):
         Bid.objects.filter(
             artwork=artwork,
             status__in=queue_statuses,
+            buyer_canceled=False,
         ).exclude(
             id=accepted_bid.id,
         ).order_by("-bid_price", "date_of_bid", "id")
@@ -892,7 +897,7 @@ def artwork_see_all(request):
     year_from = range_filter_value(year_from, "1300")
     year_to = range_filter_value(year_to, "2026")
     price_from = range_filter_value(price_from, "0")
-    price_to = range_filter_value(price_to, "100000")
+    price_to = range_filter_value(price_to, "2000000")
 
     if year_from:
         artworks = artworks.filter(year__gte=year_from)

@@ -25,6 +25,7 @@ def accepted_bid_notifications(request):
     rejected_bid_count = Bid.objects.filter(
         user=request.user,
         status=Bid.Status.REJECTED,
+        buyer_canceled=False,
         buyer_reject_notification_seen=False,
     ).count()
 

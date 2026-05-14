@@ -22,11 +22,15 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        if (control.min && control.value === control.min) {
+        const controlValue = control.dataset.format === "price"
+            ? control.value.replace(/,/g, "")
+            : control.value;
+
+        if (control.min && Number(controlValue) === Number(control.min)) {
             return;
         }
 
-        if (control.max && control.value === control.max) {
+        if (control.max && Number(controlValue) === Number(control.max)) {
             return;
         }
 
@@ -34,11 +38,11 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        if (control.value === "") {
+        if (controlValue === "") {
             return;
         }
 
-        parameters.append(control.name, control.value);
+        parameters.append(control.name, controlValue);
     }
 
     queryPreservingForms.forEach(form => {

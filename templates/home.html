@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load humanize %}
 
 {% block content %}
 
@@ -57,7 +58,7 @@
                         </a>
 
                         <p class="art-title">{{ artwork.title }}</p>
-                        <p class="price">Starting bid is: ${{ artwork.starting_bid }}</p>
+                        <p class="price">Starting bid is: ${{ artwork.starting_bid|floatformat:2|intcomma }}</p>
                     </div>
 
                     {% empty %}
@@ -94,7 +95,7 @@
                 </a>
 
                 <p class="art-title">{{ artwork.title }}</p>
-                <p class="price">Starting bid is: ${{ artwork.starting_bid }}</p>
+                <p class="price">Starting bid is: ${{ artwork.starting_bid|floatformat:2|intcomma }}</p>
             </div>
 
             {% empty %}

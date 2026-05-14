@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load humanize %}
 
 {% block content %}
 
@@ -166,21 +167,27 @@
 
                                     <div class="year-input-group">
                                         <label for="price-from-input">From</label>
-                                        <input type="number"
+                                        <input type="text"
                                                id="price-from-input"
                                                name="price_from"
+                                               inputmode="decimal"
                                                min="0"
-                                               max="100000"
+                                               max="2000000"
+                                               data-range-input
+                                               data-format="price"
                                                value="{{ request.GET.price_from }}"
                                         >
                                     </div>
                                     <div class="year-input-group">
                                         <label for="price-to-input">To</label>
-                                        <input type="number"
+                                        <input type="text"
                                                id="price-to-input"
                                                name="price_to"
+                                               inputmode="decimal"
                                                min="0"
-                                               max="100000"
+                                               max="2000000"
+                                               data-range-input
+                                               data-format="price"
                                                value="{{ request.GET.price_to }}"
                                         >
                                     </div>
@@ -228,7 +235,7 @@
                                 {% endif %}
 
                                 <p class="marketplace-card-title">{{ artwork.title }}</p>
-                                <p class="marketplace-card-price">Starting bid: ${{ artwork.starting_bid }}</p>
+                                <p class="marketplace-card-price">Starting bid: ${{ artwork.starting_bid|floatformat:2|intcomma }}</p>
                                 <div class="marketplace-card-meta">
                                     <p>{{ artwork.category }}</p>
                                     <p>Medium: {{ artwork.display_medium }}</p>

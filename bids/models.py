@@ -20,6 +20,7 @@ class Bid(models.Model):
     buyer_accept_notification_seen = models.BooleanField(default=False)
     buyer_reject_notification_seen = models.BooleanField(default=False)
     seller_cancel_notification_seen = models.BooleanField(default=False)
+    buyer_canceled = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.user.username} - {self.artwork.title} - {self.bid_price}"
