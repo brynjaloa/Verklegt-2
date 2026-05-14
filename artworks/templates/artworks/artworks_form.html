@@ -34,7 +34,7 @@
                     {{ form.category.errors }}
                 </div>
 
-                <div class="category-fields painting-field">
+                <div class="category-fields painting-field" data-category-field="Paintings">
                     <div class="form-row">
                         <label for="{{ form.painting_medium.id_for_label }}">Painting medium:</label>
                         {{ form.painting_medium }}
@@ -48,7 +48,7 @@
                     </div>
                 </div>
 
-                <div class="category-fields sculpture-field">
+                <div class="category-fields sculpture-field" data-category-field="Sculptures">
                     <div class="form-row">
                         <label for="{{ form.sculpture_material.id_for_label }}">Sculpture material:</label>
                         {{ form.sculpture_material }}
@@ -62,7 +62,7 @@
                     </div>
                 </div>
 
-                <div class="category-fields furniture-field">
+                <div class="category-fields furniture-field" data-category-field="Furniture">
                     <div class="form-row">
                         <label for="{{ form.furniture_material.id_for_label }}">Furniture material:</label>
                         {{ form.furniture_material }}
@@ -76,7 +76,7 @@
                     </div>
                 </div>
 
-                <div class="category-fields photo-field">
+                <div class="category-fields photo-field" data-category-field="Photos">
                     <div class="form-row">
                         <label for="{{ form.photo_technique.id_for_label }}">Photo technique:</label>
                         {{ form.photo_technique }}
@@ -114,15 +114,6 @@
                         {{ form.width.errors }}
                     </div>
 
-                    <div class="form-row furniture-depth-field">
-                        <label for="{{ form.depth.id_for_label }}">Depth:</label>
-                        {{ form.depth }}
-                        {% if form.depth.help_text %}
-                            <p class="field-help">{{ form.depth.help_text }}</p>
-                        {% endif %}
-                        {{ form.depth.errors }}
-                    </div>
-
                     <div class="form-row">
                         <label for="{{ form.height.id_for_label }}">Height:</label>
                         {{ form.height }}
@@ -130,6 +121,15 @@
                             <p class="field-help">{{ form.height.help_text }}</p>
                         {% endif %}
                         {{ form.height.errors }}
+                    </div>
+
+                    <div class="form-row furniture-depth-field" data-furniture-depth>
+                        <label for="{{ form.depth.id_for_label }}">Depth:</label>
+                        {{ form.depth }}
+                        {% if form.depth.help_text %}
+                            <p class="field-help">{{ form.depth.help_text }}</p>
+                        {% endif %}
+                        {{ form.depth.errors }}
                     </div>
                 </div>
 
@@ -191,5 +191,5 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="{% static 'artworks/artwork_form.js' %}"></script>
+<script src="{% static 'js/artworks/artwork_form.js' %}"></script>
 {% endblock %}

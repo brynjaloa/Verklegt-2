@@ -352,6 +352,7 @@
     color: white;
     font-size: 11px;
 }
+
 .filter-toggle {
     width: 100%;
     padding: 0;
@@ -369,7 +370,7 @@
     margin: 0 0 10px;
     text-align: left;
     user-select: none;
-    -webkit-user-select: none;
+    user-select: none;
 }
 
 .filter-toggle-icon {
