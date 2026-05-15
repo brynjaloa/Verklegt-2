@@ -344,6 +344,37 @@ def apply_any_field_filter(artworks, field_values):
     return artworks.filter(field_query)
 
 
+def build_category_specific_filter(categories_selected, medium_field_values, style_field_values):
+    category_query = Q()
+    selected_categories = set(categories_selected)
+
+    for category, category_fields in CATEGORY_FILTER_FIELDS.items():
+        single_category_query = Q(category=category)
+        medium_field = category_fields.get("medium")
+        style_field = category_fields.get("style")
+        medium_values = expand_filter_values(
+            medium_field,
+            [value for value in medium_field_values.get(medium_field, []) if value],
+        )
+        style_values = expand_filter_values(
+            style_field,
+            [value for value in style_field_values.get(style_field, []) if value],
+        )
+
+        if category not in selected_categories and not medium_values and not style_values:
+            continue
+
+        if medium_values:
+            single_category_query &= Q(**{f"{medium_field}__in": medium_values})
+
+        if style_values:
+            single_category_query &= Q(**{f"{style_field}__in": style_values})
+
+        category_query |= single_category_query
+
+    return category_query
+
+
 def range_filter_value(value, default_value):
     if value in (None, "", default_value):
         return None
@@ -589,7 +620,15 @@ def home_view(request):
     popular_artworks = (
         Artwork.objects.prefetch_related("images")
         .annotate(bid_count=Count("bid"))
-        .filter(bid_count__gt=0)
+        .annotate(
+            sold_by_bid=Exists(
+                Bid.objects.filter(
+                    artwork=OuterRef("pk"),
+                    status__in=SOLD_BID_STATUSES,
+                )
+            )
+        )
+        .filter(bid_count__gt=0, is_sold=False, sold_by_bid=False)
         .order_by("-bid_count", "-listing_date", "-id")[:8]
     )
 
@@ -878,19 +917,36 @@ def artwork_see_all(request):
 
     artworks = apply_title_search(artworks, query)
     if categories_selected:
-        artworks = artworks.filter(category__in=categories_selected)
-    artworks = apply_any_field_filter(artworks, (
-        ("painting_medium", legacy_mediums_selected + painting_mediums_selected),
-        ("sculpture_material", legacy_mediums_selected + sculpture_materials_selected),
-        ("furniture_material", legacy_mediums_selected + furniture_materials_selected),
-        ("photo_technique", legacy_mediums_selected + photo_techniques_selected),
-    ))
-    artworks = apply_any_field_filter(artworks, (
-        ("painting_style", legacy_styles_selected + painting_styles_selected),
-        ("sculpture_style", legacy_styles_selected + sculpture_styles_selected),
-        ("furniture_style", legacy_styles_selected + furniture_styles_selected),
-        ("photo_style", legacy_styles_selected + photo_styles_selected),
-    ))
+        category_specific_query = build_category_specific_filter(
+            categories_selected,
+            {
+                "painting_medium": legacy_mediums_selected + painting_mediums_selected,
+                "sculpture_material": legacy_mediums_selected + sculpture_materials_selected,
+                "furniture_material": legacy_mediums_selected + furniture_materials_selected,
+                "photo_technique": legacy_mediums_selected + photo_techniques_selected,
+            },
+            {
+                "painting_style": legacy_styles_selected + painting_styles_selected,
+                "sculpture_style": legacy_styles_selected + sculpture_styles_selected,
+                "furniture_style": legacy_styles_selected + furniture_styles_selected,
+                "photo_style": legacy_styles_selected + photo_styles_selected,
+            },
+        )
+
+        artworks = artworks.filter(category_specific_query)
+    else:
+        artworks = apply_any_field_filter(artworks, (
+            ("painting_medium", legacy_mediums_selected + painting_mediums_selected),
+            ("sculpture_material", legacy_mediums_selected + sculpture_materials_selected),
+            ("furniture_material", legacy_mediums_selected + furniture_materials_selected),
+            ("photo_technique", legacy_mediums_selected + photo_techniques_selected),
+        ))
+        artworks = apply_any_field_filter(artworks, (
+            ("painting_style", legacy_styles_selected + painting_styles_selected),
+            ("sculpture_style", legacy_styles_selected + sculpture_styles_selected),
+            ("furniture_style", legacy_styles_selected + furniture_styles_selected),
+            ("photo_style", legacy_styles_selected + photo_styles_selected),
+        ))
     if editions_selected:
         artworks = artworks.filter(edition__in=editions_selected)
     artworks = apply_status_filter(artworks, statuses_selected)

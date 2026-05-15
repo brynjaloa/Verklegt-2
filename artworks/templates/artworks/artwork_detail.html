@@ -79,11 +79,11 @@
                     </div>
 
                 {% else %}
-                    <p class="artwork-minimum-bid">Minimum bid: ${{ artwork.starting_bid|intcomma }}</p>
+                    <p class="artwork-minimum-bid">Minimum bid: ${{ artwork.starting_bid|floatformat:2|intcomma }}</p>
                     <p class="artwork-highest-bid">
                         Highest bid:
                         {% if highest_bid %}
-                        ${{ highest_bid.bid_price|intcomma }}
+                        ${{ highest_bid.bid_price|floatformat:2|intcomma }}
                         {% else %}
                         No bids yet
                         {% endif %}
@@ -102,7 +102,7 @@
                                     <span>
                                 {{ bid.user.username }}
                                 :
-                                ${{ bid.bid_price }}
+                                ${{ bid.bid_price|floatformat:2|intcomma }}
                             </span>
 
                                 </div>
