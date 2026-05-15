@@ -84,12 +84,15 @@ class ContactInformationForm(forms.Form):
     postal_code = forms.CharField(max_length=20)
     country = forms.ChoiceField(choices=COUNTRY_CHOICES)
     national_id = forms.RegexField(
-        regex=r"^\d+$",
-        max_length=20,
+        regex=r"^\d{10}$",
         label="National id",
-        error_messages={"invalid": "Use numbers only."},
+        error_messages={
+            "invalid": "National id must be exactly 10 digits.",
+        },
         widget=forms.TextInput(attrs={
             "inputmode": "numeric",
+            "maxlength": "10",
+            "pattern": r"\d{10}",
             "placeholder": "1234567890",
         }),
     )
@@ -109,12 +112,13 @@ class PaymentInformationForm(forms.Form):
 
     cardholder_name = forms.CharField(max_length=120, required=False)
     credit_card_number = forms.RegexField(
-        regex=r"^\d{16}$",
+        regex=r"^\d{15,16}$",
         required=False,
-        error_messages={"invalid": "Enter exactly 16 numbers."},
+        error_messages={"invalid": "Enter 15 or 16 digits."},
         widget=forms.TextInput(attrs={
             "inputmode": "numeric",
             "maxlength": "16",
+            "pattern": r"\d{15,16}",
             "placeholder": "1234123412341234",
         }),
     )
